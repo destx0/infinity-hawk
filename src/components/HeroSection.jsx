@@ -11,7 +11,7 @@ export function HeroSection() {
 					Infinity Mock
 				</h1>
 				<p className="mb-12 text-xl text-gray-600 dark:text-gray-300 md:text-2xl">
-					Revolutionizing your mock interview experience
+					Revolutionizing your preparation
 				</p>
 				<RainbowButton>Join Now</RainbowButton>
 			</div>

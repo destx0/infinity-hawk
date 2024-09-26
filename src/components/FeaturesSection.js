@@ -1,5 +1,6 @@
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
 import WordFadeIn from "@/components/magicui/word-fade-in";
+import Image from "next/image";
 import {
 	BookOpenIcon,
 	ClockIcon,
@@ -14,7 +15,21 @@ const features = [
 		name: "Comprehensive Study Material",
 		description:
 			"Access a vast library of curated study materials covering all exam topics.",
-		className: "col-span-2",
+		className: "col-span-2 lg:col-span-2",
+		background: (
+			<div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+				<Image
+					src="/mock.png"
+					alt="Mock Exam Interface"
+					width={500}
+					height={300}
+					style={{
+						objectFit: "cover",
+					}}
+					className="rounded-lg opacity-90 transition-all duration-300 ease-out group-hover:opacity-30 group-hover:scale-105"
+				/>
+			</div>
+		),
 	},
 	{
 		Icon: DocumentTextIcon,
