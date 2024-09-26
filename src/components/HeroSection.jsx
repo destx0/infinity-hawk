@@ -26,7 +26,7 @@ export function HeroSection() {
 						delay={0}
 						radius={200}
 					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl">
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl opacity-30">
 							SSC
 						</div>
 					</OrbitingCircles>
@@ -36,7 +36,7 @@ export function HeroSection() {
 						delay={10}
 						radius={300}
 					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-60">
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-40">
 							WBP
 						</div>
 					</OrbitingCircles>
@@ -48,7 +48,7 @@ export function HeroSection() {
 						duration={35}
 						reverse
 					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl">
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl opacity-70">
 							UPSC
 						</div>
 					</OrbitingCircles>
@@ -59,7 +59,7 @@ export function HeroSection() {
 						delay={20}
 						reverse
 					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl">
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-50">
 							IBPS
 						</div>
 					</OrbitingCircles>
@@ -71,7 +71,7 @@ export function HeroSection() {
 						duration={45}
 						delay={15}
 					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-3xl">
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-3xl opacity-80">
 							RRB
 						</div>
 					</OrbitingCircles>
