@@ -13,7 +13,7 @@ export function HeroSection() {
 				<p className="mb-12 text-xl text-gray-600 dark:text-gray-300 md:text-2xl">
 					Revolutionizing your mock interview experience
 				</p>
-				<RainbowButton>Get Started</RainbowButton>
+				<RainbowButton>Join Now</RainbowButton>
 			</div>
 
 			{/* OrbitingCirclesDemo section */}
@@ -26,13 +26,9 @@ export function HeroSection() {
 						delay={0}
 						radius={200}
 					>
-						<Image
-							src="/ssc.png"
-							alt="SSC"
-							width={100}
-							height={100}
-							className="rounded-full"
-						/>
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl">
+							SSC
+						</div>
 					</OrbitingCircles>
 					<OrbitingCircles
 						className="size-[80px] border-none bg-transparent"
@@ -40,13 +36,9 @@ export function HeroSection() {
 						delay={10}
 						radius={300}
 					>
-						<Image
-							src="/ssc.png"
-							alt="SSC"
-							width={80}
-							height={80}
-							className="rounded-full"
-						/>
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-60">
+							WBP
+						</div>
 					</OrbitingCircles>
 
 					{/* Outer Circles (reverse) */}
@@ -56,13 +48,9 @@ export function HeroSection() {
 						duration={35}
 						reverse
 					>
-						<Image
-							src="/ssc.png"
-							alt="SSC"
-							width={120}
-							height={120}
-							className="rounded-full"
-						/>
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl">
+							UPSC
+						</div>
 					</OrbitingCircles>
 					<OrbitingCircles
 						className="size-[90px] border-none bg-transparent"
@@ -71,13 +59,21 @@ export function HeroSection() {
 						delay={20}
 						reverse
 					>
-						<Image
-							src="/ssc.png"
-							alt="SSC"
-							width={90}
-							height={90}
-							className="rounded-full"
-						/>
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl">
+							IBPS
+						</div>
+					</OrbitingCircles>
+
+					{/* Additional orbiting text elements */}
+					<OrbitingCircles
+						className="size-[150px] border-none bg-transparent"
+						radius={350}
+						duration={45}
+						delay={15}
+					>
+						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-3xl">
+							RRB
+						</div>
 					</OrbitingCircles>
 				</div>
 			</div>
