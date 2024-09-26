@@ -1,9 +1,10 @@
-import BlurIn from "@/components/magicui/blur-in";
+import HeroSection from '@/components/HeroSection';
 
 export default function Home() {
 	return (
-		<div>
-			<BlurIn word={"Infinity mock"}></BlurIn>
-		</div>
+		<main>
+			<HeroSection />
+			{/* Add other sections or components here */}
+		</main>
 	);
 }
