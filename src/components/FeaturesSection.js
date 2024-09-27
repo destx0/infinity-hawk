@@ -65,10 +65,10 @@ export default function FeaturesSection() {
 	return (
 		<section className="py-16 bg-gray-50">
 			<div className="container mx-auto px-4">
-				<div className="text-3xl font-bold text-center mb-12">
+				<div className=" font-bold text-center mb-12">
 					<WordFadeIn words="Our Features" />
 				</div>
-				<BentoGrid className="max-w-6xl mx-auto">
+				<BentoGrid className="max-w-4xl mx-auto">
 					{features.map((feature, index) => (
 						<BentoCard key={index} {...feature} />
 					))}
