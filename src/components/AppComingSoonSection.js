@@ -60,12 +60,13 @@ export default function AppComingSoonSection() {
 						<motion.p
 							ref={paragraphRef} // Attach ref to paragraph
 							className="text-xl mb-8"
-							initial={{ opacity: 0, y: 20 }} // Initial state for animation
+							initial={{ opacity: 0, x: -20, scale: 0.8 }} // Initial state for animation (animate from left and scale down)
 							animate={{
 								opacity: isParagraphInView ? 1 : 0,
-								y: 0,
+								x: 0,
+								scale: 1, // Scale to normal size
 							}} // Animate opacity based on visibility
-							transition={{ duration: 0.5, delay: 0.2 }} // Animation duration with delay
+							transition={{ duration: 0.2, delay: 0.5 }} // Animation duration with delay
 						>
 							Stay tuned for our mobile app launch!
 						</motion.p>
@@ -74,12 +75,13 @@ export default function AppComingSoonSection() {
 							<motion.a
 								href="#"
 								className="inline-flex items-center justify-start w-64 h-14 bg-black text-white rounded-md hover:bg-gray-800 transition-colors text-sm"
-								initial={{ opacity: 0, y: 20 }} // Initial state for animation
+								initial={{ opacity: 0, x: -20, scale: 0.8 }} // Initial state for animation (animate from left and scale down)
 								animate={{
 									opacity: areButtonsInView ? 1 : 0,
-									y: 0,
+									x: 0,
+									scale: 1, // Scale to normal size
 								}} // Animate opacity based on visibility
-								transition={{ duration: 0.5, delay: 0.2 }} // Animation duration with delay
+								transition={{ duration: 0.2, delay: 0.5 }} // Animation duration with delay
 							>
 								<svg
 									className="w-5 h-5 m-4 ml-6"
@@ -93,12 +95,13 @@ export default function AppComingSoonSection() {
 							<motion.a
 								href="#"
 								className="inline-flex items-center justify-center w-64 h-14 bg-black text-white rounded-md hover:bg-gray-800 transition-colors text-sm"
-								initial={{ opacity: 0, y: 20 }} // Initial state for animation
+								initial={{ opacity: 0, x: -20, scale: 0.8 }} // Initial state for animation (animate from left and scale down)
 								animate={{
 									opacity: areButtonsInView ? 1 : 0,
-									y: 0,
+									x: 0,
+									scale: 1, // Scale to normal size
 								}} // Animate opacity based on visibility
-								transition={{ duration: 0.5, delay: 0.2 }} // Animation duration with delay
+								transition={{ duration: 0.2, delay: 0.5 }} // Animation duration with delay
 							>
 								<svg
 									className="w-6 h-6 m-4 -ml-6"
