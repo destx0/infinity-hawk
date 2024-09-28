@@ -3,6 +3,14 @@ import OrbitingCircles from "@/components/magicui/orbiting-circles";
 import Image from "next/image";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 
+const orbitingItems = [
+	{ text: "SSC", size: 100, duration: 30, delay: 0, radius: 200, opacity: 30, fontSize: "2xl" },
+	{ text: "WBP", size: 80, duration: 25, delay: 10, radius: 300, opacity: 40, fontSize: "xl" },
+	{ text: "UPSC", size: 120, duration: 35, delay: 0, radius: 400, opacity: 70, fontSize: "2xl", reverse: true },
+	{ text: "IBPS", size: 90, duration: 40, delay: 20, radius: 500, opacity: 50, fontSize: "xl", reverse: true },
+	{ text: "RRB", size: 150, duration: 45, delay: 15, radius: 350, opacity: 80, fontSize: "3xl" },
+];
+
 export function HeroSection() {
 	return (
 		<div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-900">
@@ -19,62 +27,20 @@ export function HeroSection() {
 			{/* OrbitingCirclesDemo section */}
 			<div className="absolute inset-0 z-0">
 				<div className="relative flex h-full w-full items-center justify-center">
-					{/* Inner Circles */}
-					<OrbitingCircles
-						className="size-[100px] border-none bg-transparent"
-						duration={30}
-						delay={0}
-						radius={200}
-					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl opacity-30">
-							SSC
-						</div>
-					</OrbitingCircles>
-					<OrbitingCircles
-						className="size-[80px] border-none bg-transparent"
-						duration={25}
-						delay={10}
-						radius={300}
-					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-40">
-							WBP
-						</div>
-					</OrbitingCircles>
-
-					{/* Outer Circles (reverse) */}
-					<OrbitingCircles
-						className="size-[120px] border-none bg-transparent"
-						radius={400}
-						duration={35}
-						reverse
-					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-2xl opacity-70">
-							UPSC
-						</div>
-					</OrbitingCircles>
-					<OrbitingCircles
-						className="size-[90px] border-none bg-transparent"
-						radius={500}
-						duration={40}
-						delay={20}
-						reverse
-					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-xl opacity-50">
-							IBPS
-						</div>
-					</OrbitingCircles>
-
-					{/* Additional orbiting text elements */}
-					<OrbitingCircles
-						className="size-[150px] border-none bg-transparent"
-						radius={350}
-						duration={45}
-						delay={15}
-					>
-						<div className="flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-3xl opacity-80">
-							RRB
-						</div>
-					</OrbitingCircles>
+					{orbitingItems.map((item, index) => (
+						<OrbitingCircles
+							key={index}
+							className={`size-[${item.size}px] border-none bg-transparent`}
+							duration={item.duration}
+							delay={item.delay}
+							radius={item.radius}
+							reverse={item.reverse}
+						>
+							<div className={`flex h-full w-full items-center justify-center text-black dark:text-white font-bold text-${item.fontSize} opacity-${item.opacity}`}>
+								{item.text}
+							</div>
+						</OrbitingCircles>
+					))}
 				</div>
 			</div>
 		</div>
