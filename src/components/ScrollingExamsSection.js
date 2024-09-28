@@ -16,7 +16,6 @@ const exams = {
 		"CSIR ASO",
 		"SSC UDC Exam",
 	],
-	BANKING: ["SBI PO", "SBI Clerk", "IBPS PO", "IBPS Clerk"],
 	RAILWAY: [
 		"RRB ALP",
 		"RRB Group D",
@@ -36,11 +35,12 @@ const exams = {
 		"WBPSC Food",
 		"WBPSC JE",
 	],
+	BANKING: ["SBI PO", "SBI Clerk", "IBPS PO", "IBPS Clerk"],
 };
 
 const ExamCategory = ({ category, examList }) => {
 	return (
-		<div className="flex items-center mb-4">
+		<div className="flex w-screen items-center mb-4">
 			<h3 className="text-8xl font-extrabold text-gray-800 uppercase tracking-wide w-1/3">
 				{category}
 			</h3>
@@ -48,7 +48,7 @@ const ExamCategory = ({ category, examList }) => {
 				<VelocityScroll
 					text={examList.join("  •  ")}
 					default_velocity={1}
-					className="font-display text-center text-4xl text-black drop-shadow-sm"
+					className="font-display w-screentext-center text-4xl tracking-[-0.02em] text-black drop-shadow-sm"
 				/>
 			</div>
 		</div>
