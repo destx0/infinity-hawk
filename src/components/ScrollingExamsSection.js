@@ -41,7 +41,7 @@ const exams = {
 const ExamCategory = ({ category, examList }) => {
 	return (
 		<div className="flex w-screen items-center align-bottom -mb-4">
-			<h3 className="text-8xl font-extrabold text-gray-800 uppercase tracking-wide ">
+			<h3 className="text-8xl  text-gray-800 uppercase tracking-wide ">
 				{category}
 			</h3>
 			<div className="">
