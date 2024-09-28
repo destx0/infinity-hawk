@@ -7,7 +7,7 @@ export default function Home() {
 	return (
 		<main>
 			<HeroSection />
-			<ScrollingExamsSection />
+			{/* <ScrollingExamsSection /> */}
 			<FeaturesSection />
 			<AppComingSoonSection />
 			{/* Add other sections or components here */}
