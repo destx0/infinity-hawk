@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
+import ShineBorder from "@/components/magicui/shine-border";
 
 const exams = {
 	SSC: [
@@ -40,36 +41,28 @@ const exams = {
 
 const ExamCard = ({ exam }) => {
 	return (
-		<div
-			className={cn(
-				"flex items-center w-full cursor-pointer overflow-hidden rounded-xl border p-4 mx-2",
-				"border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-				"dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
-			)}
+		<ShineBorder
+			className="flex items-center  cursor-pointer p-4 mx-2 justify-center rounded-lg bg-white"
+			color={[]}
 		>
-			<img
-				src="/ssc.png"
-				alt={exam}
-				className="w-8 h-8 object-cover rounded-full mr-4"
-			/>
-			<p className="text-lg font-bold dark:text-white">{exam}</p>
-		</div>
+			<p className="text-2xl font-bold text-gray-800">{exam}</p>
+		</ShineBorder>
 	);
 };
 
 export default function ScrollingExamsSection() {
 	return (
-		<section className="py-16">
+		<section className="py-16 bg-gray-50">
 			<div className="">
-				<h2 className="text-3xl font-bold text-center mb-8">
+				<h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
 					Available Exams
 				</h2>
 				{Object.entries(exams).map(([category, examList], index) => (
 					<Marquee
 						key={category}
 						pauseOnHover
-						className="py-2 [--duration:40s] [--gap:1rem] w-full "
-						reverse={index % 2 !== 0}
+						className=" [--duration:40s] [--gap:1rem] w-full"
+						reverse={false}
 					>
 						{examList.map((exam) => (
 							<ExamCard key={exam} exam={exam} />
