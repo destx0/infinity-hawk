@@ -7,8 +7,8 @@ export default function Home() {
 	return (
 		<main>
 			<HeroSection />
-			<FeaturesSection />
 			<ScrollingExamsSection />
+			<FeaturesSection />
 			<AppComingSoonSection />
 			{/* Add other sections or components here */}
 		</main>

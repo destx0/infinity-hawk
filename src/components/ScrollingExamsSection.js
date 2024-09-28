@@ -40,26 +40,25 @@ const exams = {
 
 const ExamCategory = ({ category, examList }) => {
 	return (
-		<div className="text-center">
-			<h3 className="text-4xl font-extrabold mb-6 text-gray-800 uppercase tracking-wide">
+		<div className="flex items-center mb-4">
+			<h3 className="text-8xl font-extrabold text-gray-800 uppercase tracking-wide w-1/3">
 				{category}
 			</h3>
-			<VelocityScroll
-				text={examList.join("  •  ")}
-				default_velocity={1}
-				className="font-display text-center text-4xl text-black drop-shadow-sm"
-			/>
+			<div className="">
+				<VelocityScroll
+					text={examList.join("  •  ")}
+					default_velocity={1}
+					className="font-display text-center text-4xl text-black drop-shadow-sm"
+				/>
+			</div>
 		</div>
 	);
 };
 
 export default function ScrollingExamsSection() {
 	return (
-		<section className="py-20 bg-gray-50">
+		<section className="py-10 bg-gray-50">
 			<div className="">
-				{/* <h2 className="text-3xl font-bold text-center mb-16 text-gray-900">
-					Available Exams
-				</h2> */}
 				<div className="">
 					{Object.entries(exams).map(([category, examList]) => (
 						<ExamCategory
