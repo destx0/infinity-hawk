@@ -40,14 +40,14 @@ const exams = {
 
 const ExamCategory = ({ category, examList }) => {
 	return (
-		<div className="mb-8">
-			<h3 className="text-2xl font-bold mb-4 text-gray-800">
+		<div className="text-center">
+			<h3 className="text-4xl font-extrabold mb-6 text-gray-800 uppercase tracking-wide">
 				{category}
 			</h3>
 			<VelocityScroll
 				text={examList.join("  •  ")}
 				default_velocity={1}
-				className="font-display text-center text-xl   text-black drop-shadow-sm "
+				className="font-display text-center text-4xl text-black drop-shadow-sm"
 			/>
 		</div>
 	);
@@ -55,18 +55,20 @@ const ExamCategory = ({ category, examList }) => {
 
 export default function ScrollingExamsSection() {
 	return (
-		<section className="py-16 bg-gray-50">
-			<div className="container mx-auto">
-				<h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+		<section className="py-20 bg-gray-50">
+			<div className="">
+				{/* <h2 className="text-3xl font-bold text-center mb-16 text-gray-900">
 					Available Exams
-				</h2>
-				{Object.entries(exams).map(([category, examList]) => (
-					<ExamCategory
-						key={category}
-						category={category}
-						examList={examList}
-					/>
-				))}
+				</h2> */}
+				<div className="">
+					{Object.entries(exams).map(([category, examList]) => (
+						<ExamCategory
+							key={category}
+							category={category}
+							examList={examList}
+						/>
+					))}
+				</div>
 			</div>
 		</section>
 	);
