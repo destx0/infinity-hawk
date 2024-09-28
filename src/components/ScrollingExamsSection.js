@@ -40,15 +40,15 @@ const exams = {
 
 const ExamCategory = ({ category, examList }) => {
 	return (
-		<div className="flex w-screen items-center align-bottom mb-4">
+		<div className="flex w-screen items-center align-bottom -mb-4">
 			<h3 className="text-8xl font-extrabold text-gray-800 uppercase tracking-wide ">
 				{category}
 			</h3>
 			<div className="">
 				<VelocityScroll
-					text={examList.join("    |    ")}
+					text={examList.join("     •   ")}
 					default_velocity={1}
-					className="font-display w-screen text-center text-4xl tracking-[-0.02em] text-black drop-shadow-sm"
+					className=" w-screen text-center text-xl font-extralight tracking-[-0.02em] text-black drop-shadow-sm"
 				/>
 			</div>
 		</div>
