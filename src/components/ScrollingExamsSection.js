@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
-import Marquee from "@/components/magicui/marquee";
-import ShineBorder from "@/components/magicui/shine-border";
+import { VelocityScroll } from "@/components/magicui/scroll-based-velocity";
 
 const exams = {
 	SSC: [
@@ -39,37 +38,35 @@ const exams = {
 	],
 };
 
-const ExamCard = ({ exam }) => {
+const ExamCategory = ({ category, examList }) => {
 	return (
-		<ShineBorder
-			className="flex items-center  cursor-pointer p-4 mx-2 justify-center rounded-lg bg-white"
-			color={[]}
-		>
-			<p className="text-2xl font-bold text-gray-800">{exam}</p>
-		</ShineBorder>
+		<div className="mb-8">
+			<h3 className="text-2xl font-bold mb-4 text-gray-800">
+				{category}
+			</h3>
+			<VelocityScroll
+				text={examList.join("  •  ")}
+				default_velocity={1}
+				className="font-display text-center text-xl   text-black drop-shadow-sm "
+			/>
+		</div>
 	);
 };
 
 export default function ScrollingExamsSection() {
 	return (
 		<section className="py-16 bg-gray-50">
-			<div className="">
-				<h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+			<div className="container mx-auto">
+				<h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
 					Available Exams
 				</h2>
-				{Object.entries(exams).map(([category, examList], index) => (
-					<Marquee
+				{Object.entries(exams).map(([category, examList]) => (
+					<ExamCategory
 						key={category}
-						pauseOnHover
-						className=" [--duration:40s] [--gap:1rem] w-full"
-						reverse={false}
-					>
-						{examList.map((exam) => (
-							<ExamCard key={exam} exam={exam} />
-						))}
-					</Marquee>
+						category={category}
+						examList={examList}
+					/>
 				))}
-				{/* Removed the gradient divs */}
 			</div>
 		</section>
 	);
