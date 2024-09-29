@@ -6,7 +6,7 @@ import { RainbowButton } from "@/components/magicui/rainbow-button";
 const orbitingItems = [
 	{ text: "SSC", size: 100, duration: 30, delay: 0, radius: 200, opacity: 30, fontSize: "2xl" },
 	{ text: "WBP", size: 80, duration: 25, delay: 10, radius: 300, opacity: 40, fontSize: "xl" },
-	{ text: "UPSC", size: 120, duration: 35, delay: 0, radius: 400, opacity: 70, fontSize: "2xl", reverse: true },
+	{ text: "SBI", size: 120, duration: 35, delay: 0, radius: 400, opacity: 70, fontSize: "2xl", reverse: true },
 	{ text: "IBPS", size: 90, duration: 40, delay: 20, radius: 500, opacity: 50, fontSize: "xl", reverse: true },
 	{ text: "RRB", size: 150, duration: 45, delay: 15, radius: 350, opacity: 80, fontSize: "3xl" },
 ];
