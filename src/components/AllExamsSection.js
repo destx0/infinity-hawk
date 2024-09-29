@@ -102,7 +102,7 @@ export default function AllExamsSection() {
 		<section className="py-16 bg-slate-50 ">
 			<div className=" ">
 				<div className=" font-bold text-center mb-12">
-					<WordFadeIn words="Our Features" />
+					<WordFadeIn words="Exams" />
 				</div>
 				<div className="overflow-x-auto scrollbar-hide">
 					<div className="flex space-x-6 pb-20">
