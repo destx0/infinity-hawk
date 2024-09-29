@@ -3,34 +3,34 @@ import BlurFade from "@/components/magicui/blur-fade";
 import Image from "next/image";
 
 const allExams = [
-  { name: "SSC CGL", icon: "/ssc.png", category: "SSC" },
-  { name: "SSC GD", icon: "/ssc.png", category: "SSC" },
-  { name: "SSC Selection Post", icon: "/ssc.png", category: "SSC" },
+  { name: "SSC CGL", icon: "/ssc.png", category: "SSC", width: 64, height: 64 },
+  { name: "SSC GD", icon: "/ssc.png", category: "SSC", width: 64, height: 64 },
+  { name: "SSC Selection Post", icon: "/ssc.png", category: "SSC", width: 64, height: 64 },
   // ... Add all other exams here
-  { name: "RRB ALP", icon: "/ssc.png", category: "RAILWAY" },
-  { name: "RRB Group D", icon: "/ssc.png", category: "RAILWAY" },
+  { name: "RRB ALP", icon: "/ssc.png", category: "RAILWAY", width: 64, height: 64 },
+  { name: "RRB Group D", icon: "/ssc.png", category: "RAILWAY", width: 64, height: 64 },
   // ... Add all other Railway exams
-  { name: "Kolkata Police", icon: "/wbp.png", category: "WB" },
-  { name: "Kolkata SI", icon: "/wbp.png", category: "WB" },
+  { name: "Kolkata Police", icon: "/wbp.png", category: "WB", width: 32, height: 32 },
+  { name: "Kolkata SI", icon: "/wbp.png", category: "WB", width: 32, height: 32 },
   // ... Add all other WB exams
-  { name: "SBI PO", icon: "/ssc.png", category: "BANKING" },
-  { name: "SBI Clerk", icon: "/ssc.png", category: "BANKING" },
+  { name: "SBI PO", icon: "/ssc.png", category: "BANKING", width: 64, height: 64 },
+  { name: "SBI Clerk", icon: "/ssc.png", category: "BANKING", width: 64, height: 64 },
   // ... Add all other Banking exams
 ];
 
-const ExamCard = ({ examName, iconSrc, delay }) => {
+const ExamCard = ({ examName, iconSrc, width, height, delay }) => {
   return (
 		<BlurFade delay={delay} inView>
 			<MagicCard
-				className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-32 w-32"
+				className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-32 w-48"
 				gradientColor="#D9D9D955"
 			>
 				<div className="flex justify-center w-full">
 					<Image
 						src={iconSrc}
 						alt={examName}
-						width={64}
-						height={64}
+						width={width}
+						height={height}
 					/>
 				</div>
 				<h3 className="mt-4  font-light text-neutral-400 text-center">
@@ -53,6 +53,8 @@ export default function AllExamsSection() {
                 key={exam.name}
                 examName={exam.name}
                 iconSrc={exam.icon}
+                width={exam.width}
+                height={exam.height}
                 delay={0.25 + index * 0.05}
               />
             ))}
