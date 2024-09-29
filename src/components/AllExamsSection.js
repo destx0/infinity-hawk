@@ -1,65 +1,26 @@
 import { MagicCard } from "@/components/magicui/magic-card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import Image from "next/image";
 
-const exams = {
-  SSC: {
-    icon: "/ssc.png",
-    exams: [
-      "SSC CGL",
-      "SSC GD",
-      "SSC Selection Post",
-      "SSC CHSL",
-      "SSC MTS",
-      "SSC JE CE",
-      "SSC JE EE",
-      "SSC Steno Gd C & D",
-      "SSC CPO",
-      "Delhi Police",
-      "CSIR ASO",
-      "SSC UDC Exam",
-    ],
-  },
-  RAILWAY: {
-    icon: "/ssc.png",
-    exams: [
-      "RRB ALP",
-      "RRB Group D",
-      "RRB Tech",
-      "RPF",
-      "RPF SI",
-      "RPSF",
-      "RRB Staff Nurse",
-      "RRB JE",
-      "RRB NTPC",
-    ],
-  },
-  WB: {
-    icon: "/ssc.png",
-    exams: [
-      "Kolkata Police",
-      "Kolkata SI",
-      "Kolkata Constable",
-      "Kolkata Sergeant",
-      "WBPSC Food",
-      "WBPSC JE",
-    ],
-  },
-  BANKING: {
-    icon: "/ssc.png",
-    exams: ["SBI PO", "SBI Clerk", "IBPS PO", "IBPS Clerk"],
-  },
-};
+const allExams = [
+  { name: "SSC CGL", icon: "/ssc.png", category: "SSC" },
+  { name: "SSC GD", icon: "/ssc.png", category: "SSC" },
+  { name: "SSC Selection Post", icon: "/ssc.png", category: "SSC" },
+  // ... Add all other exams here
+  { name: "RRB ALP", icon: "/ssc.png", category: "RAILWAY" },
+  { name: "RRB Group D", icon: "/ssc.png", category: "RAILWAY" },
+  // ... Add all other Railway exams
+  { name: "Kolkata Police", icon: "/ssc.png", category: "WB" },
+  { name: "Kolkata SI", icon: "/ssc.png", category: "WB" },
+  // ... Add all other WB exams
+  { name: "SBI PO", icon: "/ssc.png", category: "BANKING" },
+  { name: "SBI Clerk", icon: "/ssc.png", category: "BANKING" },
+  // ... Add all other Banking exams
+];
 
 const ExamCard = ({ examName, iconSrc }) => {
   return (
     <MagicCard
-      className="cursor-pointer flex-col items-center justify-center shadow-2xl p-4 h-48 w-48"
+      className="flex-shrink-0 cursor-pointer flex-col items-center justify-center shadow-2xl p-4 h-48 w-48"
       gradientColor="#D9D9D955"
     >
       <Image src={iconSrc} alt={examName} width={64} height={64} />
@@ -68,33 +29,18 @@ const ExamCard = ({ examName, iconSrc }) => {
   );
 };
 
-const ExamGrid = ({ examList, iconSrc }) => (
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {examList.map((exam) => (
-      <ExamCard key={exam} examName={exam} iconSrc={iconSrc} />
-    ))}
-  </div>
-);
-
 export default function AllExamsSection() {
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto">
+    <section className="py-16 ">
+      <div className=" ">
         <h2 className="text-3xl font-bold text-center mb-8">All Exams</h2>
-        <Tabs defaultValue="ssc" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            {Object.keys(exams).map((category) => (
-              <TabsTrigger key={category} value={category.toLowerCase()}>
-                {category}
-              </TabsTrigger>
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex space-x-6 pb-20">
+            {allExams.map((exam) => (
+              <ExamCard key={exam.name} examName={exam.name} iconSrc={exam.icon} />
             ))}
-          </TabsList>
-          {Object.entries(exams).map(([category, { icon, exams }]) => (
-            <TabsContent key={category} value={category.toLowerCase()}>
-              <ExamGrid examList={exams} iconSrc={icon} />
-            </TabsContent>
-          ))}
-        </Tabs>
+          </div>
+        </div>
       </div>
     </section>
   );
