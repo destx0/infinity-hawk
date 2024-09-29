@@ -20,18 +20,20 @@ const allExams = [
 const ExamCard = ({ examName, iconSrc }) => {
   return (
     <MagicCard
-      className="flex-shrink-0 cursor-pointer flex-col items-center justify-center shadow-2xl p-4 h-48 w-48"
+      className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-48 w-48"
       gradientColor="#D9D9D955"
     >
-      <Image src={iconSrc} alt={examName} width={64} height={64} />
-      <h3 className="mt-4 text-lg font-semibold text-center">{examName}</h3>
+      <div className="flex justify-center w-full">
+        <Image src={iconSrc} alt={examName} width={64} height={64} />
+      </div>
+      <h3 className="mt-4 text-lg  text-center">{examName}</h3>
     </MagicCard>
   );
 };
 
 export default function AllExamsSection() {
   return (
-    <section className="py-16 ">
+    <section className="py-16 bg-slate-50 ">
       <div className=" ">
         <h2 className="text-3xl font-bold text-center mb-8">All Exams</h2>
         <div className="overflow-x-auto scrollbar-hide">
