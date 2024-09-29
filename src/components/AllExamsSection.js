@@ -20,13 +20,13 @@ const allExams = [
 const ExamCard = ({ examName, iconSrc }) => {
   return (
     <MagicCard
-      className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-48 w-48"
+      className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-32 w-32"
       gradientColor="#D9D9D955"
     >
       <div className="flex justify-center w-full">
         <Image src={iconSrc} alt={examName} width={64} height={64} />
       </div>
-      <h3 className="mt-4 text-lg  text-center">{examName}</h3>
+      <h3 className="mt-4 text-sm  text-center">{examName}</h3>
     </MagicCard>
   );
 };
