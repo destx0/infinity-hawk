@@ -2,6 +2,7 @@ import React from "react";
 import OrbitingCircles from "@/components/magicui/orbiting-circles";
 import Image from "next/image";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
+import Link from "next/link";
 
 const orbitingItems = [
 	{ text: "SSC", size: 100, duration: 30, delay: 0, radius: 200, opacity: 30, fontSize: "2xl" },
@@ -14,14 +15,16 @@ const orbitingItems = [
 export function HeroSection() {
 	return (
 		<div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-gray-900">
-			<div className="container mx-auto px-4 py-16 text-center">
+			<div className="container mx-auto px-4 py-16 text-center relative z-10">
 				<h1 className="mb-8 text-5xl font-bold text-gray-900 dark:text-white md:text-6xl lg:text-7xl">
 					Infinity Mock
 				</h1>
 				<p className="mb-12 text-xl text-gray-600 dark:text-gray-300 md:text-2xl">
 					Revolutionizing your preparation
 				</p>
-				<RainbowButton>Join Now</RainbowButton>
+				<Link href="/join">
+					<RainbowButton>Join Now</RainbowButton>
+				</Link>
 			</div>
 
 			{/* OrbitingCirclesDemo section */}

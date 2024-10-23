@@ -1,8 +1,8 @@
-import HeroSection from '@/components/HeroSection';
-import FeaturesSection from '@/components/FeaturesSection';
-import AppComingSoonSection from '@/components/AppComingSoonSection';
-import ScrollingExamsSection from '@/components/ScrollingExamsSection';
-import AllExamsSection from '@/components/AllExamsSection';
+import HeroSection from '@/components/home/HeroSection';
+import FeaturesSection from '@/components/home/FeaturesSection';
+import AppComingSoonSection from '@/components/home/AppComingSoonSection';
+import ScrollingExamsSection from '@/components/home/ScrollingExamsSection';
+import AllExamsSection from '@/components/home/AllExamsSection';
 
 export default function Home() {
 	return (
