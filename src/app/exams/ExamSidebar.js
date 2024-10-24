@@ -10,6 +10,7 @@ import { ExamSidebarHeader } from "./ExamSidebarHeader";
 import { ExamSidebarContent } from "./ExamSidebarContent";
 import { ExamSidebarFooter } from "./ExamSidebarFooter";
 import useExamStore from "@/store/examStore";
+import { useMobile } from "@/components/hooks/use-mobile";
 
 // Import the exam data from AllExamsSection
 const allExams = [
@@ -81,6 +82,7 @@ const allExams = [
 export function ExamSidebar({ user }) {
 	const router = useRouter();
 	const { toggleSidebar } = useSidebar();
+	const isMobile = useMobile();
 
 	const handleSignOut = async () => {
 		try {
@@ -93,13 +95,15 @@ export function ExamSidebar({ user }) {
 
 	return (
 		<>
-			<SidebarTrigger className="absolute top-4 left-4 z-50">
-				<Menu className="h-6 w-6" />
-			</SidebarTrigger>
-			<Sidebar className="w-64 flex flex-col" collapsible="icon">
+			{isMobile && (
+				<SidebarTrigger className="absolute top-4 left-4 z-50">
+					<Menu className="h-6 w-6" />
+				</SidebarTrigger>
+			)}
+			<Sidebar className="w-64 flex flex-col" collapsible={isMobile ? "icon" : false}>
 				<ExamSidebarHeader allExams={allExams} />
 				<ExamSidebarContent />
-				<ExamSidebarFooter user={user} handleSignOut={handleSignOut} />
+					<ExamSidebarFooter user={user} handleSignOut={handleSignOut} />
 			</Sidebar>
 		</>
 	);
