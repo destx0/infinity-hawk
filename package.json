@@ -80,7 +80,8 @@
     "three": "^0.168.0",
     "three-globe": "^2.31.3",
     "vaul": "^1.1.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@types/three": "^0.168.0",

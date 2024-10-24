@@ -23,7 +23,7 @@ export default function JoinPage() {
   const handleLogin = async (user) => {
     const token = await user.getIdToken();
     Cookies.set('authToken', token, { expires: 30 }); // expires in 30 days
-    router.push('/dashboard');
+    router.push('/exams'); // Redirect to exams page instead of dashboard
   };
 
   const handleEmailLogin = async (e) => {
