@@ -7,6 +7,8 @@ import { auth } from '@/config/firebase';
 import { useRouter } from 'next/navigation';
 import { SidebarProvider } from "@/components/ui/sidebar";
 import useExamStore from "@/store/examStore";
+import PYQsPage from './pyqs/page';
+import MockTestsPage from './mock-tests/page';
 
 export default function ExamsPage() {
   const { activeSection, selectedExam } = useExamStore();
@@ -28,9 +30,9 @@ export default function ExamsPage() {
   const renderContent = () => {
     switch(activeSection) {
       case 'mock-tests':
-        return <h2>Mock Tests for {selectedExam}</h2>;
+        return <MockTestsPage />;
       case 'pyqs':
-        return <h2>Previous Year Questions for {selectedExam}</h2>;
+        return <PYQsPage />;
       case 'sectional-tests':
         return <h2>Sectional Tests for {selectedExam}</h2>;
       case 'topicwise-tests':
@@ -51,14 +53,15 @@ export default function ExamsPage() {
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen">
-        <ExamSidebar user={user} />
-        <main className="flex-1 p-6 overflow-auto">
-          <h1 className="text-3xl font-bold mb-4">Exams Dashboard</h1>
-          {renderContent()}
-        </main>
-      </div>
-    </SidebarProvider>
+    <div className="flex min-h-screen w-full">
+      <SidebarProvider>
+        <div className="flex w-full">
+          <ExamSidebar user={user} />
+          <main className="flex-1 overflow-auto">
+            {renderContent()}
+          </main>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 }
