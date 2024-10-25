@@ -4,12 +4,11 @@ import TestBatchQuizzes from "../components/TestBatchQuizzes";
 
 export default function PYQsPage() {
   return (
-    <div className="w-full">
-      <TestBatchQuizzes 
-        batchId="NHI6vv2PzgQ899Sz4Rll"
-        title="Previous Year Questions"
-        description="Practice with questions from previous year papers"
-      />
-    </div>
+    <TestBatchQuizzes 
+      title="Previous Year Questions"
+      description="Practice with previous year exam questions"
+      // Remove the batchId prop to let the function automatically find PYQ batches
+      isPYQ={true}
+    />
   );
 }
