@@ -21,7 +21,7 @@ export function ExamSidebarHeader({ allExams }) {
 
 	return (
 		<SidebarHeader className="p-4">
-			<div className="mb-4 text-left">
+			<div className="mb-4 text-center">
 				<h1 className="text-3xl madimi-one-regular text-sidebar-foreground leading-tight group-data-[collapsible=icon]:hidden">
 					Infinity Mock
 				</h1>
