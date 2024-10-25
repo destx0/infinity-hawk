@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Clock, Users, Award } from "lucide-react";
 import { fetchTestBatch } from "@/lib/firebase/testBatches";
 import { cn } from "@/lib/utils";
+import ExamCard from "./ExamCard"; // Import the new ExamCard component
+import { motion } from "framer-motion";
 
 export default function TestBatchQuizzes({
 	batchId = "NHI6vv2PzgQ899Sz4Rll",
@@ -125,40 +125,23 @@ export default function TestBatchQuizzes({
 					)}
 				</div>
 			</div>
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{filteredQuizzes.map((quiz) => (
-					<Card
+			<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4">
+				{filteredQuizzes.map((quiz, index) => (
+					<motion.div
 						key={quiz.id}
-						className="hover:shadow-lg transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))]"
+						initial={{ opacity: 0, y: 20 }}
+						whileInView={{ 
+							opacity: 1, 
+							y: 0,
+							transition: {
+								duration: 0.3,
+								delay: index % 4 * 0.1 // stagger effect based on column position
+							}
+						}}
+						viewport={{ once: true, margin: "-50px" }}
 					>
-						<CardHeader className="pb-2">
-							<CardTitle className="flex items-center justify-between">
-								<span className="text-lg line-clamp-1 text-[hsl(var(--sidebar-background))]">
-									{quiz.title.replace(/\.json$/, '')}
-								</span>
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-4">
-								<p className="text-sm text-muted-foreground line-clamp-2">
-									{quiz.description || "Exam Paper"}
-								</p>
-								<div className="flex items-center gap-4 text-sm text-muted-foreground">
-									<div className="flex items-center">
-										<Clock className="h-4 w-4 mr-1" />
-										<span>{quiz.duration || 45} mins</span>
-									</div>
-								</div>
-								<Button
-									className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] 
-									hover:bg-[hsl(var(--sidebar-primary))] transition-all duration-300"
-									onClick={() => console.log(`Starting quiz ${quiz.id}`)}
-								>
-									Start Quiz
-								</Button>
-							</div>
-						</CardContent>
-					</Card>
+						<ExamCard quiz={quiz} />
+					</motion.div>
 				))}
 			</div>
 		</div>
