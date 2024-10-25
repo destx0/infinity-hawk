@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Playwrite+HR:wght@100..400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,14 +36,14 @@
     --color-3: 210 100% 63%;
     --color-4: 195 100% 63%;
     --color-5: 90 100% 63%;
-    --sidebar-background: 265 49% 85%;
-    --sidebar-foreground: 265 49% 15%;
-    --sidebar-primary: 265 49% 75%;
-    --sidebar-primary-foreground: 265 49% 5%;
-    --sidebar-accent: 265 49% 80%;
-    --sidebar-accent-foreground: 265 49% 10%;
-    --sidebar-border: 265 49% 70%;
-    --sidebar-ring: 265 49% 65%;
+    --sidebar-background: 237 57% 15%;
+    --sidebar-foreground: 237 57% 95%;
+    --sidebar-primary: 237 57% 25%;
+    --sidebar-primary-foreground: 237 57% 100%;
+    --sidebar-accent: 237 57% 20%;
+    --sidebar-accent-foreground: 237 57% 90%;
+    --sidebar-border: 237 57% 10%;
+    --sidebar-ring: 237 57% 30%;
   }
 
   .dark {
@@ -69,14 +71,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 265 49% 25%;
-    --sidebar-foreground: 265 49% 90%;
-    --sidebar-primary: 265 49% 35%;
-    --sidebar-primary-foreground: 265 49% 100%;
-    --sidebar-accent: 265 49% 30%;
-    --sidebar-accent-foreground: 265 49% 95%;
-    --sidebar-border: 265 49% 20%;
-    --sidebar-ring: 265 49% 40%;
+    --sidebar-background: 237 57% 15%;
+    --sidebar-foreground: 237 57% 95%;
+    --sidebar-primary: 237 57% 25%;
+    --sidebar-primary-foreground: 237 57% 100%;
+    --sidebar-accent: 237 57% 20%;
+    --sidebar-accent-foreground: 237 57% 90%;
+    --sidebar-border: 237 57% 10%;
+    --sidebar-ring: 237 57% 30%;
   }
 }
 
@@ -115,4 +117,34 @@
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Add these custom utility classes */
+.font-playwrite {
+  font-family: "Playwrite HR", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.font-playwrite-thin {
+  font-weight: 100;
+}
+
+.font-playwrite-light {
+  font-weight: 200;
+}
+
+.font-playwrite-regular {
+  font-weight: 300;
+}
+
+.font-playwrite-medium {
+  font-weight: 400;
+}
+
+/* Add this custom utility class for Madimi One */
+.madimi-one-regular {
+  font-family: "Madimi One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
