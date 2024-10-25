@@ -1,5 +1,5 @@
 import { db } from '@/config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection } from 'firebase/firestore';
 
 export async function fetchTestBatch(batchId) {
   try {
@@ -7,8 +7,21 @@ export async function fetchTestBatch(batchId) {
     const batchSnap = await getDoc(batchRef);
     
     if (batchSnap.exists()) {
+      // Fetch details for each quiz
+      const quizzes = batchSnap.data().quizzes || [];
+      const quizDetails = await Promise.all(
+        quizzes.map(async (quizId) => {
+          const quizRef = doc(db, 'quizzes', quizId);
+          const quizSnap = await getDoc(quizRef);
+          return quizSnap.exists() ? { id: quizId, ...quizSnap.data() } : null;
+        })
+      );
+
       return {
-        data: batchSnap.data(),
+        data: {
+          ...batchSnap.data(),
+          quizzes: quizDetails.filter(quiz => quiz !== null)
+        },
         error: null
       };
     } else {
