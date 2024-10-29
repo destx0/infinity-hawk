@@ -2,8 +2,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, Award } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from 'next/navigation';
 
 export default function ExamCard({ quiz }) {
+	const router = useRouter();
+
 	return (
 		<motion.div
 			whileHover={{ scale: 1.02 }}
@@ -32,9 +35,7 @@ export default function ExamCard({ quiz }) {
 						<Button
 							className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] 
               hover:bg-[hsl(var(--sidebar-primary))] transition-all duration-300"
-							onClick={() =>
-								console.log(`Starting quiz ${quiz.id}`)
-							}
+							onClick={() => router.push(`/exams/${quiz.id}`)}
 						>
 							Start Quiz
 						</Button>

@@ -7,7 +7,6 @@ export default function PYQsPage() {
     <TestBatchQuizzes 
       title="Previous Year Questions"
       description="Practice with previous year exam questions"
-      // Remove the batchId prop to let the function automatically find PYQ batches
       isPYQ={true}
     />
   );
