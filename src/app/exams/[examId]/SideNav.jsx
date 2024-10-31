@@ -3,6 +3,12 @@
 import React from "react";
 import { QuestionStatusIcon, Legend } from "./QuestionStatusComponents";
 import useExamUIStore from "@/store/examUIStore";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+} from "@/components/ui/sidebar";
 
 export default function SideNav({ quiz, onSubmit }) {
   const {
@@ -18,13 +24,20 @@ export default function SideNav({ quiz, onSubmit }) {
   const questions = currentSection.questions;
 
   return (
-    <div className="h-full bg-[#d9edf7] flex flex-col w-64">
-      <Legend isSubmitted={false} />
-      <hr className="border-t border-gray-300 my-2" />
-      <div className="bg-[#b4dbed] p-2">
-        Section: {currentSection.name}
-      </div>
-      <div className="flex-grow overflow-y-auto pt-1 px-2">
+    <Sidebar 
+      className="h-full bg-[#d9edf7] w-64" 
+      side="right"
+      showToggle={true}
+    >
+      <SidebarHeader>
+        <Legend isSubmitted={false} />
+        <hr className="border-t border-gray-300 my-2" />
+        <div className="bg-[#b4dbed] p-2">
+          Section: {currentSection.name}
+        </div>
+      </SidebarHeader>
+
+      <SidebarContent className="pt-1 px-2">
         <div className="grid grid-cols-5 gap-2">
           {questions.map((question, index) => {
             const isActive = index === currentQuestionIndex;
@@ -54,16 +67,16 @@ export default function SideNav({ quiz, onSubmit }) {
             );
           })}
         </div>
-      </div>
-      <hr className="border-t border-gray-300 my-2" />
-      <div className="p-4">
+      </SidebarContent>
+
+      <SidebarFooter className="p-4">
         <button
           className="w-full py-2 bg-[#1ca7c0] text-white font-semibold rounded hover:bg-[#1a96ad] transition-colors duration-300"
           onClick={onSubmit}
         >
           Submit Quiz
         </button>
-      </div>
-    </div>
+      </SidebarFooter>
+    </Sidebar>
   );
 } 

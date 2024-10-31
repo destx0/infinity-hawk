@@ -8,6 +8,7 @@ import SideNav from './SideNav';
 import QuestionCard from './QuestionCard';
 import useExamUIStore from '@/store/examUIStore';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function ExamPage({ params }) {
   const [quiz, setQuiz] = useState(null);
@@ -61,68 +62,70 @@ export default function ExamPage({ params }) {
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Main content area */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto py-8 px-4">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-2">{quiz.title}</h1>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-1" />
-                <span>{quiz.duration} mins</span>
-              </div>
-              <div>
-                <span className="text-green-600">+{quiz.positiveScore}</span> /{' '}
-                <span className="text-red-600">-{quiz.negativeScore}</span>
+    <SidebarProvider defaultOpen={true}>
+      <div className="flex h-screen relative">
+        {/* Main content area - adjusted padding for right sidebar */}
+        <div className="flex-1 overflow-y-auto pr-64">
+          <div className="container mx-auto py-8 px-4">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold mb-2">{quiz.title}</h1>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{quiz.duration} mins</span>
+                </div>
+                <div>
+                  <span className="text-green-600">+{quiz.positiveScore}</span> /{' '}
+                  <span className="text-red-600">-{quiz.negativeScore}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <Tabs 
-            defaultValue={currentSectionIndex.toString()} 
-            onValueChange={handleSectionChange}
-            className="mb-6"
-          >
-            <TabsList className="mb-4">
-              {quiz.sections.map((section, index) => (
-                <TabsTrigger 
-                  key={index} 
-                  value={index.toString()}
-                  className="px-4 py-2"
+            <Tabs 
+              defaultValue={currentSectionIndex.toString()} 
+              onValueChange={handleSectionChange}
+              className="mb-6"
+            >
+              <TabsList className="mb-4">
+                {quiz.sections.map((section, index) => (
+                  <TabsTrigger 
+                    key={index} 
+                    value={index.toString()}
+                    className="px-4 py-2"
+                  >
+                    {section.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {quiz.sections.map((section, sectionIndex) => (
+                <TabsContent 
+                  key={sectionIndex} 
+                  value={sectionIndex.toString()}
+                  className="mt-0"
                 >
-                  {section.name}
-                </TabsTrigger>
+                  {currentSectionIndex === sectionIndex && (
+                    <QuestionCard 
+                      section={section}
+                      questionIndex={currentQuestionIndex}
+                    />
+                  )}
+                </TabsContent>
               ))}
-            </TabsList>
+            </Tabs>
+          </div>
+        </div>
 
-            {quiz.sections.map((section, sectionIndex) => (
-              <TabsContent 
-                key={sectionIndex} 
-                value={sectionIndex.toString()}
-                className="mt-0"
-              >
-                {currentSectionIndex === sectionIndex && (
-                  <QuestionCard 
-                    section={section}
-                    questionIndex={currentQuestionIndex}
-                  />
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
+        {/* Sidebar - now positioned on the right */}
+        <div className="fixed right-0 top-0 h-full">
+          <SideNav 
+            quiz={quiz} 
+            onSubmit={() => {
+              // Handle quiz submission
+            }} 
+          />
         </div>
       </div>
-
-      {/* Sidebar */}
-      <div className="w-64 border-l">
-        <SideNav 
-          quiz={quiz} 
-          onSubmit={() => {
-            // Handle quiz submission
-          }} 
-        />
-      </div>
-    </div>
+    </SidebarProvider>
   );
 } 

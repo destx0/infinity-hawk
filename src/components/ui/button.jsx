@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -46,28 +46,7 @@ const buttonVariants = cva(
   }
 );
 
-interface IconProps {
-  Icon: React.ElementType;
-  iconPlacement: "left" | "right";
-}
-
-interface IconRefProps {
-  Icon?: never;
-  iconPlacement?: undefined;
-}
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
-
-export type ButtonIconProps = IconProps | IconRefProps;
-
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & ButtonIconProps
->(
+const Button = React.forwardRef(
   (
     {
       className,
@@ -102,6 +81,7 @@ const Button = React.forwardRef<
     );
   }
 );
+
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

@@ -2,7 +2,8 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority";
-import { PanelLeft } from "lucide-react"
+import { PanelLeft, ChevronLeft, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useMobile } from "@/components/hooks/use-mobile"
 import { cn } from "@/components/lib/utils"
@@ -133,17 +134,41 @@ const Sidebar = React.forwardRef((
     side = "left",
     variant = "sidebar",
     collapsible = "offcanvas",
+    showToggle = false,
     className,
     children,
     ...props
   },
   ref
 ) => {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, toggleSidebar } = useSidebar();
+
+  // Add animation variants
+  const sidebarVariants = {
+    expanded: {
+      width: "var(--sidebar-width)",
+      transition: { duration: 0.2, ease: "easeInOut" }
+    },
+    collapsed: {
+      width: collapsible === "icon" ? "var(--sidebar-width-icon)" : "0px",
+      transition: { duration: 0.2, ease: "easeInOut" }
+    }
+  };
+
+  const contentVariants = {
+    expanded: {
+      opacity: 1,
+      transition: { delay: 0.1, duration: 0.2 }
+    },
+    collapsed: {
+      opacity: collapsible === "icon" ? 1 : 0,
+      transition: { duration: 0.2 }
+    }
+  };
 
   if (collapsible === "none") {
     return (
-      (<div
+      <div
         className={cn(
           "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
           className
@@ -151,67 +176,94 @@ const Sidebar = React.forwardRef((
         ref={ref}
         {...props}>
         {children}
-      </div>)
+      </div>
     );
   }
 
   if (isMobile) {
     return (
-      (<Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
           data-sidebar="sidebar"
           data-mobile="true"
           className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
-          style={
-            {
-              "--sidebar-width": SIDEBAR_WIDTH_MOBILE
-            }
-          }
+          style={{ "--sidebar-width": SIDEBAR_WIDTH_MOBILE }}
           side={side}>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+            className="flex h-full w-full flex-col">
+            {children}
+          </motion.div>
         </SheetContent>
-      </Sheet>)
+      </Sheet>
     );
   }
 
   return (
-    (<div
+    <div
       ref={ref}
       className="group peer hidden md:block text-sidebar-foreground"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}>
-      {/* This is what handles the sidebar gap on desktop */}
-      <div
+      
+      <motion.div
+        initial={false}
+        animate={state}
+        variants={sidebarVariants}
         className={cn(
-          "duration-200 relative h-svh w-[--sidebar-width] bg-transparent transition-[width] ease-linear",
-          "group-data-[collapsible=offcanvas]:w-0",
+          "relative h-svh bg-transparent",
           "group-data-[side=right]:rotate-180",
-          variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
         )} />
-      <div
+
+      <motion.div
+        initial={false}
+        animate={state}
+        variants={sidebarVariants}
         className={cn(
-          "duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex",
-          side === "left"
-            ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-            : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-          // Adjust the padding for floating and inset variants.
+          "fixed inset-y-0 z-10 hidden h-svh transition-colors ease-linear md:flex",
+          side === "left" ? "left-0" : "right-0",
           variant === "floating" || variant === "inset"
-            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            ? "p-2"
+            : "group-data-[side=left]:border-r group-data-[side=right]:border-l",
           className
         )}
         {...props}>
-        <div
+        {showToggle && (
+          <button
+            onClick={toggleSidebar}
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 z-50 h-12 w-6 bg-sidebar hover:bg-sidebar-accent transition-all duration-300 shadow-md",
+              side === "left" ? "-right-6 rounded-r-md" : "-left-6 rounded-l-md"
+            )}
+          >
+            <motion.div
+              animate={{ rotate: state === "collapsed" ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {side === "left" ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </motion.div>
+          </button>
+        )}
+        
+        <motion.div
+          initial={false}
+          animate={state}
+          variants={contentVariants}
           data-sidebar="sidebar"
           className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow">
           {children}
-        </div>
-      </div>
-    </div>)
+        </motion.div>
+      </motion.div>
+    </div>
   );
 })
 Sidebar.displayName = "Sidebar"
@@ -231,7 +283,7 @@ const SidebarTrigger = React.forwardRef(({ className, onClick, ...props }, ref) 
         toggleSidebar()
       }}
       {...props}>
-      <PanelLeft />
+      <ChevronLeft className="h-4 w-4" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>)
   );
