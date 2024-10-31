@@ -3,6 +3,8 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import useExamUIStore from "@/store/examUIStore";
+import LatexRenderer from "./LatexRenderer";
+import { Check, X, Minus } from "lucide-react";
 
 export default function QuestionCard({ section, questionIndex }) {
   const { 
@@ -45,7 +47,7 @@ export default function QuestionCard({ section, questionIndex }) {
 
       <div className="space-y-6">
         <div className="text-lg">
-          {question.question}
+          <LatexRenderer>{question.question}</LatexRenderer>
         </div>
 
         <div className="space-y-3">
@@ -70,11 +72,20 @@ export default function QuestionCard({ section, questionIndex }) {
                 onChange={() => handleOptionSelect(optionIndex)}
                 className="w-4 h-4 text-[hsl(var(--sidebar-primary))]"
               />
-              <span className="ml-3">{option}</span>
+              <span className="ml-3">
+                <LatexRenderer>{option}</LatexRenderer>
+              </span>
             </label>
           ))}
         </div>
       </div>
+
+      {question.explanation && (
+        <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+          <h3 className="font-semibold">Explanation:</h3>
+          <LatexRenderer>{question.explanation}</LatexRenderer>
+        </div>
+      )}
 
       <div className="flex justify-between mt-8">
         <Button
