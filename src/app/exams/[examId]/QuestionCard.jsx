@@ -4,7 +4,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import useExamUIStore from "@/store/examUIStore";
 import LatexRenderer from "./LatexRenderer";
-import { Check, X, Minus } from "lucide-react";
 
 export default function QuestionCard({ section, questionIndex }) {
 	const {
@@ -86,34 +85,6 @@ export default function QuestionCard({ section, questionIndex }) {
 					<LatexRenderer>{question.explanation}</LatexRenderer>
 				</div>
 			)}
-
-			<div className="flex justify-between mt-8">
-				<Button
-					variant="outline"
-					disabled={questionIndex === 0}
-					onClick={() => {
-						if (questionIndex > 0) {
-							useExamUIStore
-								.getState()
-								.setCurrentQuestion(questionIndex - 1);
-						}
-					}}
-				>
-					Previous
-				</Button>
-				<Button
-					disabled={questionIndex === section.questions.length - 1}
-					onClick={() => {
-						if (questionIndex < section.questions.length - 1) {
-							useExamUIStore
-								.getState()
-								.setCurrentQuestion(questionIndex + 1);
-						}
-					}}
-				>
-					Next
-				</Button>
-			</div>
 		</div>
 	);
 }
