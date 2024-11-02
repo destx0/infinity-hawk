@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { fetchTestBatch } from "@/lib/firebase/testBatches";
 import { cn } from "@/lib/utils";
-import ExamCard from "./ExamCard"; // Import the new ExamCard component
+import ExamCard from "./ExamCard";
 import { motion } from "framer-motion";
 
 export default function TestBatchQuizzes({
@@ -68,10 +67,8 @@ export default function TestBatchQuizzes({
 
 	if (loading) {
 		return (
-			<div className="space-y-4 w-full">
-				{[...Array(3)].map((_, i) => (
-					<Skeleton key={i} className="h-[100px] w-full" />
-				))}
+			<div className="min-h-screen w-full flex items-center justify-center">
+				<span className="loading loading-infinity loading-lg scale-[2]"></span>
 			</div>
 		);
 	}

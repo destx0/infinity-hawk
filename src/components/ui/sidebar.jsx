@@ -141,28 +141,17 @@ const Sidebar = React.forwardRef((
   },
   ref
 ) => {
-  const { isMobile, state, toggleSidebar } = useSidebar();
+  const { isMobile, state, toggleSidebar, openMobile, setOpenMobile } = useSidebar();
 
   // Add animation variants
   const sidebarVariants = {
     expanded: {
       width: "var(--sidebar-width)",
-      transition: { duration: 0.2, ease: "easeInOut" }
+      transition: { duration: 0.1, ease: "easeInOut" }
     },
     collapsed: {
       width: collapsible === "icon" ? "var(--sidebar-width-icon)" : "0px",
-      transition: { duration: 0.2, ease: "easeInOut" }
-    }
-  };
-
-  const contentVariants = {
-    expanded: {
-      opacity: 1,
-      transition: { delay: 0.1, duration: 0.2 }
-    },
-    collapsed: {
-      opacity: collapsible === "icon" ? 1 : 0,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.1, ease: "easeInOut" }
     }
   };
 
@@ -189,14 +178,9 @@ const Sidebar = React.forwardRef((
           className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           style={{ "--sidebar-width": SIDEBAR_WIDTH_MOBILE }}
           side={side}>
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-            className="flex h-full w-full flex-col">
+          <div className="flex h-full w-full flex-col">
             {children}
-          </motion.div>
+          </div>
         </SheetContent>
       </Sheet>
     );
@@ -254,14 +238,11 @@ const Sidebar = React.forwardRef((
           </button>
         )}
         
-        <motion.div
-          initial={false}
-          animate={state}
-          variants={contentVariants}
+        <div
           data-sidebar="sidebar"
           className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow">
           {children}
-        </motion.div>
+        </div>
       </motion.div>
     </div>
   );

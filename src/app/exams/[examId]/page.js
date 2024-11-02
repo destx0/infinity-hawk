@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { Clock, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import SideNav from './SideNav';
+import ExamHeader from './ExamHeader';
 import QuestionCard from './QuestionCard';
 import useExamUIStore from '@/store/examUIStore';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 export default function ExamPage({ params }) {
   const [quiz, setQuiz] = useState(null);
@@ -61,63 +61,112 @@ export default function ExamPage({ params }) {
     setCurrentQuestion(0); // Reset to first question of new section
   };
 
+  const handleMarkForReview = () => {
+    // TODO: Implement mark for review logic
+    handleNextQuestion();
+  };
+
+  const handleClearResponse = () => {
+    // TODO: Implement clear response logic
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < quiz.sections[currentSectionIndex].questions.length - 1) {
+      setCurrentQuestion(currentQuestionIndex + 1);
+    } else if (currentSectionIndex < quiz.sections.length - 1) {
+      setCurrentSection(currentSectionIndex + 1);
+      setCurrentQuestion(0);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestion(currentQuestionIndex - 1);
+    } else if (currentSectionIndex > 0) {
+      setCurrentSection(currentSectionIndex - 1);
+      setCurrentQuestion(quiz.sections[currentSectionIndex - 1].questions.length - 1);
+    }
+  };
+
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex h-screen relative">
-        {/* Main content area - adjusted padding for right sidebar */}
-        <div className="flex-1 overflow-y-auto pr-64">
-          <div className="container mx-auto py-8 px-4">
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold mb-2">{quiz.title}</h1>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center">
-                  <Clock className="h-4 w-4 mr-1" />
-                  <span>{quiz.duration} mins</span>
-                </div>
-                <div>
-                  <span className="text-green-600">+{quiz.positiveScore}</span> /{' '}
-                  <span className="text-red-600">-{quiz.negativeScore}</span>
-                </div>
+    <div className="flex flex-col h-screen w-full">
+      <ExamHeader 
+        title={quiz.title}
+        duration={quiz.duration}
+        positiveScore={quiz.positiveScore}
+        negativeScore={quiz.negativeScore}
+        className="w-full"
+      />
+      
+      {/* Body Section */}
+      <div 
+        className="flex flex-grow overflow-hidden"
+        style={{ fontSize: "125%" }}
+      >
+        {/* Main Content - Takes up all available space */}
+        <div className="flex-grow overflow-auto flex flex-col">
+          {/* Section Buttons */}
+          <div className="sticky top-0 bg-white z-10 border-b p-2 flex gap-2">
+            {quiz.sections.map((section, index) => (
+              <Button
+                key={index}
+                variant={currentSectionIndex === index ? "default" : "outline"}
+                onClick={() => handleSectionChange(index)}
+                className="px-4 py-2"
+              >
+                {section.name}
+              </Button>
+            ))}
+          </div>
+
+          {/* Question Content */}
+          <div className="flex-grow p-6">
+            {/* Question Header */}
+            <div className="mb-4 flex justify-between items-center">
+              <div>
+                Question {currentQuestionIndex + 1} of {quiz.sections[currentSectionIndex].questions.length}
               </div>
+              <div>Time spent: 00:00</div>
             </div>
+            
+            {/* Question Card */}
+            <QuestionCard 
+              section={quiz.sections[currentSectionIndex]}
+              questionIndex={currentQuestionIndex}
+            />
+          </div>
 
-            <Tabs 
-              defaultValue={currentSectionIndex.toString()} 
-              onValueChange={handleSectionChange}
-              className="mb-6"
+          {/* Bottom Action Bar */}
+          <div className="sticky bottom-0 bg-white border-t p-4 flex justify-between items-center">
+            <Button
+              variant="outline"
+              onClick={handlePreviousQuestion}
+              disabled={currentQuestionIndex === 0 && currentSectionIndex === 0}
             >
-              <TabsList className="mb-4">
-                {quiz.sections.map((section, index) => (
-                  <TabsTrigger 
-                    key={index} 
-                    value={index.toString()}
-                    className="px-4 py-2"
-                  >
-                    {section.name}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              {quiz.sections.map((section, sectionIndex) => (
-                <TabsContent 
-                  key={sectionIndex} 
-                  value={sectionIndex.toString()}
-                  className="mt-0"
-                >
-                  {currentSectionIndex === sectionIndex && (
-                    <QuestionCard 
-                      section={section}
-                      questionIndex={currentQuestionIndex}
-                    />
-                  )}
-                </TabsContent>
-              ))}
-            </Tabs>
+              Previous
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleClearResponse}>
+                Clear Response
+              </Button>
+              <Button onClick={handleMarkForReview}>
+                Mark for Review & Next
+              </Button>
+            </div>
+            <Button
+              onClick={handleNextQuestion}
+              disabled={
+                currentQuestionIndex === quiz.sections[currentSectionIndex].questions.length - 1 &&
+                currentSectionIndex === quiz.sections.length - 1
+              }
+            >
+              Next
+            </Button>
           </div>
         </div>
 
-        {/* Sidebar - now positioned on the right */}
-        <div className="fixed right-0 top-0 h-full">
+        {/* Side Navigation */}
+        <div className="border-l bg-white overflow-y-auto">
           <SideNav 
             quiz={quiz} 
             onSubmit={() => {
@@ -126,6 +175,6 @@ export default function ExamPage({ params }) {
           />
         </div>
       </div>
-    </SidebarProvider>
+    </div>
   );
 } 

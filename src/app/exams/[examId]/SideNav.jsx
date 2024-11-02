@@ -25,7 +25,7 @@ export default function SideNav({ quiz, onSubmit }) {
 
   return (
     <Sidebar 
-      className="h-full bg-[#d9edf7] w-64" 
+      className="h-full bg-[#d9edf7] w-64 pt-16"
       side="right"
       showToggle={true}
     >
