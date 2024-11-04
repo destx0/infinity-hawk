@@ -1,6 +1,8 @@
 import localFont from "next/font/local";
+import { headers } from 'next/headers';
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import "katex/dist/katex.min.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,14 +35,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const headersList = headers();
+  const isExamPage = headersList.get('x-is-exam-page') === '1';
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          {children}
-        </SidebarProvider>
+        {isExamPage ? (
+          children
+        ) : (
+          <SidebarProvider>
+            {children}
+          </SidebarProvider>
+        )}
       </body>
     </html>
   );
