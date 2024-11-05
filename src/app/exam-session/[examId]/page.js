@@ -1,61 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { db } from "@/config/firebase";
-import { doc, getDoc, addDoc, collection } from "firebase/firestore";
 import { AlertCircle } from "lucide-react";
 import SideNav from "./SideNav";
 import QuestionCard from "./QuestionCard";
-import useExamUIStore from "@/store/examUIStore";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { auth } from "@/config/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useExamSession } from "./useExamSession";
 
 export default function ExamPage({ params }) {
-	const [quiz, setQuiz] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	const [tempSelectedOption, setTempSelectedOption] = useState(null);
 	const {
+		quiz,
+		loading,
+		error,
+		tempSelectedOption,
+		setTempSelectedOption,
+		showConfirmModal,
+		setShowConfirmModal,
+		submissionScore,
 		currentSectionIndex,
 		currentQuestionIndex,
-		setCurrentIndices,
-		setAnswer,
-		nextQuestion,
-		previousQuestion,
-		markQuestionVisited,
 		isSubmitted,
-		answers,
-		submitQuiz,
-		calculateScore,
-	} = useExamUIStore();
-	const router = useRouter();
-	const [showConfirmModal, setShowConfirmModal] = useState(false);
-	const [submissionScore, setSubmissionScore] = useState(null);
-	const [user] = useAuthState(auth);
-
-	useEffect(() => {
-		async function fetchQuiz() {
-			try {
-				const quizRef = doc(db, "fullQuizzes", params.examId);
-				const quizSnap = await getDoc(quizRef);
-
-				if (quizSnap.exists()) {
-					setQuiz(quizSnap.data());
-				} else {
-					setError("Quiz not found");
-				}
-			} catch (err) {
-				console.error("Error fetching quiz:", err);
-				setError("Error loading quiz");
-			} finally {
-				setLoading(false);
-			}
-		}
-
-		fetchQuiz();
-	}, [params.examId]);
+		handleJumpToSection,
+		handleMarkForReview,
+		handleClearResponse,
+		handleNextQuestion,
+		handlePreviousQuestion,
+		handleJumpToQuestion,
+		handleSubmitQuiz,
+		router
+	} = useExamSession(params.examId);
 
 	if (loading) {
 		return (
@@ -73,95 +45,6 @@ export default function ExamPage({ params }) {
 			</div>
 		);
 	}
-
-	const handleJumpToSection = (sectionIndex) => {
-		setCurrentIndices(Number(sectionIndex), 0);
-		
-		const firstQuestionInSection = quiz.sections[sectionIndex].questions[0];
-		
-		markQuestionVisited(firstQuestionInSection.id);
-		
-		setTempSelectedOption(null);
-	};
-
-	const handleMarkForReview = () => {
-		nextQuestion(quiz.sections);
-		setTempSelectedOption(null);
-	};
-
-	const handleClearResponse = () => {
-		setTempSelectedOption(null);
-	};
-
-	const handleNextQuestion = () => {
-		if (tempSelectedOption !== null && !isSubmitted) {
-			const currentQuestion = quiz.sections[currentSectionIndex].questions[currentQuestionIndex];
-			setAnswer(currentQuestion.id, tempSelectedOption);
-		}
-		
-		nextQuestion(quiz.sections);
-		
-		setTempSelectedOption(null);
-	};
-
-	const handlePreviousQuestion = () => {
-		previousQuestion(quiz.sections);
-		
-		setTempSelectedOption(null);
-	};
-
-	const handleJumpToQuestion = (questionIndex) => {
-		setCurrentIndices(currentSectionIndex, questionIndex);
-		
-		const targetQuestion = quiz.sections[currentSectionIndex].questions[questionIndex];
-		
-		markQuestionVisited(targetQuestion.id);
-		
-		setTempSelectedOption(null);
-	};
-
-	const handleSubmitQuiz = async () => {
-		try {
-			if (!user) {
-				throw new Error("User must be logged in to submit");
-			}
-
-			const scoreDetails = calculateScore(quiz.sections);
-			
-			// Create submission document with required fields
-			const submissionData = {
-				quizId: params.examId,
-				userId: user.uid,
-				submittedAt: new Date(),
-				totalScore: scoreDetails.totalScore,
-				sections: quiz.sections.map(section => {
-					const answeredQuestions = section.questions
-						.filter(question => answers[question.id] !== undefined)
-						.map(question => ({
-							questionId: question.id,
-							selectedOption: answers[question.id]
-						}));
-					
-					return {
-						sectionId: section.id || section.name,
-						questions: answeredQuestions
-					};
-				}).filter(section => section.questions.length > 0)
-			};
-
-			// Save to Firestore
-			const submissionRef = await addDoc(collection(db, "submissions"), submissionData);
-			console.log("Submission saved with ID:", submissionRef.id);
-			
-			submitQuiz();
-			setSubmissionScore(scoreDetails.totalScore);
-			setShowConfirmModal(false);
-		} catch (error) {
-			console.error("Error submitting quiz:", error);
-			
-			alert(error.message || "Error submitting quiz. Please try again.");
-		}
-	};
 
 	return (
 		<div className="flex flex-col h-screen">
