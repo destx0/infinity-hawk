@@ -5,7 +5,7 @@ import { QuestionStatusIcon, Legend } from "./QuestionStatusComponents";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useExamUIStore from "@/store/examUIStore";
 
-export default function SideNav({ quiz, onSubmit }) {
+export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
   const {
     currentQuestionIndex,
     currentSectionIndex,
@@ -73,11 +73,11 @@ export default function SideNav({ quiz, onSubmit }) {
 
                 return (
                   <button
-                    key={index}
+                    key={question.id}
+                    onClick={() => onQuestionClick(index)}
                     className={`relative transition-all duration-300 hover:scale-110 ${
                       isActive ? "bg-blue-100" : ""
                     }`}
-                    onClick={() => setCurrentQuestion(index)}
                   >
                     <QuestionStatusIcon
                       isActive={isActive}
