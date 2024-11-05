@@ -13,7 +13,7 @@ export default function TestBatchQuizzes({
 	description = "Practice questions from our collection",
 	isPYQ = false,
 }) {
-	const [quizzes, setQuizzes] = useState([]);
+	const [exams, setExams] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [selectedYear, setSelectedYear] = useState("all");
@@ -26,23 +26,24 @@ export default function TestBatchQuizzes({
 	};
 
 	useEffect(() => {
-		async function getQuizzes() {
+		async function getExams() {
 			setLoading(true);
 			const { data, error: fetchError } = await fetchTestBatch(batchId);
 
 			if (fetchError) {
 				setError(fetchError);
 			} else {
-				const quizzesData = data.quizzes || [];
-				setQuizzes(quizzesData);
+				const examDetails = data.examDetails || [];
+				console.log("Loaded exam details:", examDetails); // Debug log
+				setExams(examDetails);
 
 				// If it's PYQ section, extract and set available years
 				if (isPYQ) {
 					const years = new Set();
-					quizzesData.forEach((quiz) => {
-						const yearFromTitle = extractYear(quiz.title);
+					examDetails.forEach((exam) => {
+						const yearFromTitle = extractYear(exam.title);
 						const yearFromDesc = extractYear(
-							quiz.description || ""
+							exam.description || ""
 						);
 						if (yearFromTitle) years.add(yearFromTitle);
 						if (yearFromDesc) years.add(yearFromDesc);
@@ -53,17 +54,17 @@ export default function TestBatchQuizzes({
 			setLoading(false);
 		}
 
-		getQuizzes();
+		getExams();
 	}, [batchId, isPYQ]);
 
-	const filteredQuizzes =
+	const filteredExams =
 		isPYQ && selectedYear !== "all"
-			? quizzes.filter(
-					(quiz) =>
-						extractYear(quiz.title) === selectedYear ||
-						extractYear(quiz.description || "") === selectedYear
+			? exams.filter(
+					(exam) =>
+						extractYear(exam.title) === selectedYear ||
+						extractYear(exam.description || "") === selectedYear
 			  )
-			: quizzes;
+			: exams;
 
 	if (loading) {
 		return (
@@ -137,21 +138,21 @@ export default function TestBatchQuizzes({
 				</div>
 			</div>
 			<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-				{filteredQuizzes.map((quiz, index) => (
+				{filteredExams.map((exam, index) => (
 					<motion.div
-						key={quiz.id}
+						key={exam.primaryQuizId}
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{
 							opacity: 1,
 							y: 0,
 							transition: {
 								duration: 0.3,
-								delay: (index % 4) * 0.1, // stagger effect based on column position
+								delay: (index % 4) * 0.1,
 							},
 						}}
 						viewport={{ once: true, margin: "-50px" }}
 					>
-						<ExamCard quiz={quiz} />
+						<ExamCard exam={exam} />
 					</motion.div>
 				))}
 			</div>

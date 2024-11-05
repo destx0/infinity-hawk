@@ -4,8 +4,10 @@ import { Clock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
 
-export default function ExamCard({ quiz }) {
+export default function ExamCard({ exam }) {
 	const router = useRouter();
+
+	const quizData = exam.quizData || {};
 
 	return (
 		<motion.div
@@ -17,19 +19,22 @@ export default function ExamCard({ quiz }) {
 				<CardHeader className="pb-2">
 					<CardTitle className="flex items-center justify-between">
 						<span className="text-lg line-clamp-1 text-[hsl(var(--sidebar-background))]">
-							{quiz.title.replace(/\.json$/, "")}
+							{exam.title}
 						</span>
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-4">
 						<p className="text-sm text-muted-foreground line-clamp-2">
-							{quiz.description || "Exam Paper"}
+							{exam.description || "Exam Paper"}
 						</p>
 						<div className="flex items-center gap-4 text-sm text-muted-foreground">
 							<div className="flex items-center">
 								<Clock className="h-4 w-4 mr-1" />
-								<span>{quiz.duration || 45} mins</span>
+								<span>{exam.duration || 45} mins</span>
+							</div>
+							<div className="flex items-center">
+								<span>+{exam.positiveScore || 1} | -{exam.negativeScore || 0}</span>
 							</div>
 						</div>
 						<Button
@@ -38,7 +43,7 @@ export default function ExamCard({ quiz }) {
 							iconPlacement="right"
 							className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] 
 							hover:bg-[hsl(var(--sidebar-primary))] transition-all duration-300"
-							onClick={() => router.push(`/exams/${quiz.id}`)}
+							onClick={() => router.push(`/exams/${exam.primaryQuizId}`)}
 						>
 							Start Quiz
 						</Button>
