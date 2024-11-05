@@ -43,7 +43,7 @@ export default function ExamCard({ exam }) {
 							iconPlacement="right"
 							className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] 
 							hover:bg-[hsl(var(--sidebar-primary))] transition-all duration-300"
-							onClick={() => router.push(`/exams/${exam.primaryQuizId}`)}
+							onClick={() => router.push(`/exam-session/${exam.primaryQuizId}`)}
 						>
 							Start Quiz
 						</Button>

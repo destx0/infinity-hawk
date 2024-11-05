@@ -10,6 +10,9 @@ import useExamStore from "@/store/examStore";
 import PYQsPage from './pyqs/page';
 import MockTestsPage from './mock-tests/page';
 
+const isExamPage = window.location.pathname.includes('/exams/') && 
+                   !window.location.pathname.endsWith('/exams');
+
 export default function ExamsPage() {
   const { activeSection, selectedExam } = useExamStore();
   const [user, setUser] = React.useState(null);
@@ -66,14 +69,21 @@ export default function ExamsPage() {
 
   return (
     <div className="flex min-h-screen w-full">
-      <SidebarProvider>
-        <div className="flex w-full">
-          <ExamSidebar user={user} />
-          <main className="flex-1 overflow-auto">
-            {renderContent()}
-          </main>
-        </div>
-      </SidebarProvider>
+      {!isExamPage && (
+        <SidebarProvider>
+          <div className="flex w-full">
+            <ExamSidebar user={user} />
+            <main className="flex-1 overflow-auto">
+              {renderContent()}
+            </main>
+          </div>
+        </SidebarProvider>
+      )}
+      {isExamPage && (
+        <main className="flex-1 overflow-auto">
+          {renderContent()}
+        </main>
+      )}
     </div>
   );
 }
