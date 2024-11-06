@@ -5,6 +5,7 @@ import SideNav from "./SideNav";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
 import { useExamSession } from "./useExamSession";
+import ExamAnalysis from './ExamAnalysis';
 
 export default function ExamPage({ params }) {
 	const {
@@ -26,7 +27,11 @@ export default function ExamPage({ params }) {
 		handlePreviousQuestion,
 		handleJumpToQuestion,
 		handleSubmitQuiz,
-		router
+		router,
+		showAnalysis,
+		handleToggleAnalysis,
+		getAnalytics,
+		handleCloseScoreModal,
 	} = useExamSession(params.examId);
 
 	if (loading) {
@@ -59,6 +64,15 @@ export default function ExamPage({ params }) {
 					<div>
 						{quiz.positiveScore && `+${quiz.positiveScore}`} | {quiz.negativeScore && `-${quiz.negativeScore}`}
 					</div>
+					{isSubmitted && (
+						<Button
+							onClick={handleToggleAnalysis}
+							variant="outline"
+							className="ml-4"
+						>
+							{showAnalysis ? 'Hide Analysis' : 'Show Analysis'}
+						</Button>
+					)}
 				</div>
 			</div>
 
@@ -181,17 +195,31 @@ export default function ExamPage({ params }) {
 			{isSubmitted && submissionScore !== null && (
 				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-						<h2 className="text-xl font-bold mb-4">Quiz Submitted!</h2>
-						<p className="mb-4">Your score: {submissionScore}</p>
 						<div className="flex justify-end">
 							<Button
-								onClick={() => router.push('/exams')}
+								variant="ghost"
+								size="sm"
+								onClick={handleCloseScoreModal}
+								className="h-8 w-8 p-0"
 							>
-								Return to Exams
+								✕
 							</Button>
+						</div>
+						<div className="text-center">
+							<h2 className="text-xl font-bold mb-4">Quiz Submitted!</h2>
+							<p className="text-3xl font-bold text-blue-600 mb-2">{submissionScore}</p>
+							<p className="text-gray-600">Click "Show Analysis" to view detailed performance</p>
 						</div>
 					</div>
 				</div>
+			)}
+
+			{/* Analysis Modal */}
+			{showAnalysis && isSubmitted && (
+				<ExamAnalysis 
+					analytics={getAnalytics()} 
+					onClose={handleToggleAnalysis}
+				/>
 			)}
 		</div>
 	);

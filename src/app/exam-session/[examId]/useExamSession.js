@@ -14,6 +14,7 @@ export function useExamSession(examId) {
     const [submissionScore, setSubmissionScore] = useState(null);
     const [user] = useAuthState(auth);
     const router = useRouter();
+    const [showAnalysis, setShowAnalysis] = useState(false);
 
     const {
         currentSectionIndex,
@@ -118,10 +119,61 @@ export function useExamSession(examId) {
             submitQuiz();
             setSubmissionScore(scoreDetails.totalScore);
             setShowConfirmModal(false);
+            setShowAnalysis(true);
         } catch (error) {
             console.error("Error submitting quiz:", error);
             alert(error.message || "Error submitting quiz. Please try again.");
         }
+    };
+
+    const handleToggleAnalysis = () => {
+        setShowAnalysis(prev => !prev);
+    };
+
+    const getAnalytics = () => {
+        if (!quiz || !answers) return null;
+
+        const analytics = {
+            totalQuestions: 0,
+            attempted: 0,
+            correct: 0,
+            incorrect: 0,
+            score: 0,
+            sectionWise: {}
+        };
+
+        quiz.sections.forEach(section => {
+            analytics.sectionWise[section.name] = {
+                total: section.questions.length,
+                attempted: 0,
+                correct: 0,
+                incorrect: 0
+            };
+
+            section.questions.forEach(question => {
+                analytics.totalQuestions++;
+                if (answers[question.id] !== undefined) {
+                    analytics.attempted++;
+                    analytics.sectionWise[section.name].attempted++;
+                    
+                    if (answers[question.id] === question.correctOption) {
+                        analytics.correct++;
+                        analytics.sectionWise[section.name].correct++;
+                        analytics.score += quiz.positiveScore || 1;
+                    } else {
+                        analytics.incorrect++;
+                        analytics.sectionWise[section.name].incorrect++;
+                        analytics.score -= quiz.negativeScore || 0;
+                    }
+                }
+            });
+        });
+
+        return analytics;
+    };
+
+    const handleCloseScoreModal = () => {
+        setSubmissionScore(null);
     };
 
     return {
@@ -143,6 +195,10 @@ export function useExamSession(examId) {
         handlePreviousQuestion,
         handleJumpToQuestion,
         handleSubmitQuiz,
-        router
+        router,
+        showAnalysis,
+        handleToggleAnalysis,
+        getAnalytics,
+        handleCloseScoreModal,
     };
 } 
