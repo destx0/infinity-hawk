@@ -6,6 +6,8 @@ import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
 import { useExamSession } from "./useExamSession";
 import ExamAnalysis from './ExamAnalysis';
+import LanguageSelection from './LanguageSelection';
+import TermsAndConditions from './TermsAndConditions';
 
 export default function ExamPage({ params }) {
 	const {
@@ -32,6 +34,12 @@ export default function ExamPage({ params }) {
 		handleToggleAnalysis,
 		getAnalytics,
 		handleCloseScoreModal,
+		showLanguageSelection,
+		handleLanguageSelect,
+		handlePreviousFromLanguageSelection,
+		showTermsAndConditions,
+		handleAcceptTerms,
+		handlePreviousFromTerms,
 	} = useExamSession(params.examId);
 
 	if (loading) {
@@ -48,6 +56,28 @@ export default function ExamPage({ params }) {
 				<AlertCircle className="w-12 h-12 text-red-500" />
 				<h1 className="text-xl font-semibold">{error}</h1>
 			</div>
+		);
+	}
+
+	if (showTermsAndConditions) {
+		return (
+			<TermsAndConditions
+				onStartQuiz={handleAcceptTerms}
+				testName={quiz.title}
+				duration={quiz.duration}
+				onPrevious={handlePreviousFromTerms}
+			/>
+		);
+	}
+
+	if (showLanguageSelection) {
+		return (
+			<LanguageSelection
+				testName={quiz.title}
+				durationMinutes={quiz.duration}
+				onStart={handleLanguageSelect}
+				onPrevious={handlePreviousFromTerms}
+			/>
 		);
 	}
 

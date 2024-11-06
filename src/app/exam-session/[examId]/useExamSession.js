@@ -15,6 +15,9 @@ export function useExamSession(examId) {
     const [user] = useAuthState(auth);
     const router = useRouter();
     const [showAnalysis, setShowAnalysis] = useState(false);
+    const [showLanguageSelection, setShowLanguageSelection] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [showTermsAndConditions, setShowTermsAndConditions] = useState(true);
 
     const {
         currentSectionIndex,
@@ -176,6 +179,24 @@ export function useExamSession(examId) {
         setSubmissionScore(null);
     };
 
+    const handleLanguageSelect = (language) => {
+        setSelectedLanguage(language);
+        setShowLanguageSelection(false);
+    };
+
+    const handlePreviousFromLanguageSelection = () => {
+        router.push('/exams');
+    };
+
+    const handleAcceptTerms = () => {
+        setShowTermsAndConditions(false);
+        setShowLanguageSelection(true);
+    };
+
+    const handlePreviousFromTerms = () => {
+        router.push('/exams');
+    };
+
     return {
         quiz,
         loading,
@@ -200,5 +221,11 @@ export function useExamSession(examId) {
         handleToggleAnalysis,
         getAnalytics,
         handleCloseScoreModal,
+        showLanguageSelection,
+        handleLanguageSelect,
+        handlePreviousFromLanguageSelection,
+        showTermsAndConditions,
+        handleAcceptTerms,
+        handlePreviousFromTerms,
     };
 } 
