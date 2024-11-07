@@ -40,6 +40,7 @@ export default function ExamPage({ params }) {
 		showTermsAndConditions,
 		handleAcceptTerms,
 		handlePreviousFromTerms,
+		languageVersions,
 	} = useExamSession(params.examId);
 
 	if (loading) {
@@ -77,6 +78,7 @@ export default function ExamPage({ params }) {
 				durationMinutes={quiz.duration}
 				onStart={handleLanguageSelect}
 				onPrevious={handlePreviousFromTerms}
+				languageVersions={languageVersions}
 			/>
 		);
 	}

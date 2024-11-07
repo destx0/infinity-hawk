@@ -5,15 +5,19 @@ const LanguageSelection = ({
 	onStart,
 	testName = "Sample Test",
 	durationMinutes = 60,
+	languageVersions = []
 }) => {
 	const [selectedLanguage, setSelectedLanguage] = useState("");
 	const [isConfirmed, setIsConfirmed] = useState(false);
 
-	const languages = [
-		{ value: "en", label: "English" },
+	const languages = languageVersions.map(version => ({
+		value: version.language,
+		label: version.language.charAt(0).toUpperCase() + version.language.slice(1)
+	}));
 
-		// Add more languages as needed
-	];
+	if (languages.length === 0) {
+		languages.push({ value: "en", label: "English" });
+	}
 
 	const handleLanguageChange = (e) => {
 		setSelectedLanguage(e.target.value);

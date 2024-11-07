@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "@/config/firebase";
-import { doc, getDoc, addDoc, collection } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import useExamUIStore from "@/store/examUIStore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export function useExamSession(examId) {
     const [quiz, setQuiz] = useState(null);
+    const [languageVersions, setLanguageVersions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [tempSelectedOption, setTempSelectedOption] = useState(null);
@@ -34,15 +35,29 @@ export function useExamSession(examId) {
     } = useExamUIStore();
 
     useEffect(() => {
-        async function fetchQuiz() {
+        async function fetchQuizAndLanguages() {
             try {
+                // Fetch main quiz
                 const quizRef = doc(db, "fullQuizzes", examId);
                 const quizSnap = await getDoc(quizRef);
 
-                if (quizSnap.exists()) {
-                    setQuiz(quizSnap.data());
-                } else {
+                if (!quizSnap.exists()) {
                     setError("Quiz not found");
+                    return;
+                }
+
+                const mainQuiz = quizSnap.data();
+                setQuiz(mainQuiz);
+
+                // Get language versions from the main quiz document
+                if (mainQuiz.languageVersions && Array.isArray(mainQuiz.languageVersions)) {
+                    const versions = mainQuiz.languageVersions.map(version => ({
+                        id: version.quizId,
+                        language: version.language,
+                        isDefault: version.isDefault,
+                        quizId: version.quizId
+                    }));
+                    setLanguageVersions(versions);
                 }
             } catch (err) {
                 console.error("Error fetching quiz:", err);
@@ -52,7 +67,7 @@ export function useExamSession(examId) {
             }
         }
 
-        fetchQuiz();
+        fetchQuizAndLanguages();
     }, [examId]);
 
     const handleJumpToSection = (sectionIndex) => {
@@ -179,9 +194,28 @@ export function useExamSession(examId) {
         setSubmissionScore(null);
     };
 
-    const handleLanguageSelect = (language) => {
-        setSelectedLanguage(language);
-        setShowLanguageSelection(false);
+    const handleLanguageSelect = async (language) => {
+        try {
+            // Find the selected language version from the versions array
+            const selectedVersion = languageVersions.find(v => v.language === language);
+            
+            if (selectedVersion && selectedVersion.quizId) {
+                // Fetch the quiz content for selected language
+                const langQuizRef = doc(db, "fullQuizzes", selectedVersion.quizId);
+                const langQuizSnap = await getDoc(langQuizRef);
+                
+                if (langQuizSnap.exists()) {
+                    setQuiz(langQuizSnap.data());
+                }
+            }
+            
+            setSelectedLanguage(language);
+            setShowLanguageSelection(false);
+        } catch (err) {
+            console.error("Error loading language version:", err);
+            // Fallback to default quiz if language version fails to load
+            setShowLanguageSelection(false);
+        }
     };
 
     const handlePreviousFromLanguageSelection = () => {
@@ -199,6 +233,7 @@ export function useExamSession(examId) {
 
     return {
         quiz,
+        languageVersions,
         loading,
         error,
         tempSelectedOption,
