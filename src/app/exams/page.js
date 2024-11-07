@@ -4,21 +4,26 @@ import React, { useEffect, useState, Suspense } from "react";
 import { ExamSidebar } from "./ExamSidebar";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/config/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import useExamStore from "@/store/examStore";
 import PYQsPage from "./pyqs/page";
 import MockTestsPage from "./mock-tests/page";
 
-const isExamPage =
-	window.location.pathname.includes("/exams/") &&
-	!window.location.pathname.endsWith("/exams");
-
 export default function ExamsPage() {
 	const { activeSection, selectedExam } = useExamStore();
 	const [user, setUser] = React.useState(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [isExamPage, setIsExamPage] = useState(false);
 	const router = useRouter();
+	const pathname = usePathname();
+
+	useEffect(() => {
+		// Check if we're on an exam page
+		setIsExamPage(
+			pathname.includes("/exams/") && !pathname.endsWith("/exams")
+		);
+	}, [pathname]);
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
