@@ -11,6 +11,20 @@ import TermsAndConditions from "./TermsAndConditions";
 import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
 import "@leenguyen/react-flip-clock-countdown/dist/index.css";
 
+const getShortenedSectionName = (name) => {
+	const shortNames = {
+		'Quantitative Aptitude': 'Quant',
+		'General Awareness': 'GA',
+		'Reasoning': 'Reas',
+		'English Language': 'Eng',
+		'Computer Knowledge': 'Comp',
+		'Professional Knowledge': 'Prof',
+		'General Knowledge': 'GK',
+		'Current Affairs': 'CA'
+	};
+	return shortNames[name] || name;
+};
+
 export default function ExamPage({ params }) {
 	const {
 		quiz,
@@ -97,8 +111,14 @@ export default function ExamPage({ params }) {
 				className="bg-white border-b p-5 flex justify-between items-center sticky top-0 z-10"
 				style={{ fontSize: "125%" }}
 			>
-				<h1 className="text-xl font-bold">{quiz.title}</h1>
-				<div className="flex items-center gap-4">
+				<div className="flex-1 min-w-0 mr-4">
+					<div className="overflow-x-auto scrollbar-hide">
+						<h1 className="text-xl font-bold whitespace-nowrap">
+							{quiz.title}
+						</h1>
+					</div>
+				</div>
+				<div className="flex items-center gap-4 flex-shrink-0">
 					<FlipClockCountdown
 						to={endTime}
 						className="flip-clock"
@@ -143,35 +163,34 @@ export default function ExamPage({ params }) {
 				<div className="flex-grow overflow-auto flex flex-col">
 					{/* Sticky section tabs and question header */}
 					<div className="sticky top-0 bg-white z-10">
-						<div className="flex border-b text-sm">
+						<div className="flex border-b text-sm overflow-x-auto scrollbar-hide">
 							{quiz.sections.map((section, index) => (
 								<button
 									key={index}
 									onClick={() => handleJumpToSection(index)}
-									className={`px-4 py-2 ${
+									className={`px-3 py-2 whitespace-nowrap ${
 										currentSectionIndex === index
 											? "border-b-2 border-blue-500"
 											: ""
 									}`}
 								>
-									{section.name}
+									<span className="hidden md:inline">{section.name}</span>
+									<span className="md:hidden">{getShortenedSectionName(section.name)}</span>
 								</button>
 							))}
 						</div>
-						<div className="flex justify-between items-center p-5 border-b">
+						<div className="flex justify-between items-center p-3 sm:p-5 border-b">
 							<div className="flex items-center">
 								<p className="text-sm text-gray-600">
-									Question {currentQuestionIndex + 1} of{" "}
-									{
-										quiz.sections[currentSectionIndex]
-											.questions.length
-									}
+									<span className="hidden sm:inline">Question </span>
+									{currentQuestionIndex + 1}/{quiz.sections[currentSectionIndex].questions.length}
 								</p>
 							</div>
-							<div className="flex items-center gap-6">
+							<div className="flex items-center gap-2 sm:gap-6">
 								<div className="flex items-center text-sm text-gray-600">
-									<span className="mr-1.5">⏱</span>
-									Time spent: 00:00
+									<span className="mr-1">⏱</span>
+									<span className="hidden sm:inline">Time spent: </span>
+									00:00
 								</div>
 								<div className="flex items-center gap-2">
 									<span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-sm">
@@ -194,29 +213,26 @@ export default function ExamPage({ params }) {
 					/>
 
 					{/* Bottom Bar */}
-					<div
-						className="bg-white border-t p-5 sticky bottom-0 mt-auto"
-						style={{ fontSize: "75%" }}
-					>
-						<div className="flex justify-between items-center">
-							<div className="flex gap-2.5">
+					<div className="bg-white border-t p-3 sticky bottom-0 mt-auto">
+						<div className="flex justify-between items-center gap-2">
+							<div className="flex gap-2 flex-1 min-w-0">
 								<button
-									className="px-5 py-2.5 rounded bg-[#92c4f2] text-black"
+									className="px-3 py-2 rounded bg-[#92c4f2] text-black text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#7db3e8] transition-colors"
 									onClick={handleMarkForReview}
 								>
-									Mark for review & next
+									Mark for review
 								</button>
 								<button
-									className="px-5 py-2.5 bg-[#92c4f2] text-black rounded"
+									className="px-3 py-2 bg-[#92c4f2] text-black rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#7db3e8] transition-colors"
 									onClick={handleClearResponse}
 								>
-									Clear Response
+									Clear
 								</button>
 							</div>
 
-							<div className="flex items-center gap-2.5">
+							<div className="flex items-center gap-2 flex-shrink-0">
 								<button
-									className="px-5 py-2.5 bg-[#1ca7c0] text-white rounded"
+									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 									onClick={handlePreviousQuestion}
 									disabled={
 										currentQuestionIndex === 0 &&
@@ -226,7 +242,7 @@ export default function ExamPage({ params }) {
 									Previous
 								</button>
 								<button
-									className="px-5 py-2.5 bg-[#1ca7c0] text-white rounded"
+									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 									onClick={handleNextQuestion}
 									disabled={
 										currentQuestionIndex ===
