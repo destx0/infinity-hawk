@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
 import SideNav from "./SideNav";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
@@ -142,13 +142,22 @@ export default function ExamPage({ params }) {
 						duration={0.5}
 						renderMap={[false, true, true, true]}
 					/>
-					{isSubmitted && (
+					{isSubmitted ? (
 						<Button
 							onClick={handleToggleAnalysis}
 							variant="outline"
 							className="ml-4"
 						>
 							{showAnalysis ? "Hide Analysis" : "Show Analysis"}
+						</Button>
+					) : (
+						<Button
+							onClick={() => router.push('/exams')}
+							variant="ghost"
+							size="icon"
+							className="ml-4"
+						>
+							<X className="h-5 w-5" />
 						</Button>
 					)}
 				</div>
@@ -231,27 +240,26 @@ export default function ExamPage({ params }) {
 							</div>
 
 							<div className="flex items-center gap-2 flex-shrink-0">
-								<button
-									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
-									onClick={handlePreviousQuestion}
-									disabled={
-										currentQuestionIndex === 0 &&
-										currentSectionIndex === 0
-									}
-								>
-									Previous
-								</button>
+								{isSubmitted && (
+									<button
+										className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
+										onClick={handlePreviousQuestion}
+										disabled={currentQuestionIndex === 0 && currentSectionIndex === 0}
+									>
+										Previous
+									</button>
+								)}
 								<button
 									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 									onClick={handleNextQuestion}
-									disabled={
-										currentQuestionIndex ===
-											quiz.sections[currentSectionIndex]
-												.questions.length -
-												1 &&
-										currentSectionIndex ===
-											quiz.sections.length - 1
-									}
+										disabled={
+											currentQuestionIndex ===
+												quiz.sections[currentSectionIndex]
+													.questions.length -
+													1 &&
+											currentSectionIndex ===
+												quiz.sections.length - 1
+										}
 								>
 									Save & Next
 								</button>
