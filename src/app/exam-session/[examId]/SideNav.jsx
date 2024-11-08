@@ -58,7 +58,7 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 							<h1 className="text-md md:text-md text-white leading-tight text-center">
 								{quiz.title}
 							</h1>
-							<div className="text-[10px] text-white/80 text-center italic">
+							<div className="text-[10px] text-white/90 text-center madimi-one-regular">
 								Powered by Infinity Mock
 							</div>
 						</div>

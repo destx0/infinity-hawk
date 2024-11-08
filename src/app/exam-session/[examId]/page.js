@@ -153,11 +153,10 @@ export default function ExamPage({ params }) {
 					) : (
 						<Button
 							onClick={() => router.push('/exams')}
-							variant="ghost"
-							size="icon"
-							className="ml-4"
+							variant="outline"
+							className="ml-4 text-[#1ca7c0] border-[#1ca7c0] hover:bg-[#1ca7c0] hover:text-white transition-colors"
 						>
-							<X className="h-5 w-5" />
+							Exit Test
 						</Button>
 					)}
 				</div>
@@ -226,13 +225,13 @@ export default function ExamPage({ params }) {
 						<div className="flex justify-between items-center gap-2">
 							<div className="flex gap-2 flex-1 min-w-0">
 								<button
-									className="px-3 py-2 rounded bg-[#92c4f2] text-black text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#7db3e8] transition-colors"
+									className="px-3 py-2 rounded bg-[#1ca7c0] text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#1a96ad] transition-colors"
 									onClick={handleMarkForReview}
 								>
 									Mark for review
 								</button>
 								<button
-									className="px-3 py-2 bg-[#92c4f2] text-black rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#7db3e8] transition-colors"
+									className="px-3 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#1a96ad] transition-colors"
 									onClick={handleClearResponse}
 								>
 									Clear
@@ -252,14 +251,10 @@ export default function ExamPage({ params }) {
 								<button
 									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 									onClick={handleNextQuestion}
-										disabled={
-											currentQuestionIndex ===
-												quiz.sections[currentSectionIndex]
-													.questions.length -
-													1 &&
-											currentSectionIndex ===
-												quiz.sections.length - 1
-										}
+									disabled={
+										currentQuestionIndex === quiz.sections[currentSectionIndex].questions.length - 1 &&
+										currentSectionIndex === quiz.sections.length - 1
+									}
 								>
 									Save & Next
 								</button>
