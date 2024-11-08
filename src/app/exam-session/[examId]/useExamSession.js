@@ -260,6 +260,11 @@ export function useExamSession(examId) {
 		router.push("/exams");
 	};
 
+	const handleComplete = () => {
+		// Auto-submit the quiz when timer ends
+		handleSubmitQuiz();
+	};
+
 	return {
 		quiz,
 		languageVersions,
@@ -269,27 +274,28 @@ export function useExamSession(examId) {
 		setTempSelectedOption,
 		showConfirmModal,
 		setShowConfirmModal,
-		submissionScore,
-		currentSectionIndex,
-		currentQuestionIndex,
-		isSubmitted,
-		handleJumpToSection,
-		handleMarkForReview,
-		handleClearResponse,
-		handleNextQuestion,
-		handlePreviousQuestion,
-		handleJumpToQuestion,
-		handleSubmitQuiz,
-		router,
-		showAnalysis,
-		handleToggleAnalysis,
-		getAnalytics,
-		handleCloseScoreModal,
-		showLanguageSelection,
-		handleLanguageSelect,
-		handlePreviousFromLanguageSelection,
-		showTermsAndConditions,
-		handleAcceptTerms,
-		handlePreviousFromTerms,
+			submissionScore,
+			currentSectionIndex,
+			currentQuestionIndex,
+			isSubmitted,
+			handleJumpToSection,
+			handleMarkForReview,
+			handleClearResponse,
+			handleNextQuestion,
+			handlePreviousQuestion,
+			handleJumpToQuestion,
+			handleSubmitQuiz,
+			router,
+			showAnalysis,
+			handleToggleAnalysis,
+			getAnalytics,
+			handleCloseScoreModal,
+			showLanguageSelection,
+			handleLanguageSelect,
+			handlePreviousFromLanguageSelection,
+			showTermsAndConditions,
+			handleAcceptTerms,
+			handlePreviousFromTerms,
+			handleComplete,
 	};
 }

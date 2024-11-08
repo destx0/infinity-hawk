@@ -42,7 +42,7 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
   return (
     <div className="relative h-full flex justify-end">
       <button
-        className="fixed right-0 top-1/2 transform -translate-y-1/2 -translate-x-64 bg-gray-200 text-gray-600 p-1 rounded-l z-50 transition-transform duration-300"
+        className="fixed right-0 top-1/2 transform -translate-y-1/2 -translate-x-64 bg-[#1ca7c0] text-white p-1 rounded-l z-50 transition-transform duration-300 hover:bg-[#1a96ad]"
         style={{
           transform: isSidebarOpen 
             ? 'translate(-16rem, -50%)' 
@@ -57,10 +57,15 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
           isSidebarOpen ? "w-64" : "w-0"
         } overflow-hidden`}
       >
-        <div className="w-64 h-full bg-[#d9edf7] flex flex-col">
+        <div className="w-64 h-full bg-[#1ca7c0] bg-opacity-10 flex flex-col">
+          <div className="bg-[#1ca7c0] p-4 flex justify-center items-center">
+            <h2 className="text-2xl madimi-one-regular text-white leading-tight">
+              Infinity Mock
+            </h2>
+          </div>
           <Legend isSubmitted={false} />
-          <hr className="border-t border-gray-300 my-2" />
-          <div className="bg-[#b4dbed] p-2">
+          <hr className="border-t border-[#1ca7c0] border-opacity-20 my-2" />
+          <div className="bg-[#1ca7c0] bg-opacity-20 p-2 font-medium">
             Section: {currentSection.name}
           </div>
           <div className="flex-grow overflow-y-auto pt-1 px-2">
@@ -76,7 +81,7 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
                     key={question.id}
                     onClick={() => onQuestionClick(index)}
                     className={`relative transition-all duration-300 hover:scale-110 ${
-                      isActive ? "bg-blue-100" : ""
+                      isActive ? "bg-[#1ca7c0] bg-opacity-20" : ""
                     }`}
                   >
                     <QuestionStatusIcon
@@ -94,10 +99,10 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
               })}
             </div>
           </div>
-          <hr className="border-t border-gray-300 my-2" />
+          <hr className="border-t border-[#1ca7c0] border-opacity-20 my-2" />
           <div className="p-4">
             <button
-              className="w-full py-2 bg-[#1ca7c0] text-white font-semibold rounded hover:bg-[#1a96ad] transition-colors duration-300"
+              className="w-full py-2 bg-[#1ca7c0] text-white font-semibold rounded hover:bg-[#1a96ad] transition-colors duration-300 madimi-one-regular"
               onClick={onSubmit}
             >
               Submit Quiz

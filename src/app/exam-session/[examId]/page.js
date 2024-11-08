@@ -8,6 +8,8 @@ import { useExamSession } from "./useExamSession";
 import ExamAnalysis from "./ExamAnalysis";
 import LanguageSelection from "./LanguageSelection";
 import TermsAndConditions from "./TermsAndConditions";
+import FlipClockCountdown from "@leenguyen/react-flip-clock-countdown";
+import "@leenguyen/react-flip-clock-countdown/dist/index.css";
 
 export default function ExamPage({ params }) {
 	const {
@@ -41,7 +43,11 @@ export default function ExamPage({ params }) {
 		handleAcceptTerms,
 		handlePreviousFromTerms,
 		languageVersions,
+		handleComplete,
 	} = useExamSession(params.examId);
+
+	// Calculate end time based on quiz duration (assuming duration is in minutes)
+	const endTime = new Date().getTime() + (quiz?.duration || 0) * 60 * 1000;
 
 	if (loading) {
 		return (
@@ -93,11 +99,29 @@ export default function ExamPage({ params }) {
 			>
 				<h1 className="text-xl font-bold">{quiz.title}</h1>
 				<div className="flex items-center gap-4">
-					<div>Time remaining: 00:00</div>
-					<div>
-						{quiz.positiveScore && `+${quiz.positiveScore}`} |{" "}
-						{quiz.negativeScore && `-${quiz.negativeScore}`}
-					</div>
+					<FlipClockCountdown
+						to={endTime}
+						className="flip-clock"
+						labelStyle={{
+							fontSize: 0,
+						}}
+						digitBlockStyle={{
+							width: 25,
+							height: 35,
+							fontSize: 20,
+							backgroundColor: "#1ca7c0",
+						}}
+						dividerStyle={{
+							color: "white",
+							height: 1,
+						}}
+						separatorStyle={{
+							size: "4px",
+							color: "#1ca7c0",
+						}}
+						duration={0.5}
+						renderMap={[false, true, true, true]}
+					/>
 					{isSubmitted && (
 						<Button
 							onClick={handleToggleAnalysis}
@@ -136,16 +160,26 @@ export default function ExamPage({ params }) {
 						</div>
 						<div className="flex justify-between items-center p-5 border-b">
 							<div className="flex items-center">
-								<p className="text-sm text-gray-600 mr-5">
+								<p className="text-sm text-gray-600">
 									Question {currentQuestionIndex + 1} of{" "}
 									{
 										quiz.sections[currentSectionIndex]
 											.questions.length
 									}
 								</p>
+							</div>
+							<div className="flex items-center gap-6">
 								<div className="flex items-center text-sm text-gray-600">
 									<span className="mr-1.5">⏱</span>
 									Time spent: 00:00
+								</div>
+								<div className="flex items-center gap-2">
+									<span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-sm">
+										+{quiz.positiveScore || 0}
+									</span>
+									<span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-sm">
+										-{quiz.negativeScore || 0}
+									</span>
 								</div>
 							</div>
 						</div>
