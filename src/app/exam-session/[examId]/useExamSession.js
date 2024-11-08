@@ -123,10 +123,16 @@ export function useExamSession(examId) {
 				throw new Error("User must be logged in to submit");
 			}
 
+			// Find the language-specific quiz ID from languageVersions
+			const languageVersion = languageVersions.find(v => v.language === selectedLanguage);
+			const languageSpecificQuizId = languageVersion?.quizId;
+
 			const scoreDetails = calculateScore(quiz.sections);
 
 			const submissionData = {
-				quizId: examId,
+				quizId: languageSpecificQuizId || examId, // Use the language-specific quiz ID
+				primaryQuizId: examId, // Original quiz ID is always the primary
+				languageVersion: selectedLanguage,
 				userId: user.uid,
 				submittedAt: new Date(),
 				totalScore: scoreDetails.totalScore,
@@ -144,6 +150,18 @@ export function useExamSession(examId) {
 					}))
 					.filter((section) => section.questions.length > 0),
 			};
+
+			// Log submission data for debugging
+			console.log("Language Versions:", languageVersions);
+			console.log("Selected Language:", selectedLanguage);
+			console.log("Language Version Found:", languageVersion);
+			console.log("Submitting with data:", {
+				quizId: submissionData.quizId,
+				primaryQuizId: submissionData.primaryQuizId,
+					languageVersion: submissionData.languageVersion,
+					totalScore: submissionData.totalScore,
+					sectionsCount: submissionData.sections.length,
+			});
 
 			const submissionRef = await addDoc(
 				collection(db, "submissions"),

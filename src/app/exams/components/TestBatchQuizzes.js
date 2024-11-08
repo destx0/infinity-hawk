@@ -6,6 +6,9 @@ import { fetchTestBatch } from "@/lib/firebase/testBatches";
 import { cn } from "@/lib/utils";
 import ExamCard from "./ExamCard";
 import { motion } from "framer-motion";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "@/config/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function TestBatchQuizzes({
 	batchId = "NHI6vv2PzgQ899Sz4Rll",
@@ -17,7 +20,34 @@ export default function TestBatchQuizzes({
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [selectedYear, setSelectedYear] = useState("all");
+	const [selectedStatus, setSelectedStatus] = useState("all");
 	const [availableYears, setAvailableYears] = useState([]);
+	const [user] = useAuthState(auth);
+	const [attemptedQuizIds, setAttemptedQuizIds] = useState(new Set());
+
+	useEffect(() => {
+		async function fetchAttemptedQuizzes() {
+			if (!user) return;
+
+			try {
+				const submissionsRef = collection(db, "submissions");
+				const q = query(
+					submissionsRef,
+					where("userId", "==", user.uid)
+				);
+				const querySnapshot = await getDocs(q);
+				const attemptedIds = new Set();
+				querySnapshot.forEach((doc) => {
+					attemptedIds.add(doc.data().primaryQuizId);
+				});
+				setAttemptedQuizIds(attemptedIds);
+			} catch (error) {
+				console.error("Error fetching attempted quizzes:", error);
+			}
+		}
+
+		fetchAttemptedQuizzes();
+	}, [user]);
 
 	// Function to extract year from text
 	const extractYear = (text) => {
@@ -57,14 +87,18 @@ export default function TestBatchQuizzes({
 		getExams();
 	}, [batchId, isPYQ]);
 
-	const filteredExams =
-		isPYQ && selectedYear !== "all"
-			? exams.filter(
-					(exam) =>
-						extractYear(exam.title) === selectedYear ||
-						extractYear(exam.description || "") === selectedYear
-			  )
-			: exams;
+	const filteredExams = exams.filter(exam => {
+		const matchesYear = !isPYQ || selectedYear === "all" || 
+			extractYear(exam.title) === selectedYear || 
+			extractYear(exam.description || "") === selectedYear;
+
+		const isAttempted = attemptedQuizIds.has(exam.primaryQuizId);
+		const matchesStatus = selectedStatus === "all" || 
+			(selectedStatus === "attempted" && isAttempted) ||
+			(selectedStatus === "unattempted" && !isAttempted);
+
+		return matchesYear && matchesStatus;
+	});
 
 	if (loading) {
 		return (
@@ -85,60 +119,101 @@ export default function TestBatchQuizzes({
 	}
 
 	return (
-		<div className="p-6 w-full max-w-[1600px] mx-auto">
-			<div className="mb-8 ">
+		<div className="p-6 w-full max-w-[1200px] mx-auto">
+			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>
 						<h2 className="text-3xl font-bold mb-2">{title}</h2>
-						<p className="text-muted-foreground ">
-							{description}
-						</p>
+						<p className="text-muted-foreground">{description}</p>
 					</div>
-					{isPYQ && availableYears.length > 0 && (
-						<div className="flex flex-wrap gap-2 items-center pt-2">
+					<div className="flex flex-wrap gap-4 items-center pt-2">
+						{/* Status Filter */}
+						<div className="flex gap-2">
 							<Button
-								variant={
-									selectedYear === "all"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedYear("all")}
+								variant={selectedStatus === "all" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("all")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedYear === "all"
+									selectedStatus === "all"
 										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
 										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
 								)}
 							>
-								All Years
+								All Tests
 							</Button>
-							<div className="flex flex-wrap gap-2">
-								{availableYears.map((year) => (
-									<Button
-										key={year}
-										variant={
-											selectedYear === year
-												? "default"
-												: "outline"
-										}
-										onClick={() => setSelectedYear(year)}
-										className={cn(
-											"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-											selectedYear === year
-												? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-												: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-										)}
-									>
-										{year}
-									</Button>
-								))}
-							</div>
+							<Button
+								variant={selectedStatus === "attempted" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("attempted")}
+								className={cn(
+									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedStatus === "attempted"
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								Attempted
+							</Button>
+							<Button
+								variant={selectedStatus === "unattempted" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("unattempted")}
+								className={cn(
+									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedStatus === "unattempted"
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								Unattempted
+							</Button>
 						</div>
-					)}
+
+						{/* Year Filter - existing code */}
+						{isPYQ && availableYears.length > 0 && (
+							<div className="flex flex-wrap gap-2">
+								<Button
+									variant={
+										selectedYear === "all"
+											? "default"
+											: "outline"
+									}
+									onClick={() => setSelectedYear("all")}
+									className={cn(
+										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+										selectedYear === "all"
+											? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+											: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+									)}
+								>
+									All Years
+								</Button>
+								<div className="flex flex-wrap gap-2">
+									{availableYears.map((year) => (
+										<Button
+											key={year}
+											variant={
+												selectedYear === year
+													? "default"
+													: "outline"
+											}
+											onClick={() => setSelectedYear(year)}
+											className={cn(
+												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+												selectedYear === year
+													? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+													: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+											)}
+										>
+											{year}
+										</Button>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
-			<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-				{filteredExams.map((exam, index) => (
+			<div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+				{filteredExams.slice(0, 3).map((exam, index) => (
 					<motion.div
 						key={exam.primaryQuizId}
 						initial={{ opacity: 0, y: 20 }}
@@ -147,7 +222,7 @@ export default function TestBatchQuizzes({
 							y: 0,
 							transition: {
 								duration: 0.3,
-								delay: (index % 4) * 0.1,
+								delay: index * 0.1,
 							},
 						}}
 						viewport={{ once: true, margin: "-50px" }}

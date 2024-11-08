@@ -1,52 +1,125 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight, BarChart2, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db, auth } from "@/config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function ExamCard({ exam }) {
 	const router = useRouter();
+	const [user] = useAuthState(auth);
+	const [hasAttempted, setHasAttempted] = useState(false);
+	const [score, setScore] = useState(null);
 
 	const quizData = exam.quizData || {};
+
+	useEffect(() => {
+		async function checkAttempted() {
+			if (!user) return;
+
+			try {
+				const submissionsRef = collection(db, "submissions");
+				const q = query(
+					submissionsRef,
+					where("userId", "==", user.uid),
+					where("primaryQuizId", "==", exam.primaryQuizId)
+				);
+
+				const querySnapshot = await getDocs(q);
+				if (!querySnapshot.empty) {
+					const submission = querySnapshot.docs[0].data();
+					setHasAttempted(true);
+					setScore(submission.totalScore);
+				}
+			} catch (error) {
+				console.error("Error checking submissions:", error);
+			}
+		}
+
+		checkAttempted();
+	}, [user, exam.primaryQuizId]);
 
 	return (
 		<motion.div
 			whileHover={{ scale: 1.02 }}
 			whileTap={{ scale: 0.98 }}
 			transition={{ type: "spring", stiffness: 400, damping: 25 }}
+			className="h-full"
 		>
-			<Card className="hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))]">
-				<CardHeader className="pb-2">
-					<CardTitle className="flex items-center justify-between">
-						<span className="text-lg line-clamp-1 text-[hsl(var(--sidebar-background))]">
+			<Card
+				className={`hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col ${
+					hasAttempted ? "bg-[#f0f9f0]" : "bg-white"
+				}`}
+			>
+				<CardHeader className="pb-2 flex-none">
+					<CardTitle className="flex items-start justify-between gap-2">
+						<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
 							{exam.title}
 						</span>
 					</CardTitle>
 				</CardHeader>
-				<CardContent>
-					<div className="space-y-4">
-						<p className="text-sm text-muted-foreground line-clamp-2">
-							{exam.description || "Exam Paper"}
-						</p>
+				<CardContent className="flex flex-col flex-grow">
+					<div className="space-y-4 flex flex-col h-full">
 						<div className="flex items-center gap-4 text-sm text-muted-foreground">
 							<div className="flex items-center">
 								<Clock className="h-4 w-4 mr-1" />
 								<span>{exam.duration || 45} mins</span>
 							</div>
-							<div className="flex items-center">
-								<span>+{exam.positiveScore || 1} | -{exam.negativeScore || 0}</span>
-							</div>
+
+							{hasAttempted && score !== null && (
+								<div className="flex items-center text-green-900 ml-auto">
+									<span>Score: {score}</span>
+								</div>
+							)}
 						</div>
-						<Button
-							variant="expandIcon"
-							Icon={ArrowRight}
-							iconPlacement="right"
-							className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] 
-							hover:bg-[hsl(var(--sidebar-primary))] transition-all duration-300"
-							onClick={() => router.push(`/exam-session/${exam.primaryQuizId}`)}
-						>
-							Start Quiz
-						</Button>
+						<div className="mt-auto pt-6">
+							{hasAttempted ? (
+								<div className="flex gap-2">
+									<Button
+										variant="expandIcon"
+										Icon={BarChart2}
+										iconPlacement="right"
+										className="flex-1 bg-green-900 hover:bg-green-800 text-white"
+										onClick={() =>
+											router.push(
+												`/exam-session/${exam.primaryQuizId}?mode=review`
+											)
+										}
+									>
+										Analysis
+									</Button>
+									<Button
+										variant="outline"
+										size="icon"
+										className="w-10 h-10 border-green-900 text-green-900 hover:bg-green-50"
+										onClick={() =>
+											router.push(
+												`/exam-session/${exam.primaryQuizId}`
+											)
+										}
+									>
+										<RotateCcw className="h-4 w-4" />
+									</Button>
+								</div>
+							) : (
+								<Button
+									variant="expandIcon"
+									Icon={ArrowRight}
+									iconPlacement="right"
+									className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
+									onClick={() =>
+										router.push(
+											`/exam-session/${exam.primaryQuizId}`
+										)
+									}
+								>
+									Start Quiz
+								</Button>
+							)}
+						</div>
 					</div>
 				</CardContent>
 			</Card>
