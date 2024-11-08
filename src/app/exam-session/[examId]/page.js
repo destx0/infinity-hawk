@@ -5,9 +5,9 @@ import SideNav from "./SideNav";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
 import { useExamSession } from "./useExamSession";
-import ExamAnalysis from './ExamAnalysis';
-import LanguageSelection from './LanguageSelection';
-import TermsAndConditions from './TermsAndConditions';
+import ExamAnalysis from "./ExamAnalysis";
+import LanguageSelection from "./LanguageSelection";
+import TermsAndConditions from "./TermsAndConditions";
 
 export default function ExamPage({ params }) {
 	const {
@@ -74,8 +74,9 @@ export default function ExamPage({ params }) {
 	if (showLanguageSelection) {
 		return (
 			<LanguageSelection
-				testName={quiz.title}
-				durationMinutes={quiz.duration}
+				quiz={quiz}
+				testName={quiz?.title}
+				durationMinutes={quiz?.duration}
 				onStart={handleLanguageSelect}
 				onPrevious={handlePreviousFromTerms}
 				languageVersions={languageVersions}
@@ -94,7 +95,8 @@ export default function ExamPage({ params }) {
 				<div className="flex items-center gap-4">
 					<div>Time remaining: 00:00</div>
 					<div>
-						{quiz.positiveScore && `+${quiz.positiveScore}`} | {quiz.negativeScore && `-${quiz.negativeScore}`}
+						{quiz.positiveScore && `+${quiz.positiveScore}`} |{" "}
+						{quiz.negativeScore && `-${quiz.negativeScore}`}
 					</div>
 					{isSubmitted && (
 						<Button
@@ -102,14 +104,17 @@ export default function ExamPage({ params }) {
 							variant="outline"
 							className="ml-4"
 						>
-							{showAnalysis ? 'Hide Analysis' : 'Show Analysis'}
+							{showAnalysis ? "Hide Analysis" : "Show Analysis"}
 						</Button>
 					)}
 				</div>
 			</div>
 
 			{/* Body Section */}
-			<div className="flex flex-grow overflow-hidden" style={{ fontSize: "125%" }}>
+			<div
+				className="flex flex-grow overflow-hidden"
+				style={{ fontSize: "125%" }}
+			>
 				{/* Main Content */}
 				<div className="flex-grow overflow-auto flex flex-col">
 					{/* Sticky section tabs and question header */}
@@ -133,7 +138,10 @@ export default function ExamPage({ params }) {
 							<div className="flex items-center">
 								<p className="text-sm text-gray-600 mr-5">
 									Question {currentQuestionIndex + 1} of{" "}
-									{quiz.sections[currentSectionIndex].questions.length}
+									{
+										quiz.sections[currentSectionIndex]
+											.questions.length
+									}
 								</p>
 								<div className="flex items-center text-sm text-gray-600">
 									<span className="mr-1.5">⏱</span>
@@ -152,7 +160,10 @@ export default function ExamPage({ params }) {
 					/>
 
 					{/* Bottom Bar */}
-					<div className="bg-white border-t p-5 sticky bottom-0 mt-auto" style={{ fontSize: "75%" }}>
+					<div
+						className="bg-white border-t p-5 sticky bottom-0 mt-auto"
+						style={{ fontSize: "75%" }}
+					>
 						<div className="flex justify-between items-center">
 							<div className="flex gap-2.5">
 								<button
@@ -173,7 +184,10 @@ export default function ExamPage({ params }) {
 								<button
 									className="px-5 py-2.5 bg-[#1ca7c0] text-white rounded"
 									onClick={handlePreviousQuestion}
-									disabled={currentQuestionIndex === 0 && currentSectionIndex === 0}
+									disabled={
+										currentQuestionIndex === 0 &&
+										currentSectionIndex === 0
+									}
 								>
 									Previous
 								</button>
@@ -181,8 +195,12 @@ export default function ExamPage({ params }) {
 									className="px-5 py-2.5 bg-[#1ca7c0] text-white rounded"
 									onClick={handleNextQuestion}
 									disabled={
-										currentQuestionIndex === quiz.sections[currentSectionIndex].questions.length - 1 &&
-										currentSectionIndex === quiz.sections.length - 1
+										currentQuestionIndex ===
+											quiz.sections[currentSectionIndex]
+												.questions.length -
+												1 &&
+										currentSectionIndex ===
+											quiz.sections.length - 1
 									}
 								>
 									Save & Next
@@ -204,8 +222,13 @@ export default function ExamPage({ params }) {
 			{showConfirmModal && (
 				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-						<h2 className="text-xl font-bold mb-4">Confirm Submission</h2>
-						<p className="mb-4">Are you sure you want to submit this quiz? You won't be able to modify your answers after submission.</p>
+						<h2 className="text-xl font-bold mb-4">
+							Confirm Submission
+						</h2>
+						<p className="mb-4">
+							Are you sure you want to submit this quiz? You won't
+							be able to modify your answers after submission.
+						</p>
 						<div className="flex justify-end gap-4">
 							<Button
 								variant="outline"
@@ -213,9 +236,7 @@ export default function ExamPage({ params }) {
 							>
 								Cancel
 							</Button>
-							<Button
-								onClick={handleSubmitQuiz}
-							>
+							<Button onClick={handleSubmitQuiz}>
 								Submit Quiz
 							</Button>
 						</div>
@@ -223,33 +244,10 @@ export default function ExamPage({ params }) {
 				</div>
 			)}
 
-			{/* Score Display Modal */}
-			{isSubmitted && submissionScore !== null && (
-				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-					<div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-						<div className="flex justify-end">
-							<Button
-								variant="ghost"
-								size="sm"
-								onClick={handleCloseScoreModal}
-								className="h-8 w-8 p-0"
-							>
-								✕
-							</Button>
-						</div>
-						<div className="text-center">
-							<h2 className="text-xl font-bold mb-4">Quiz Submitted!</h2>
-							<p className="text-3xl font-bold text-blue-600 mb-2">{submissionScore}</p>
-							<p className="text-gray-600">Click "Show Analysis" to view detailed performance</p>
-						</div>
-					</div>
-				</div>
-			)}
-
 			{/* Analysis Modal */}
 			{showAnalysis && isSubmitted && (
-				<ExamAnalysis 
-					analytics={getAnalytics()} 
+				<ExamAnalysis
+					analytics={getAnalytics()}
 					onClose={handleToggleAnalysis}
 				/>
 			)}

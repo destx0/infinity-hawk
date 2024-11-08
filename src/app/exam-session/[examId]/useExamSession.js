@@ -47,6 +47,7 @@ export function useExamSession(examId) {
 				}
 
 				const mainQuiz = quizSnap.data();
+				console.log("Initial Quiz Data:", mainQuiz);
 				setQuiz(mainQuiz);
 
 				// Get language versions from the main quiz document
@@ -176,6 +177,10 @@ export function useExamSession(examId) {
 			sectionWise: {},
 		};
 
+		// Get scoring values from quiz document with fallbacks
+		const positiveScore = quiz.positiveScore ?? 2;
+		const negativeScore = quiz.negativeScore ?? 0.5;
+
 		quiz.sections.forEach((section) => {
 			analytics.sectionWise[section.name] = {
 				total: section.questions.length,
@@ -193,11 +198,11 @@ export function useExamSession(examId) {
 					if (answers[question.id] === question.correctOption) {
 						analytics.correct++;
 						analytics.sectionWise[section.name].correct++;
-						analytics.score += quiz.positiveScore || 1;
+						analytics.score += positiveScore;
 					} else {
 						analytics.incorrect++;
 						analytics.sectionWise[section.name].incorrect++;
-						analytics.score -= quiz.negativeScore || 0;
+						analytics.score -= negativeScore;
 					}
 				}
 			});
@@ -212,13 +217,14 @@ export function useExamSession(examId) {
 
 	const handleLanguageSelect = async (language) => {
 		try {
-			// Find the selected language version from the versions array
 			const selectedVersion = languageVersions.find(
 				(v) => v.language === language
 			);
 
+			console.log("Selected Version:", selectedVersion);
+			console.log("Current Quiz Data:", quiz);
+
 			if (selectedVersion && selectedVersion.quizId) {
-				// Fetch the quiz content for selected language
 				const langQuizRef = doc(
 					db,
 					"fullQuizzes",
@@ -227,7 +233,9 @@ export function useExamSession(examId) {
 				const langQuizSnap = await getDoc(langQuizRef);
 
 				if (langQuizSnap.exists()) {
-					setQuiz(langQuizSnap.data());
+					const quizData = langQuizSnap.data();
+					console.log("Language Version Quiz Data:", quizData);
+					setQuiz(quizData);
 				}
 			}
 
@@ -235,7 +243,6 @@ export function useExamSession(examId) {
 			setShowLanguageSelection(false);
 		} catch (err) {
 			console.error("Error loading language version:", err);
-			// Fallback to default quiz if language version fails to load
 			setShowLanguageSelection(false);
 		}
 	};
