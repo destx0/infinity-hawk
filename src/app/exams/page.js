@@ -7,8 +7,7 @@ import { auth } from "@/config/firebase";
 import { useRouter, usePathname } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import useExamStore from "@/store/examStore";
-import PYQsPage from "./pyqs/page";
-import MockTestsPage from "./mock-tests/page";
+import TestBatchQuizzes from "./components/TestBatchQuizzes";
 
 export default function ExamsPage() {
 	const { activeSection, selectedExam } = useExamStore();
@@ -49,13 +48,24 @@ export default function ExamsPage() {
 			case "mock-tests":
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
-						<MockTestsPage />
+						<div className="w-full">
+							<TestBatchQuizzes
+								batchId="R83daLJQ48AdeMwx2zU0"
+								title="Mock Tests"
+								description="Full-length mock tests to assess your preparation"
+							/>
+						</div>
 					</Suspense>
 				);
 			case "pyqs":
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
-						<PYQsPage />
+						<TestBatchQuizzes 
+							batchId="n5XhAoQqCLEloWMwZpt5"
+							title="Previous Year Questions"
+							description="Practice with previous year exam questions"
+							isPYQ={true}
+						/>
 					</Suspense>
 				);
 			case "sectional-tests":
