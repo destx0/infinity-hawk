@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "@/config/firebase";
-import { doc, getDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, getDocs, query, where, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import useExamUIStore from "@/store/examUIStore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -138,61 +138,91 @@ export function useExamSession(examId) {
 				throw new Error("User must be logged in to submit");
 			}
 
+			console.log("=== Starting Quiz Submission ===");
+			console.log("User ID:", user.uid);
+			console.log("Quiz ID (Primary):", examId);
+
 			// Use default language if none selected
 			const effectiveLanguage = selectedLanguage || 'default';
+			console.log("Selected Language:", effectiveLanguage);
 			
 			// Find the language-specific quiz ID from languageVersions
 			const languageVersion = languageVersions.find(v => v.language === effectiveLanguage);
 			const languageSpecificQuizId = languageVersion?.quizId;
+			
+			console.log("Language Versions Available:", languageVersions);
+			console.log("Selected Language Version:", languageVersion);
+			console.log("Language Specific Quiz ID:", languageSpecificQuizId);
 
 			const scoreDetails = calculateScore(quiz.sections);
+			console.log("Score Details:", scoreDetails);
 
+			// Create submission document
 			const submissionData = {
-				quizId: languageSpecificQuizId || examId,
-				primaryQuizId: examId,
-				languageVersion: effectiveLanguage,
+				primaryQuizId: examId,  // Original quiz ID
+				languageQuizId: languageSpecificQuizId || examId, // Language version quiz ID
 				userId: user.uid,
 				submittedAt: new Date(),
-				totalScore: scoreDetails.totalScore,
-				sections: quiz.sections
-					.map((section) => ({
-						sectionId: section.id || section.name,
-						questions: section.questions
-							.filter(
-								(question) => answers[question.id] !== undefined
-							)
-							.map((question) => ({
-								questionId: question.id,
-								selectedOption: answers[question.id],
-							})),
-					}))
-					.filter((section) => section.questions.length > 0),
+				score: scoreDetails.totalScore,
+				language: effectiveLanguage,
+				answers: quiz.sections.map(section => ({
+					sectionId: section.id || section.name,
+					questions: section.questions
+						.filter(question => answers[question.id] !== undefined)
+						.map(question => ({
+							questionId: question.id,
+							selectedOption: answers[question.id],
+						})),
+				})),
 			};
 
-			// Log submission data for debugging
-			console.log("Language Versions:", languageVersions);
-			console.log("Selected Language:", selectedLanguage);
-			console.log("Language Version Found:", languageVersion);
-			console.log("Submitting with data:", {
-				quizId: submissionData.quizId,
-				primaryQuizId: submissionData.primaryQuizId,
-					languageVersion: submissionData.languageVersion,
-					totalScore: submissionData.totalScore,
-					sectionsCount: submissionData.sections.length,
-			});
+			console.log("=== Full Submission Data ===");
+			console.log(JSON.stringify(submissionData, null, 2));
 
+			// Save submission
 			const submissionRef = await addDoc(
 				collection(db, "submissions"),
 				submissionData
 			);
 			console.log("Submission saved with ID:", submissionRef.id);
 
+			// Prepare minimal submission data
+			const minimalSubmissionData = {
+				primaryQuizId: examId,
+				languageQuizId: languageSpecificQuizId || examId,
+				submissionId: submissionRef.id,
+				score: scoreDetails.totalScore,
+				submittedAt: new Date(),
+			};
+
+			// Update user's submissions document
+			const userSubmissionsRef = doc(db, "users", user.uid);
+			
+			try {
+				// Update the submissions array in the user document
+				await setDoc(userSubmissionsRef, {
+					submissions: {
+						[submissionRef.id]: minimalSubmissionData
+					}
+				}, { merge: true });
+				
+				console.log("User submissions updated at:", `users/${user.uid}`);
+			} catch (error) {
+				console.error("Error updating user submissions:", error);
+				// Continue execution even if user submission update fails
+			}
+
+			console.log("=== Submission Complete ===");
+
 			submitQuiz();
 			setSubmissionScore(scoreDetails.totalScore);
 			setShowConfirmModal(false);
 			setShowAnalysis(true);
+
 		} catch (error) {
-			console.error("Error submitting quiz:", error);
+			console.error("=== Submission Error ===");
+			console.error("Error details:", error);
+			console.error("Error stack:", error.stack);
 			alert(error.message || "Error submitting quiz. Please try again.");
 		}
 	};

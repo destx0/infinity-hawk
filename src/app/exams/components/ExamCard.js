@@ -4,43 +4,22 @@ import { Clock, ArrowRight, BarChart2, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "@/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function ExamCard({ exam }) {
+export default function ExamCard({ exam, userSubmissions }) {
 	const router = useRouter();
 	const [user] = useAuthState(auth);
-	const [hasAttempted, setHasAttempted] = useState(false);
-	const [score, setScore] = useState(null);
-
-	const quizData = exam.quizData || {};
-
-	useEffect(() => {
-		async function checkAttempted() {
-			if (!user) return;
-
-			try {
-				const submissionsRef = collection(db, "submissions");
-				const q = query(
-					submissionsRef,
-					where("userId", "==", user.uid),
-					where("primaryQuizId", "==", exam.primaryQuizId)
-				);
-
-				const querySnapshot = await getDocs(q);
-				if (!querySnapshot.empty) {
-					const submission = querySnapshot.docs[0].data();
-					setHasAttempted(true);
-					setScore(submission.totalScore);
-				}
-			} catch (error) {
-				console.error("Error checking submissions:", error);
-			}
-		}
-
-		checkAttempted();
-	}, [user, exam.primaryQuizId]);
+	
+	// Find submission for this exam from the passed userSubmissions prop
+	const submission = userSubmissions ? 
+		Object.values(userSubmissions).find(
+			sub => sub.primaryQuizId === exam.primaryQuizId
+		) : null;
+	
+	const hasAttempted = !!submission;
+	const score = submission?.score;
 
 	return (
 		<motion.div

@@ -8,7 +8,7 @@ import ExamCard from "./ExamCard";
 import { motion } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/config/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 
 export default function TestBatchQuizzes({
 	batchId = "NHI6vv2PzgQ899Sz4Rll",
@@ -23,30 +23,26 @@ export default function TestBatchQuizzes({
 	const [selectedStatus, setSelectedStatus] = useState("all");
 	const [availableYears, setAvailableYears] = useState([]);
 	const [user] = useAuthState(auth);
-	const [attemptedQuizIds, setAttemptedQuizIds] = useState(new Set());
+	const [userSubmissions, setUserSubmissions] = useState(null);
 
 	useEffect(() => {
-		async function fetchAttemptedQuizzes() {
+		async function fetchUserData() {
 			if (!user) return;
 
 			try {
-				const submissionsRef = collection(db, "submissions");
-				const q = query(
-					submissionsRef,
-					where("userId", "==", user.uid)
-				);
-				const querySnapshot = await getDocs(q);
-				const attemptedIds = new Set();
-				querySnapshot.forEach((doc) => {
-					attemptedIds.add(doc.data().primaryQuizId);
-				});
-				setAttemptedQuizIds(attemptedIds);
+				const userDocRef = doc(db, "users", user.uid);
+				const userDoc = await getDoc(userDocRef);
+				
+				if (userDoc.exists()) {
+					const userData = userDoc.data();
+					setUserSubmissions(userData.submissions || {});
+				}
 			} catch (error) {
-				console.error("Error fetching attempted quizzes:", error);
+				console.error("Error fetching user data:", error);
 			}
 		}
 
-		fetchAttemptedQuizzes();
+		fetchUserData();
 	}, [user]);
 
 	// Function to extract year from text
@@ -92,7 +88,9 @@ export default function TestBatchQuizzes({
 			extractYear(exam.title) === selectedYear || 
 			extractYear(exam.description || "") === selectedYear;
 
-		const isAttempted = attemptedQuizIds.has(exam.primaryQuizId);
+		const isAttempted = userSubmissions && 
+			Object.values(userSubmissions).some(sub => sub.primaryQuizId === exam.primaryQuizId);
+		
 		const matchesStatus = selectedStatus === "all" || 
 			(selectedStatus === "attempted" && isAttempted) ||
 			(selectedStatus === "unattempted" && !isAttempted);
@@ -213,7 +211,7 @@ export default function TestBatchQuizzes({
 				</div>
 			</div>
 			<div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-				{filteredExams.slice(0, 3).map((exam, index) => (
+				{filteredExams.map((exam, index) => (
 					<motion.div
 						key={exam.primaryQuizId}
 						initial={{ opacity: 0, y: 20 }}
@@ -227,7 +225,10 @@ export default function TestBatchQuizzes({
 						}}
 						viewport={{ once: true, margin: "-50px" }}
 					>
-						<ExamCard exam={exam} />
+						<ExamCard 
+							exam={exam} 
+							userSubmissions={userSubmissions}
+						/>
 					</motion.div>
 				))}
 			</div>
