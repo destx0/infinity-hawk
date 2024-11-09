@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "@/config/firebase";
-import { doc, getDoc, addDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import useExamUIStore from "@/store/examUIStore";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -15,10 +15,17 @@ export function useExamSession(examId) {
 	const [submissionScore, setSubmissionScore] = useState(null);
 	const [user] = useAuthState(auth);
 	const router = useRouter();
-	const [showAnalysis, setShowAnalysis] = useState(false);
+	const searchParams = new URLSearchParams(window.location.search);
+	const isReviewMode = searchParams.get('mode') === 'review';
+
+	// Update initial states based on review mode
+	const [showTermsAndConditions, setShowTermsAndConditions] = useState(!isReviewMode);
 	const [showLanguageSelection, setShowLanguageSelection] = useState(false);
+	const [showAnalysis, setShowAnalysis] = useState(isReviewMode);
+
 	const [selectedLanguage, setSelectedLanguage] = useState(null);
-	const [showTermsAndConditions, setShowTermsAndConditions] = useState(true);
+
+	const [submissionData, setSubmissionData] = useState(null);
 
 	const {
 		currentSectionIndex,
@@ -65,6 +72,14 @@ export function useExamSession(examId) {
 					);
 					setLanguageVersions(versions);
 				}
+
+				// If in review mode, fetch submission data
+				if (isReviewMode) {
+					await fetchSubmissionData();
+					setShowLanguageSelection(false);
+					setShowTermsAndConditions(false);
+					submitQuiz(); // Mark as submitted for review mode
+				}
 			} catch (err) {
 				console.error("Error fetching quiz:", err);
 				setError("Error loading quiz");
@@ -74,7 +89,7 @@ export function useExamSession(examId) {
 		}
 
 		fetchQuizAndLanguages();
-	}, [examId]);
+	}, [examId, isReviewMode]);
 
 	const handleJumpToSection = (sectionIndex) => {
 		setCurrentIndices(Number(sectionIndex), 0);
@@ -123,16 +138,19 @@ export function useExamSession(examId) {
 				throw new Error("User must be logged in to submit");
 			}
 
+			// Use default language if none selected
+			const effectiveLanguage = selectedLanguage || 'default';
+			
 			// Find the language-specific quiz ID from languageVersions
-			const languageVersion = languageVersions.find(v => v.language === selectedLanguage);
+			const languageVersion = languageVersions.find(v => v.language === effectiveLanguage);
 			const languageSpecificQuizId = languageVersion?.quizId;
 
 			const scoreDetails = calculateScore(quiz.sections);
 
 			const submissionData = {
-				quizId: languageSpecificQuizId || examId, // Use the language-specific quiz ID
-				primaryQuizId: examId, // Original quiz ID is always the primary
-				languageVersion: selectedLanguage,
+				quizId: languageSpecificQuizId || examId,
+				primaryQuizId: examId,
+				languageVersion: effectiveLanguage,
 				userId: user.uid,
 				submittedAt: new Date(),
 				totalScore: scoreDetails.totalScore,
@@ -271,7 +289,9 @@ export function useExamSession(examId) {
 
 	const handleAcceptTerms = () => {
 		setShowTermsAndConditions(false);
-		setShowLanguageSelection(true);
+		if (!isReviewMode) {
+			setShowLanguageSelection(true);
+		}
 	};
 
 	const handlePreviousFromTerms = () => {
@@ -281,6 +301,35 @@ export function useExamSession(examId) {
 	const handleComplete = () => {
 		// Auto-submit the quiz when timer ends
 		handleSubmitQuiz();
+	};
+
+	const fetchSubmissionData = async () => {
+		if (!user) return;
+		
+		try {
+			const submissionsRef = collection(db, "submissions");
+			const q = query(
+				submissionsRef,
+				where("userId", "==", user.uid),
+				where("primaryQuizId", "==", examId)
+			);
+			
+			const querySnapshot = await getDocs(q);
+			if (!querySnapshot.empty) {
+				const submission = querySnapshot.docs[0].data();
+				setSubmissionData(submission);
+				
+				// Pre-populate answers from submission
+				submission.sections.forEach(section => {
+					section.questions.forEach(question => {
+						setAnswer(question.questionId, question.selectedOption);
+					});
+				});
+			}
+		} catch (error) {
+			console.error("Error fetching submission:", error);
+			setError("Error loading submission data");
+		}
 	};
 
 	return {
@@ -315,5 +364,8 @@ export function useExamSession(examId) {
 			handleAcceptTerms,
 			handlePreviousFromTerms,
 			handleComplete,
+			isReviewMode,
+			selectedLanguage,
+			submissionData,
 	};
 }

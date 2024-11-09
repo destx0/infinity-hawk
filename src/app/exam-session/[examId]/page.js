@@ -58,6 +58,7 @@ export default function ExamPage({ params }) {
 		handlePreviousFromTerms,
 		languageVersions,
 		handleComplete,
+		isReviewMode,
 	} = useExamSession(params.examId);
 
 	// Calculate end time based on quiz duration (assuming duration is in minutes)
@@ -80,7 +81,7 @@ export default function ExamPage({ params }) {
 		);
 	}
 
-	if (showTermsAndConditions) {
+	if (showTermsAndConditions && !isReviewMode) {
 		return (
 			<TermsAndConditions
 				onStartQuiz={handleAcceptTerms}
@@ -91,7 +92,7 @@ export default function ExamPage({ params }) {
 		);
 	}
 
-	if (showLanguageSelection) {
+	if (showLanguageSelection && !isReviewMode) {
 		return (
 			<LanguageSelection
 				quiz={quiz}
