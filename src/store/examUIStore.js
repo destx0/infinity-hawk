@@ -94,32 +94,56 @@ const useExamUIStore = create((set, get) => ({
   },
 
   calculateScore: (sections) => {
-    const { answers } = get();
     let totalScore = 0;
-    const sectionScores = {};
+    let totalQuestions = 0;
+    let attempted = 0;
+    let correct = 0;
+    let incorrect = 0;
+    const sectionWise = {};
 
-    sections.forEach(section => {
-      let sectionScore = 0;
-      section.questions.forEach(question => {
-        const userAnswer = answers[question.id];
-        if (userAnswer === question.correctOption) {
-          sectionScore += section.positiveScore || 0;
-          totalScore += section.positiveScore || 0;
-        } else if (userAnswer !== undefined) {
-          sectionScore -= section.negativeScore || 0;
-          totalScore -= section.negativeScore || 0;
-        }
-      });
-      sectionScores[section.name] = sectionScore;
+    sections.forEach((section) => {
+        totalQuestions += section.questions.length;
+        sectionWise[section.name] = {
+            total: section.questions.length,
+            attempted: 0,
+            correct: 0,
+            incorrect: 0,
+            score: 0
+        };
+
+        section.questions.forEach((question) => {
+            const answer = get().answers[question.id];
+            
+            if (answer !== undefined) {
+                attempted++;
+                sectionWise[section.name].attempted++;
+
+                const posScore = section.positiveScore || 2;
+                const negScore = section.negativeScore || 0.5;
+
+                if (answer === question.correctOption) {
+                    correct++;
+                    sectionWise[section.name].correct++;
+                    totalScore += posScore;
+                    sectionWise[section.name].score += posScore;
+                } else {
+                    incorrect++;
+                    sectionWise[section.name].incorrect++;
+                    totalScore -= negScore;
+                    sectionWise[section.name].score -= negScore;
+                }
+            }
+        });
     });
 
     return {
-      totalScore,
-      sectionScores,
-      answeredQuestions: Object.keys(answers).length,
-      totalQuestions: sections.reduce((acc, section) => 
-        acc + section.questions.length, 0
-      )
+        totalScore: totalScore,
+        totalQuestions,
+        attempted,
+        correct,
+        incorrect,
+        sectionWise,
+        rawScore: totalScore
     };
   }
 }));

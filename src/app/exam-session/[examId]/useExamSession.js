@@ -139,8 +139,8 @@ export function useExamSession(examId) {
 			}
 
 			console.log("=== Starting Quiz Submission ===");
-			console.log("User ID:", user.uid);
-			console.log("Quiz ID (Primary):", examId);
+			console.log("Quiz Data:", quiz);
+			console.log("User Answers:", answers);
 
 			// Use default language if none selected
 			const effectiveLanguage = selectedLanguage || 'default';
@@ -148,22 +148,50 @@ export function useExamSession(examId) {
 			
 			// Find the language-specific quiz ID from languageVersions
 			const languageVersion = languageVersions.find(v => v.language === effectiveLanguage);
-			const languageSpecificQuizId = languageVersion?.quizId;
+			const languageSpecificQuizId = languageVersion?.quizId || examId;
 			
 			console.log("Language Versions Available:", languageVersions);
 			console.log("Selected Language Version:", languageVersion);
 			console.log("Language Specific Quiz ID:", languageSpecificQuizId);
 
+			// Calculate score with detailed logging
+			console.log("=== Score Calculation ===");
 			const scoreDetails = calculateScore(quiz.sections);
-			console.log("Score Details:", scoreDetails);
+			console.log("Raw Score Details:", scoreDetails);
+
+			// Validate score calculation
+			if (scoreDetails.totalScore === undefined || scoreDetails.totalScore === null) {
+				console.error("Score calculation failed - totalScore is undefined or null");
+				throw new Error("Score calculation failed");
+			}
+
+			// Get scoring rules from quiz
+			const positiveScore = quiz.positiveScore || 2;
+			const negativeScore = quiz.negativeScore || 0.5;
+
+			// Create analytics object
+			const analytics = {
+				totalQuestions: scoreDetails.totalQuestions,
+				attempted: scoreDetails.attempted,
+				correct: scoreDetails.correct,
+				incorrect: scoreDetails.incorrect,
+				score: scoreDetails.totalScore,
+				positiveScore,
+				negativeScore,
+				sectionWise: scoreDetails.sectionWise
+			};
+
+			console.log("=== Analytics Data ===");
+			console.log(JSON.stringify(analytics, null, 2));
 
 			// Create submission document
 			const submissionData = {
-				primaryQuizId: examId,  // Original quiz ID
-				languageQuizId: languageSpecificQuizId || examId, // Language version quiz ID
+				primaryQuizId: examId,
+				languageQuizId: languageSpecificQuizId,
 				userId: user.uid,
 				submittedAt: new Date(),
 				score: scoreDetails.totalScore,
+				totalScore: scoreDetails.totalScore,
 				language: effectiveLanguage,
 				answers: quiz.sections.map(section => ({
 					sectionId: section.id || section.name,
@@ -172,8 +200,10 @@ export function useExamSession(examId) {
 						.map(question => ({
 							questionId: question.id,
 							selectedOption: answers[question.id],
+							correct: answers[question.id] === question.correctOption
 						})),
 				})),
+				analytics
 			};
 
 			console.log("=== Full Submission Data ===");
@@ -186,14 +216,24 @@ export function useExamSession(examId) {
 			);
 			console.log("Submission saved with ID:", submissionRef.id);
 
-			// Prepare minimal submission data
+			// Prepare minimal submission data for user document
 			const minimalSubmissionData = {
 				primaryQuizId: examId,
-				languageQuizId: languageSpecificQuizId || examId,
+				languageQuizId: languageSpecificQuizId,
 				submissionId: submissionRef.id,
 				score: scoreDetails.totalScore,
+				totalScore: scoreDetails.totalScore,
 				submittedAt: new Date(),
+				analytics: {
+					attempted: scoreDetails.attempted || 0,
+					correct: scoreDetails.correct || 0,
+					incorrect: scoreDetails.incorrect || 0,
+					totalQuestions: scoreDetails.totalQuestions || 0
+				}
 			};
+
+			console.log("=== Minimal Submission Data ===");
+			console.log(JSON.stringify(minimalSubmissionData, null, 2));
 
 			// Update user's submissions document
 			const userSubmissionsRef = doc(db, "users", user.uid);
@@ -207,12 +247,15 @@ export function useExamSession(examId) {
 				}, { merge: true });
 				
 				console.log("User submissions updated at:", `users/${user.uid}`);
+				console.log("Final submission data saved:", minimalSubmissionData);
 			} catch (error) {
 				console.error("Error updating user submissions:", error);
+				console.error("Error details:", error.message);
 				// Continue execution even if user submission update fails
 			}
 
 			console.log("=== Submission Complete ===");
+			console.log("Final Score:", scoreDetails.totalScore);
 
 			submitQuiz();
 			setSubmissionScore(scoreDetails.totalScore);
@@ -221,8 +264,7 @@ export function useExamSession(examId) {
 
 		} catch (error) {
 			console.error("=== Submission Error ===");
-			console.error("Error details:", error);
-			console.error("Error stack:", error.stack);
+			console.error(error);
 			alert(error.message || "Error submitting quiz. Please try again.");
 		}
 	};
