@@ -8,24 +8,30 @@ import { useRouter } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import useExamStore from "@/store/examStore";
 import TestBatchQuizzes from "../components/TestBatchQuizzes";
+import { useMobile } from "@/components/hooks/use-mobile";
+import { cn } from "@/components/lib/utils";
 
 export default function ExamPage({ params }) {
-	const { activeSection, selectedExam, allExams, setSelectedExam } = useExamStore();
+	const { activeSection, selectedExam, allExams, setSelectedExam } =
+		useExamStore();
 	const [user, setUser] = React.useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const router = useRouter();
 	const { examSlug } = params;
+	const isMobile = useMobile();
 
 	// Set exam from URL slug
 	useEffect(() => {
 		const examName = allExams.find(
-			exam => exam.name.toLowerCase().replace(/ /g, '-') === examSlug
+			(exam) => exam.name.toLowerCase().replace(/ /g, "-") === examSlug
 		)?.name;
 
 		if (examName) {
 			setSelectedExam(examName);
 		} else {
-			const defaultExam = allExams[0].name.toLowerCase().replace(/ /g, '-');
+			const defaultExam = allExams[0].name
+				.toLowerCase()
+				.replace(/ /g, "-");
 			router.replace(`/exams/${defaultExam}`);
 		}
 	}, [examSlug, allExams, setSelectedExam, router]);
@@ -57,7 +63,8 @@ export default function ExamPage({ params }) {
 	);
 
 	const renderContent = () => {
-		const currentExam = allExams.find(exam => exam.name === selectedExam) || allExams[0];
+		const currentExam =
+			allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 		const currentBatchIds = currentExam.batchIds || {};
 
 		switch (activeSection) {
@@ -79,7 +86,7 @@ export default function ExamPage({ params }) {
 			case "pyqs":
 				return currentBatchIds.pyqs ? (
 					<Suspense fallback={<LoadingSpinner />}>
-						<TestBatchQuizzes 
+						<TestBatchQuizzes
 							batchId={currentBatchIds.pyqs}
 							title={`${selectedExam} Previous Year Questions`}
 							description="Practice with previous year exam questions"
@@ -87,13 +94,15 @@ export default function ExamPage({ params }) {
 						/>
 					</Suspense>
 				) : (
-					<ComingSoon title={`${selectedExam} Previous Year Questions`} />
+					<ComingSoon
+						title={`${selectedExam} Previous Year Questions`}
+					/>
 				);
 
 			case "sectional-tests":
 				return currentBatchIds.sectional ? (
 					<Suspense fallback={<LoadingSpinner />}>
-						<TestBatchQuizzes 
+						<TestBatchQuizzes
 							batchId={currentBatchIds.sectional}
 							title={`${selectedExam} Sectional Tests`}
 							description="Practice section-wise to master each topic"
@@ -106,7 +115,7 @@ export default function ExamPage({ params }) {
 			case "topicwise-tests":
 				return currentBatchIds.topicwise ? (
 					<Suspense fallback={<LoadingSpinner />}>
-						<TestBatchQuizzes 
+						<TestBatchQuizzes
 							batchId={currentBatchIds.topicwise}
 							title={`${selectedExam} Topicwise Tests`}
 							description="Practice topic by topic to strengthen your basics"
@@ -119,23 +128,33 @@ export default function ExamPage({ params }) {
 			case "bookmarked":
 				return currentBatchIds.bookmarked ? (
 					<div className="p-6">
-						<h2 className="text-2xl font-bold mb-4">Bookmarked Questions</h2>
+						<h2 className="text-2xl font-bold mb-4">
+							Bookmarked Questions
+						</h2>
 						<div className="grid gap-4">
 							{/* Bookmarked questions content will go here */}
-							<ComingSoon title={`${selectedExam} Bookmarked Questions`} />
+							<ComingSoon
+								title={`${selectedExam} Bookmarked Questions`}
+							/>
 						</div>
 					</div>
 				) : (
-					<ComingSoon title={`${selectedExam} Bookmarked Questions`} />
+					<ComingSoon
+						title={`${selectedExam} Bookmarked Questions`}
+					/>
 				);
 
 			case "previous-tests":
 				return currentBatchIds.previous ? (
 					<div className="p-6">
-						<h2 className="text-2xl font-bold mb-4">Previously Attempted Tests</h2>
+						<h2 className="text-2xl font-bold mb-4">
+							Previously Attempted Tests
+						</h2>
 						<div className="grid gap-4">
 							{/* Previous tests content will go here */}
-							<ComingSoon title={`${selectedExam} Previous Tests`} />
+							<ComingSoon
+								title={`${selectedExam} Previous Tests`}
+							/>
 						</div>
 					</div>
 				) : (
@@ -145,7 +164,9 @@ export default function ExamPage({ params }) {
 			case "statistics":
 				return currentBatchIds.statistics ? (
 					<div className="p-6">
-						<h2 className="text-2xl font-bold mb-4">Performance Statistics</h2>
+						<h2 className="text-2xl font-bold mb-4">
+							Performance Statistics
+						</h2>
 						<div className="grid gap-4">
 							{/* Statistics content will go here */}
 							<ComingSoon title={`${selectedExam} Statistics`} />
@@ -169,11 +190,16 @@ export default function ExamPage({ params }) {
 			<SidebarProvider>
 				<div className="flex w-full">
 					<ExamSidebar user={user} />
-					<main className="flex-1 overflow-auto">
+					<main
+						className={cn(
+							"flex-1 overflow-auto",
+							isMobile && "pt-16"
+						)}
+					>
 						{renderContent()}
 					</main>
 				</div>
 			</SidebarProvider>
 		</div>
 	);
-} 
+}
