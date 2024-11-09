@@ -121,7 +121,7 @@ const useExamUIStore = create((set, get) => ({
                 const posScore = section.positiveScore || 2;
                 const negScore = section.negativeScore || 0.5;
 
-                if (answer === question.correctOption) {
+                if (answer === question.correctAnswer) {
                     correct++;
                     sectionWise[section.name].correct++;
                     totalScore += posScore;

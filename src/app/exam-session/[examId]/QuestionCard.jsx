@@ -102,7 +102,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 									: "border-gray-200 hover:border-gray-300"
 							}
 						`}
-					>
+						>
 						<input
 							type="radio"
 							name={`question-${question.id}`}

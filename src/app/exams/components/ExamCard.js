@@ -20,6 +20,7 @@ export default function ExamCard({ exam, userSubmissions }) {
 	
 	const hasAttempted = !!submission;
 	const score = submission?.score;
+	const submissionId = submission?.submissionId;
 
 	return (
 		<motion.div
@@ -64,24 +65,24 @@ export default function ExamCard({ exam, userSubmissions }) {
 										className="flex-1 bg-green-900 hover:bg-green-800 text-white"
 										onClick={() =>
 											router.push(
-												`/exam-session/${exam.primaryQuizId}?mode=review`
+												`/exam-session/${exam.primaryQuizId}?mode=review&submissionId=${submissionId}`
 											)
 										}
 									>
 										Analysis
 									</Button>
 									<Button
-										variant="outline"
-										size="icon"
-										className="w-10 h-10 border-green-900 text-green-900 hover:bg-green-50"
-										onClick={() =>
-											router.push(
-												`/exam-session/${exam.primaryQuizId}`
-											)
-										}
-									>
-										<RotateCcw className="h-4 w-4" />
-									</Button>
+											variant="outline"
+											size="icon"
+											className="w-10 h-10 border-green-900 text-green-900 hover:bg-green-50"
+											onClick={() =>
+												router.push(
+													`/exam-session/${exam.primaryQuizId}`
+												)
+											}
+										>
+											<RotateCcw className="h-4 w-4" />
+										</Button>
 								</div>
 							) : (
 								<Button
