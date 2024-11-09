@@ -10,7 +10,7 @@ import useExamStore from "@/store/examStore";
 import TestBatchQuizzes from "./components/TestBatchQuizzes";
 
 export default function ExamsPage() {
-	const { activeSection, selectedExam } = useExamStore();
+	const { activeSection, selectedExam, examBatchIds } = useExamStore();
 	const [user, setUser] = React.useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isExamPage, setIsExamPage] = useState(false);
@@ -44,14 +44,19 @@ export default function ExamsPage() {
 	);
 
 	const renderContent = () => {
+		const currentExamBatches = examBatchIds[selectedExam] || {
+			mockTests: "n5XhAoQqCLEloWMwZpt5",
+			pyqs: "n5XhAoQqCLEloWMwZpt5"
+		};
+
 		switch (activeSection) {
 			case "mock-tests":
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
 						<div className="w-full">
 							<TestBatchQuizzes
-								batchId="R83daLJQ48AdeMwx2zU0"
-								title="Mock Tests"
+								batchId={currentExamBatches.mockTests}
+								title={`${selectedExam} Mock Tests`}
 								description="Full-length mock tests to assess your preparation"
 							/>
 						</div>
@@ -61,8 +66,8 @@ export default function ExamsPage() {
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
 						<TestBatchQuizzes 
-							batchId="n5XhAoQqCLEloWMwZpt5"
-							title="Previous Year Questions"
+							batchId={currentExamBatches.pyqs}
+							title={`${selectedExam} Previous Year Questions`}
 							description="Practice with previous year exam questions"
 							isPYQ={true}
 						/>
