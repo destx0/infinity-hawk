@@ -78,7 +78,7 @@ const ExamCard = ({ examName, iconSrc, width, height, delay }) => {
 	return (
 		<BlurFade delay={delay} inView>
 			<MagicCard
-				className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-32 w-48"
+				className="flex-shrink-0 cursor-pointer flex flex-col items-center justify-center shadow-2xl p-4 h-32 w-full md:w-48"
 				gradientColor="#D9D9D955"
 			>
 				<div className="flex justify-center w-full">
@@ -89,7 +89,7 @@ const ExamCard = ({ examName, iconSrc, width, height, delay }) => {
 						height={height}
 					/>
 				</div>
-				<h3 className="mt-4  font-light text-neutral-400 text-center">
+				<h3 className="mt-4 font-light text-neutral-400 text-center text-sm md:text-base">
 					{examName}
 				</h3>
 			</MagicCard>
@@ -99,13 +99,29 @@ const ExamCard = ({ examName, iconSrc, width, height, delay }) => {
 
 export default function AllExamsSection() {
 	return (
-		<section className="py-16 bg-slate-50 ">
-			<div className=" ">
-				<div className=" font-bold text-center mb-12">
+		<section className="py-16 bg-slate-50">
+			<div className="container mx-auto px-4">
+				<div className="font-bold text-center mb-12">
 					<WordFadeIn words="Exams" />
 				</div>
-				<div className="overflow-x-auto scrollbar-hide">
-					<div className="flex space-x-6 pb-20">
+				{/* Small screens: grid layout */}
+				<div className="block md:hidden">
+					<div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+						{allExams.map((exam, index) => (
+							<ExamCard
+								key={exam.name}
+								examName={exam.name}
+								iconSrc={exam.icon}
+								width={exam.width}
+								height={exam.height}
+								delay={0.25 + index * 0.05}
+							/>
+						))}
+					</div>
+				</div>
+				{/* Medium and larger screens: horizontal scroll */}
+				<div className="hidden md:block overflow-x-auto scrollbar-hide">
+					<div className="flex space-x-6 pb-8">
 						{allExams.map((exam, index) => (
 							<ExamCard
 								key={exam.name}

@@ -15,7 +15,7 @@ const features = [
 		name: "Comprehensive Study Material",
 		description:
 			"Access a vast library of curated study materials covering all exam topics.",
-		className: "col-span-2 lg:col-span-2",
+		className: "md:col-span-2",
 		background: (
 			<div className="absolute inset-0 flex items-center justify-center overflow-hidden">
 				<Image
