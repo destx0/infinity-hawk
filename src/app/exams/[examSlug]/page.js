@@ -49,16 +49,16 @@ export default function ExamPage({ params }) {
 		</div>
 	);
 
+	const ComingSoon = ({ title }) => (
+		<div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4">
+			<h2 className="text-2xl font-bold mb-2">{title}</h2>
+			<p className="text-gray-500">Coming Soon!</p>
+		</div>
+	);
+
 	const renderContent = () => {
 		const currentExam = allExams.find(exam => exam.name === selectedExam) || allExams[0];
 		const currentBatchIds = currentExam.batchIds || {};
-
-		const ComingSoon = ({ title }) => (
-			<div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4">
-				<h2 className="text-2xl font-bold mb-2">{title}</h2>
-				<p className="text-gray-500">Coming Soon!</p>
-			</div>
-		);
 
 		switch (activeSection) {
 			case "mock-tests":
@@ -75,6 +75,7 @@ export default function ExamPage({ params }) {
 				) : (
 					<ComingSoon title={`${selectedExam} Mock Tests`} />
 				);
+
 			case "pyqs":
 				return currentBatchIds.pyqs ? (
 					<Suspense fallback={<LoadingSpinner />}>
@@ -88,7 +89,74 @@ export default function ExamPage({ params }) {
 				) : (
 					<ComingSoon title={`${selectedExam} Previous Year Questions`} />
 				);
-			// ... rest of the cases remain the same ...
+
+			case "sectional-tests":
+				return currentBatchIds.sectional ? (
+					<Suspense fallback={<LoadingSpinner />}>
+						<TestBatchQuizzes 
+							batchId={currentBatchIds.sectional}
+							title={`${selectedExam} Sectional Tests`}
+							description="Practice section-wise to master each topic"
+						/>
+					</Suspense>
+				) : (
+					<ComingSoon title={`${selectedExam} Sectional Tests`} />
+				);
+
+			case "topicwise-tests":
+				return currentBatchIds.topicwise ? (
+					<Suspense fallback={<LoadingSpinner />}>
+						<TestBatchQuizzes 
+							batchId={currentBatchIds.topicwise}
+							title={`${selectedExam} Topicwise Tests`}
+							description="Practice topic by topic to strengthen your basics"
+						/>
+					</Suspense>
+				) : (
+					<ComingSoon title={`${selectedExam} Topicwise Tests`} />
+				);
+
+			case "bookmarked":
+				return currentBatchIds.bookmarked ? (
+					<div className="p-6">
+						<h2 className="text-2xl font-bold mb-4">Bookmarked Questions</h2>
+						<div className="grid gap-4">
+							{/* Bookmarked questions content will go here */}
+							<ComingSoon title={`${selectedExam} Bookmarked Questions`} />
+						</div>
+					</div>
+				) : (
+					<ComingSoon title={`${selectedExam} Bookmarked Questions`} />
+				);
+
+			case "previous-tests":
+				return currentBatchIds.previous ? (
+					<div className="p-6">
+						<h2 className="text-2xl font-bold mb-4">Previously Attempted Tests</h2>
+						<div className="grid gap-4">
+							{/* Previous tests content will go here */}
+							<ComingSoon title={`${selectedExam} Previous Tests`} />
+						</div>
+					</div>
+				) : (
+					<ComingSoon title={`${selectedExam} Previous Tests`} />
+				);
+
+			case "statistics":
+				return currentBatchIds.statistics ? (
+					<div className="p-6">
+						<h2 className="text-2xl font-bold mb-4">Performance Statistics</h2>
+						<div className="grid gap-4">
+							{/* Statistics content will go here */}
+							<ComingSoon title={`${selectedExam} Statistics`} />
+						</div>
+					</div>
+				) : (
+					<ComingSoon title={`${selectedExam} Statistics`} />
+				);
+
+			default:
+				return <ComingSoon title="Select a section" />;
 		}
 	};
 
