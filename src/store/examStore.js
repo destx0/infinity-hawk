@@ -1,48 +1,55 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+
+const allExams = [
+	{
+		name: "SSC CGL",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "n5XhAoQqCLEloWMwZpt5",
+		},
+	},
+	{
+		name: "SSC MTS",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "oxwP2UWNlhLGofjCwF4H",
+		},
+	},
+	{
+		name: "SSC CHSL",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "lREzU5A6OpFExEuFYaQ0",
+		},
+	},
+
+	{
+		name: "RRB Group D",
+		icon: "/rail.png",
+		category: "RAILWAY",
+		width: 32,
+		height: 32,
+		batchIds: {
+			pyqs: "06S8AE3xtCAbl05g4KSo",
+		},
+	},
+];
 
 const useExamStore = create((set) => ({
-  activeSection: 'mock-tests',
-  selectedExam: 'SSC CGL',
-  examBatchIds: {
-    "SSC CGL": {
-      mockTests: "R83daLJQ48AdeMwx2zU0",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "SSC GD": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "SSC Selection Post": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "RRB ALP": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "RRB Group D": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "Kolkata Police": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "Kolkata SI": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "SBI PO": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    },
-    "SBI Clerk": {
-      mockTests: "n5XhAoQqCLEloWMwZpt5",
-      pyqs: "n5XhAoQqCLEloWMwZpt5"
-    }
-  },
-  setActiveSection: (section) => set({ activeSection: section }),
-  setSelectedExam: (exam) => set({ selectedExam: exam }),
+	activeSection: "pyqs",
+	selectedExam: "SSC CGL",
+	allExams,
+	setActiveSection: (section) => set({ activeSection: section }),
+	setSelectedExam: (exam) => set({ selectedExam: exam }),
 }));
 
 export default useExamStore;

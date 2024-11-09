@@ -13,11 +13,18 @@ import {
 import { ChevronsUpDown, Check } from "lucide-react";
 import Image from "next/image";
 import useExamStore from "@/store/examStore";
+import { useRouter } from "next/navigation";
 
-export function ExamSidebarHeader({ allExams }) {
-	const { selectedExam, setSelectedExam } = useExamStore();
-	const selectedExamData =
-		allExams.find((exam) => exam.name === selectedExam) || allExams[0];
+export function ExamSidebarHeader() {
+	const { selectedExam, setSelectedExam, allExams } = useExamStore();
+	const router = useRouter();
+	const selectedExamData = allExams.find((exam) => exam.name === selectedExam) || allExams[0];
+
+	const handleExamSelect = (examName) => {
+		setSelectedExam(examName);
+		const examSlug = examName.toLowerCase().replace(/ /g, '-');
+		router.push(`/exams/${examSlug}`);
+	};
 
 	return (
 		<SidebarHeader className="p-4">
@@ -26,7 +33,7 @@ export function ExamSidebarHeader({ allExams }) {
 					Infinity Mock
 				</h1>
 			</div>
-				<SidebarMenu>
+			<SidebarMenu>
 				<SidebarMenuItem>
 					<DropdownMenu>
 						<DropdownMenuTrigger className="w-full p-2 flex items-center justify-between bg-sidebar-accent rounded-md">
@@ -35,8 +42,8 @@ export function ExamSidebarHeader({ allExams }) {
 									<Image
 										src={selectedExamData.icon}
 										alt={selectedExamData.name}
-										width={32}
-										height={32}
+										width={selectedExamData.width}
+										height={selectedExamData.height}
 										className="object-cover"
 									/>
 								</div>
@@ -55,15 +62,15 @@ export function ExamSidebarHeader({ allExams }) {
 							{allExams.map((exam) => (
 								<DropdownMenuItem
 									key={exam.name}
-									onSelect={() => setSelectedExam(exam.name)}
+									onSelect={() => handleExamSelect(exam.name)}
 								>
 									<div className="flex items-center w-full">
 										<div className="w-8 h-8 mr-3 flex items-center justify-center rounded-md bg-sidebar-primary overflow-hidden">
 											<Image
 												src={exam.icon}
 												alt={exam.name}
-												width={32}
-												height={32}
+												width={exam.width}
+												height={exam.height}
 												className="object-cover"
 											/>
 										</div>
