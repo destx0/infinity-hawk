@@ -12,6 +12,7 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 		answers,
 		markedQuestions,
 		visitedQuestions,
+		isSubmitted,
 	} = useExamUIStore();
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -118,15 +119,17 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 
 					<hr className="border-t border-[#1ca7c0] border-opacity-20 my-2" />
 
-					{/* Submit Button */}
-					<div className="p-4">
-						<button
-							className="w-full py-2 bg-[#1ca7c0] text-white font-semibold rounded hover:bg-[#1a96ad] transition-colors duration-300 "
-							onClick={onSubmit}
-						>
-							Submit Quiz
-						</button>
-					</div>
+					{/* Submit Button - Only show if not submitted */}
+					{!isSubmitted && (
+						<div className="p-4">
+							<button
+								className="w-full py-2 bg-[#1ca7c0] text-white font-semibold rounded hover:bg-[#1a96ad] transition-colors duration-300"
+								onClick={onSubmit}
+							>
+								Submit Quiz
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
