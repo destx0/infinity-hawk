@@ -114,7 +114,7 @@ const LanguageSelection = ({
 						id="language"
 						value={selectedLanguage}
 						onChange={handleLanguageChange}
-						className="border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+						className="border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
 					>
 						<option value="">-- Select --</option>
 						{languages.map((lang) => (
@@ -131,7 +131,7 @@ const LanguageSelection = ({
 							type="checkbox"
 							checked={isConfirmed}
 							onChange={handleConfirmationChange}
-							className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+							className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded bg-white"
 						/>
 						<span className="ml-2 text-sm font-bold text-gray-700">
 							I have read all the instructions carefully and have

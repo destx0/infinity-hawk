@@ -109,7 +109,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 							value={index}
 							checked={tempSelectedOption === index || (!tempSelectedOption && selectedOption === index)}
 							onChange={() => handleOptionSelect(index)}
-							className="w-4 h-4 text-blue-600"
+							className="w-4 h-4 text-blue-600 bg-white"
 							disabled={isSubmitted}
 						/>
 						<span className="ml-3 flex-grow">
