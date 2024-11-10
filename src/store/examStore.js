@@ -8,7 +8,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
-			pyqs: "n5XhAoQqCLEloWMwZpt5",
+			pyqs: "7w9OZaBCbloI6rZkxxqU",
 		},
 	},
 	{
@@ -18,7 +18,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
-			pyqs: "oxwP2UWNlhLGofjCwF4H",
+			pyqs: "6u4YWSRBHdAOJxF1xYF5",
 		},
 	},
 	{
@@ -28,7 +28,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
-			pyqs: "lREzU5A6OpFExEuFYaQ0",
+			pyqs: "KW6qxdmgcQERQiLPwK2Z",
 		},
 	},
 
@@ -39,7 +39,27 @@ const allExams = [
 		width: 32,
 		height: 32,
 		batchIds: {
-			pyqs: "06S8AE3xtCAbl05g4KSo",
+			pyqs: "Jn3jFGVLZz4Z2ZjvEhxj",
+		},
+	},
+	{
+		name: "RRB NTPC",
+		icon: "/rail.png",
+		category: "RAILWAY",
+		width: 32,
+		height: 32,
+		batchIds: {
+			pyqs: "CunPVy26PMiqIBQpnv5D",
+		},
+	},
+	{
+		name: "West Bengal",
+		icon: "/wbp.png",
+		category: "West Bengal",
+		width: 32,
+		height: 32,
+		batchIds: {
+			pyqs: "bOerxhZfsuoPNKHHFSDq",
 		},
 	},
 ];
