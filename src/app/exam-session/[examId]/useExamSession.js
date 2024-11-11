@@ -38,6 +38,8 @@ export function useExamSession(examId) {
 
 	const [submissionData, setSubmissionData] = useState(null);
 
+	const [examStartTime, setExamStartTime] = useState(null);
+
 	const {
 		currentSectionIndex,
 		currentQuestionIndex,
@@ -392,6 +394,7 @@ export function useExamSession(examId) {
 
 			setSelectedLanguage(language);
 			setShowLanguageSelection(false);
+			setExamStartTime(new Date().getTime());
 		} catch (err) {
 			console.error("Error loading language version:", err);
 			setShowLanguageSelection(false);
@@ -564,5 +567,6 @@ export function useExamSession(examId) {
 		isReviewMode,
 		selectedLanguage,
 		submissionData,
+		examStartTime,
 	};
 }

@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from 'react';
 
 import { AlertCircle, X } from "lucide-react";
 import SideNav from "./SideNav";
@@ -25,7 +26,14 @@ const getShortenedSectionName = (name) => {
 	return shortNames[name] || name;
 };
 
+// Add this before the ExamPage function
+const calculateEndTime = (durationInMinutes) => {
+	return new Date().getTime() + (durationInMinutes || 0) * 60 * 1000;
+};
+
 export default function ExamPage({ params }) {
+	const [showExitModal, setShowExitModal] = useState(false);
+
 	const {
 		quiz,
 		loading,
@@ -59,15 +67,30 @@ export default function ExamPage({ params }) {
 		languageVersions,
 		handleComplete,
 		isReviewMode,
+		examStartTime,
 	} = useExamSession(params.examId);
 
-	// Calculate end time based on quiz duration (assuming duration is in minutes)
-	const endTime = new Date().getTime() + (quiz?.duration || 0) * 60 * 1000;
+	// Calculate end time based on exam start time
+	const endTimeRef = React.useRef(null);
+	
+	React.useEffect(() => {
+		if (quiz?.duration && examStartTime && !endTimeRef.current) {
+			endTimeRef.current = examStartTime + (quiz.duration * 60 * 1000);
+		}
+	}, [quiz, examStartTime]);
+
+	const handleExitTest = () => {
+		if (!isSubmitted) {
+			setShowExitModal(true);
+		} else {
+			router.push('/exams');
+		}
+	};
 
 	if (loading) {
 		return (
-			<div className="flex justify-center items-center min-h-screen">
-				Loading...
+			<div className="min-h-screen w-full flex items-center justify-center">
+				<span className="loading loading-infinity loading-lg scale-[2]"></span>
 			</div>
 		);
 	}
@@ -120,40 +143,43 @@ export default function ExamPage({ params }) {
 					</div>
 				</div>
 				<div className="flex items-center gap-4 flex-shrink-0">
-					<FlipClockCountdown
-						to={endTime}
-						className="flip-clock"
-						labelStyle={{
-							fontSize: 0,
-						}}
-						digitBlockStyle={{
-							width: 25,
-							height: 35,
-							fontSize: 20,
-							backgroundColor: "#1ca7c0",
-						}}
-						dividerStyle={{
-							color: "white",
-							height: 1,
-						}}
-						separatorStyle={{
-							size: "4px",
-							color: "#1ca7c0",
-						}}
-						duration={0.5}
-						renderMap={[false, true, true, true]}
-					/>
+					{endTimeRef.current && examStartTime && (
+						<FlipClockCountdown
+							to={endTimeRef.current}
+							className="flip-clock"
+							labelStyle={{
+								fontSize: 0,
+							}}
+							digitBlockStyle={{
+								width: 25,
+								height: 35,
+								fontSize: 20,
+								backgroundColor: "#1ca7c0",
+							}}
+							dividerStyle={{
+								color: "white",
+								height: 1,
+							}}
+							separatorStyle={{
+								size: "4px",
+								color: "#1ca7c0",
+							}}
+							duration={0.5}
+							renderMap={[false, true, true, true]}
+							onComplete={handleComplete}
+						/>
+					)}
 					{isSubmitted ? (
 						<Button
 							onClick={handleToggleAnalysis}
 							variant="outline"
-							className="ml-4"
+								className="ml-4"
 						>
 							{showAnalysis ? "Hide Analysis" : "Show Analysis"}
 						</Button>
 					) : (
 						<Button
-							onClick={() => router.push('/exams')}
+							onClick={handleExitTest}
 							variant="outline"
 							className="ml-4 text-[#1ca7c0] border-[#1ca7c0] hover:bg-[#1ca7c0] hover:text-white transition-colors"
 						>
@@ -304,6 +330,35 @@ export default function ExamPage({ params }) {
 					analytics={getAnalytics()}
 					onClose={handleToggleAnalysis}
 				/>
+			)}
+
+			{/* Exit Confirmation Modal */}
+			{showExitModal && (
+				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+						<h2 className="text-xl font-bold mb-4">
+							Confirm Exit
+						</h2>
+						<p className="mb-6 text-gray-600">
+							Are you sure you want to exit? Your progress will not be saved and this will count as an attempt.
+						</p>
+						<div className="flex justify-end gap-4">
+							<Button
+								variant="outline"
+								onClick={() => setShowExitModal(false)}
+								className="border-gray-300"
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={() => router.push('/exams')}
+								className="bg-red-500 hover:bg-red-600 text-white"
+							>
+								Exit Test
+							</Button>
+						</div>
+					</div>
+				</div>
 			)}
 		</div>
 	);
