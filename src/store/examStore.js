@@ -1,16 +1,16 @@
 import { create } from "zustand";
 
 const allExams = [
-	{
-		name: "SSC CGL",
-		icon: "/ssc.png",
-		category: "SSC",
-		width: 64,
-		height: 64,
-		batchIds: {
-			pyqs: "7w9OZaBCbloI6rZkxxqU",
-		},
-	},
+	// {
+	// 	name: "SSC CGL",
+	// 	icon: "/ssc.png",
+	// 	category: "SSC",
+	// 	width: 64,
+	// 	height: 64,
+	// 	batchIds: {
+	// 		pyqs: "7w9OZaBCbloI6rZkxxqU",
+	// 	},
+	// },
 	{
 		name: "SSC MTS",
 		icon: "/ssc.png",
@@ -18,7 +18,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
-			pyqs: "6u4YWSRBHdAOJxF1xYF5",
+			pyqs: "7YIxWJRTqXyY8SHk7fUH",
 		},
 	},
 	{
@@ -28,7 +28,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
-			pyqs: "KW6qxdmgcQERQiLPwK2Z",
+			pyqs: "MDOtslHBMQ9VPdua7ppQ",
 		},
 	},
 
@@ -39,7 +39,7 @@ const allExams = [
 		width: 32,
 		height: 32,
 		batchIds: {
-			pyqs: "Jn3jFGVLZz4Z2ZjvEhxj",
+			pyqs: "SCj53w0mE3lvxKcJAksp",
 		},
 	},
 	{
@@ -49,19 +49,19 @@ const allExams = [
 		width: 32,
 		height: 32,
 		batchIds: {
-			pyqs: "CunPVy26PMiqIBQpnv5D",
+			pyqs: "WEY3husaRJoOlmOnv69e",
 		},
 	},
-	{
-		name: "West Bengal",
-		icon: "/wbp.png",
-		category: "West Bengal",
-		width: 32,
-		height: 32,
-		batchIds: {
-			pyqs: "bOerxhZfsuoPNKHHFSDq",
-		},
-	},
+	// {
+	// 	name: "West Bengal",
+	// 	icon: "/wbp.png",
+	// 	category: "West Bengal",
+	// 	width: 32,
+	// 	height: 32,
+	// 	batchIds: {
+	// 		pyqs: "bOerxhZfsuoPNKHHFSDq",
+	// 	},
+	// },
 ];
 
 const useExamStore = create((set) => ({
