@@ -1,16 +1,16 @@
 import { create } from "zustand";
 
 const allExams = [
-	// {
-	// 	name: "SSC CGL",
-	// 	icon: "/ssc.png",
-	// 	category: "SSC",
-	// 	width: 64,
-	// 	height: 64,
-	// 	batchIds: {
-	// 		pyqs: "7w9OZaBCbloI6rZkxxqU",
-	// 	},
-	// },
+	{
+		name: "SSC CGL",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "ELXu6TiicEX569Iq179P",
+		},
+	},
 	{
 		name: "SSC MTS",
 		icon: "/ssc.png",
