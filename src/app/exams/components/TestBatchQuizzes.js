@@ -246,8 +246,8 @@ export default function TestBatchQuizzes({
 							opacity: 1,
 							y: 0,
 							transition: {
-								duration: 0.1,
-								delay: index * 0.05,
+								duration: 0.05,
+								delay: index * 0.02,
 							},
 						}}
 						viewport={{ once: true, margin: "-50px" }}
