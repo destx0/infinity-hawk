@@ -135,7 +135,7 @@ export default function ExamPage({ params }) {
 				className="bg-white border-b p-5 flex justify-between items-center sticky top-0 z-10"
 				style={{ fontSize: "125%" }}
 			>
-				<div className="flex-1 min-w-0 mr-4">
+				<div className="flex-1 min-w-0">
 					<div className="overflow-x-auto scrollbar-hide">
 						<h1 className="text-xl font-bold whitespace-nowrap">
 							{quiz.title}
@@ -173,19 +173,19 @@ export default function ExamPage({ params }) {
 						<Button
 							onClick={handleToggleAnalysis}
 							variant="outline"
-								className="ml-4"
+							className="ml-4"
 						>
 							{showAnalysis ? "Hide Analysis" : "Show Analysis"}
 						</Button>
-					) : (
-						<Button
-							onClick={handleExitTest}
-							variant="outline"
-							className="ml-4 text-[#1ca7c0] border-[#1ca7c0] hover:bg-[#1ca7c0] hover:text-white transition-colors"
-						>
-							Exit Test
-						</Button>
-					)}
+					) : null}
+					<Button
+						variant="outline"
+						onClick={() => router.push('/exams')}
+						className="text-[#1ca7c0] border-[#1ca7c0] hover:bg-[#1ca7c0] hover:text-white transition-colors"
+					>
+						<X className="h-4 w-4 mr-2" />
+						Exit
+					</Button>
 				</div>
 			</div>
 

@@ -8,7 +8,14 @@ import ExamCard from "./ExamCard";
 import { motion } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/config/firebase";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+	collection,
+	query,
+	where,
+	getDocs,
+	doc,
+	getDoc,
+} from "firebase/firestore";
 
 export default function TestBatchQuizzes({
 	batchId = "NHI6vv2PzgQ899Sz4Rll",
@@ -32,7 +39,7 @@ export default function TestBatchQuizzes({
 			try {
 				const userDocRef = doc(db, "users", user.uid);
 				const userDoc = await getDoc(userDocRef);
-				
+
 				if (userDoc.exists()) {
 					const userData = userDoc.data();
 					setUserSubmissions(userData.submissions || {});
@@ -83,15 +90,21 @@ export default function TestBatchQuizzes({
 		getExams();
 	}, [batchId, isPYQ]);
 
-	const filteredExams = exams.filter(exam => {
-		const matchesYear = !isPYQ || selectedYear === "all" || 
-			extractYear(exam.title) === selectedYear || 
+	const filteredExams = exams.filter((exam) => {
+		const matchesYear =
+			!isPYQ ||
+			selectedYear === "all" ||
+			extractYear(exam.title) === selectedYear ||
 			extractYear(exam.description || "") === selectedYear;
 
-		const isAttempted = userSubmissions && 
-			Object.values(userSubmissions).some(sub => sub.primaryQuizId === exam.primaryQuizId);
-		
-		const matchesStatus = selectedStatus === "all" || 
+		const isAttempted =
+			userSubmissions &&
+			Object.values(userSubmissions).some(
+				(sub) => sub.primaryQuizId === exam.primaryQuizId
+			);
+
+		const matchesStatus =
+			selectedStatus === "all" ||
 			(selectedStatus === "attempted" && isAttempted) ||
 			(selectedStatus === "unattempted" && !isAttempted);
 
@@ -128,7 +141,11 @@ export default function TestBatchQuizzes({
 						{/* Status Filter */}
 						<div className="flex gap-2">
 							<Button
-								variant={selectedStatus === "all" ? "default" : "outline"}
+								variant={
+									selectedStatus === "all"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("all")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -140,7 +157,11 @@ export default function TestBatchQuizzes({
 								All Tests
 							</Button>
 							<Button
-								variant={selectedStatus === "attempted" ? "default" : "outline"}
+								variant={
+									selectedStatus === "attempted"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("attempted")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -152,7 +173,11 @@ export default function TestBatchQuizzes({
 								Attempted
 							</Button>
 							<Button
-								variant={selectedStatus === "unattempted" ? "default" : "outline"}
+								variant={
+									selectedStatus === "unattempted"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("unattempted")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -193,7 +218,9 @@ export default function TestBatchQuizzes({
 													? "default"
 													: "outline"
 											}
-											onClick={() => setSelectedYear(year)}
+											onClick={() =>
+												setSelectedYear(year)
+											}
 											className={cn(
 												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
 												selectedYear === year
@@ -219,14 +246,14 @@ export default function TestBatchQuizzes({
 							opacity: 1,
 							y: 0,
 							transition: {
-								duration: 0.3,
-								delay: index * 0.1,
+								duration: 0.1,
+								delay: index * 0.05,
 							},
 						}}
 						viewport={{ once: true, margin: "-50px" }}
 					>
-						<ExamCard 
-							exam={exam} 
+						<ExamCard
+							exam={exam}
 							userSubmissions={userSubmissions}
 						/>
 					</motion.div>

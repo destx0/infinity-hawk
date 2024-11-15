@@ -15,6 +15,9 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 		isSubmitted,
 	} = useExamUIStore();
 
+	const searchParams = new URLSearchParams(window.location.search);
+	const isReviewMode = searchParams.get("mode") === "review";
+
 	const question = section.questions[questionIndex];
 	const isMarked = markedQuestions.has(question.id);
 	const selectedOption = answers[question.id];
@@ -70,7 +73,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 				<LatexRenderer>{question.question}</LatexRenderer>
 			</h2>
 
-			{isSubmitted && (
+			{isReviewMode && isSubmitted && (
 				<div
 					className={`mb-4 p-2 rounded-md border ${getStatusStyle(
 						questionStatus
@@ -89,7 +92,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 							flex items-center p-4 rounded-lg border-2 cursor-pointer
 							transition-all duration-200
 							${
-								isSubmitted
+								isReviewMode && isSubmitted
 									? index === question.correctAnswer
 										? "bg-green-100 border-green-500"
 										: index === selectedOption
@@ -102,7 +105,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 									: "border-gray-200 hover:border-gray-300"
 							}
 						`}
-						>
+					>
 						<input
 							type="radio"
 							name={`question-${question.id}`}
@@ -115,7 +118,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 						<span className="ml-3 flex-grow">
 							<LatexRenderer>{option}</LatexRenderer>
 						</span>
-						{isSubmitted && (
+						{isReviewMode && isSubmitted && (
 							<>
 								{index === question.correctAnswer && (
 									<Check className="ml-2 text-green-500 w-5 h-5 flex-shrink-0" />
@@ -130,7 +133,7 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 				))}
 			</div>
 
-			{isSubmitted && question.explanation && (
+			{isReviewMode && isSubmitted && question.explanation && (
 				<div className="mt-4 p-4 bg-gray-100 rounded-lg">
 					<h3 className="font-semibold">Explanation:</h3>
 					<LatexRenderer>{question.explanation}</LatexRenderer>
