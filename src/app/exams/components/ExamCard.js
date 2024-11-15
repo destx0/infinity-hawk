@@ -11,19 +11,20 @@ import { useAuthState } from "react-firebase-hooks/auth";
 export default function ExamCard({ exam, userSubmissions }) {
 	const router = useRouter();
 	const [user] = useAuthState(auth);
-	
+
 	// Find submission for this exam from the passed userSubmissions prop
-	const submission = userSubmissions ? 
-		Object.values(userSubmissions).find(
-			sub => sub.primaryQuizId === exam.primaryQuizId
-		) : null;
-	
+	const submission = userSubmissions
+		? Object.values(userSubmissions).find(
+				(sub) => sub.primaryQuizId === exam.primaryQuizId
+		  )
+		: null;
+
 	const hasAttempted = !!submission;
 	const score = submission?.score;
 	const submissionId = submission?.submissionId;
 
 	// Format title by replacing underscores with spaces
-	const formattedTitle = exam.title?.replace(/_/g, ' ') || '';
+	const formattedTitle = exam.title?.replace(/_/g, " ") || "";
 
 	return (
 		<motion.div
@@ -75,15 +76,16 @@ export default function ExamCard({ exam, userSubmissions }) {
 										Analysis
 									</Button>
 									<Button
-										variant="outline"
-										className="flex-1 border-green-900 text-green-900 hover:bg-green-50 gap-2"
+										variant="expandIcon"
+										Icon={RotateCcw}
+										iconPlacement="right"
+										className="flex-1 border-green-900  text-white gap-2"
 										onClick={() =>
 											router.push(
 												`/exam-session/${exam.primaryQuizId}`
 											)
 										}
 									>
-										<RotateCcw className="h-4 w-4" />
 										Retake Test
 									</Button>
 								</div>
@@ -91,7 +93,6 @@ export default function ExamCard({ exam, userSubmissions }) {
 								<Button
 									variant="expandIcon"
 									Icon={ArrowRight}
-									
 									iconPlacement="right"
 									className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
 									onClick={() =>

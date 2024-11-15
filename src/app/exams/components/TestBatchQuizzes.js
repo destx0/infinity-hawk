@@ -31,6 +31,8 @@ export default function TestBatchQuizzes({
 	const [availableYears, setAvailableYears] = useState([]);
 	const [user] = useAuthState(auth);
 	const [userSubmissions, setUserSubmissions] = useState(null);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [searchKey, setSearchKey] = useState(0);
 
 	useEffect(() => {
 		async function fetchUserData() {
@@ -108,7 +110,11 @@ export default function TestBatchQuizzes({
 			(selectedStatus === "attempted" && isAttempted) ||
 			(selectedStatus === "unattempted" && !isAttempted);
 
-		return matchesYear && matchesStatus;
+		const matchesSearch = 
+			searchQuery === "" || 
+			exam.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+		return matchesYear && matchesStatus && matchesSearch;
 	});
 
 	if (loading) {
@@ -138,67 +144,11 @@ export default function TestBatchQuizzes({
 						<p className="text-muted-foreground">{description}</p>
 					</div>
 					<div className="flex flex-wrap gap-4 items-center pt-2">
-						{/* Status Filter */}
-						<div className="flex gap-2">
-							<Button
-								variant={
-									selectedStatus === "all"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("all")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "all"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								All Tests
-							</Button>
-							<Button
-								variant={
-									selectedStatus === "attempted"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("attempted")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "attempted"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								Attempted
-							</Button>
-							<Button
-								variant={
-									selectedStatus === "unattempted"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("unattempted")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "unattempted"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								Unattempted
-							</Button>
-						</div>
-
-						{/* Year Filter - existing code */}
+						{/* Year Filter - Moved to first position */}
 						{isPYQ && availableYears.length > 0 && (
 							<div className="flex flex-wrap gap-2">
 								<Button
-									variant={
-										selectedYear === "all"
-											? "default"
-											: "outline"
-									}
+									variant={selectedYear === "all" ? "default" : "outline"}
 									onClick={() => setSelectedYear("all")}
 									className={cn(
 										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -213,17 +163,11 @@ export default function TestBatchQuizzes({
 									{availableYears.map((year) => (
 										<Button
 											key={year}
-											variant={
-												selectedYear === year
-													? "default"
-													: "outline"
-											}
-											onClick={() =>
-												setSelectedYear(year)
-											}
+											variant={selectedYear === year ? "default" : "outline"}
+											onClick={() => setSelectedYear(year)}
 											className={cn(
 												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-												selectedYear === year
+												 selectedYear === year
 													? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
 													: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
 											)}
@@ -234,10 +178,104 @@ export default function TestBatchQuizzes({
 								</div>
 							</div>
 						)}
+
+						{/* Status Filter - Moved to second position */}
+						<div className="flex gap-2">
+							<Button
+								variant={selectedStatus === "all" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("all")}
+								className={cn(
+									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedStatus === "all"
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								All Tests
+							</Button>
+							<Button
+								variant={selectedStatus === "attempted" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("attempted")}
+								className={cn(
+									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedStatus === "attempted"
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								Attempted
+							</Button>
+							<Button
+								variant={selectedStatus === "unattempted" ? "default" : "outline"}
+								onClick={() => setSelectedStatus("unattempted")}
+								className={cn(
+									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedStatus === "unattempted"
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								Unattempted
+							</Button>
+						</div>
+
+						{/* Search Bar - Remains at the end */}
+						<div className="ml-auto flex items-center relative min-w-[200px]">
+							<input
+								type="text"
+								placeholder="Search tests..."
+								value={searchQuery}
+								onChange={(e) => {
+									setSearchQuery(e.target.value);
+									setSearchKey(prev => prev + 1);
+								}}
+								className="w-full px-4 pr-16 h-8 rounded-full border border-[hsl(var(--sidebar-border))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--sidebar-accent))] focus:border-transparent bg-transparent text-sm"
+							/>
+							{/* Clear button */}
+							{searchQuery && (
+								<button
+									onClick={() => {
+										setSearchQuery("");
+										setSearchKey(prev => prev + 1);
+									}}
+									className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
+									aria-label="Clear search"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										className="h-4 w-4"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M6 18L18 6M6 6l12 12"
+										/>
+									</svg>
+								</button>
+							)}
+							<svg
+								className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+								/>
+							</svg>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+			<div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3" key={searchKey}>
 				{filteredExams.map((exam, index) => (
 					<motion.div
 						key={exam.primaryQuizId}
