@@ -131,7 +131,12 @@ const StatusItem = ({ icon, description }) => (
 	</div>
 );
 
-const TermsAndConditions = ({ onStartQuiz, testName, duration, onPrevious }) => {
+const TermsAndConditions = ({
+	onStartQuiz,
+	testName,
+	duration,
+	onPrevious,
+}) => {
 	return (
 		<div className="flex flex-col h-screen bg-white">
 			<div className="flex-grow overflow-auto p-8">

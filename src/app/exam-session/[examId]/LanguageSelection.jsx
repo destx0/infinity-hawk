@@ -5,7 +5,7 @@ const LanguageSelection = ({
 	onStart,
 	testName = "Sample Test",
 	quiz,
-	languageVersions = []
+	languageVersions = [],
 }) => {
 	console.log("LanguageSelection - Received Quiz Data:", quiz);
 	console.log("LanguageSelection - Language Versions:", languageVersions);
@@ -14,8 +14,11 @@ const LanguageSelection = ({
 	const [isConfirmed, setIsConfirmed] = useState(false);
 
 	const durationMinutes = quiz?.duration ?? 60;
-	const numQuestions = quiz?.sections?.reduce((total, section) => 
-		total + section.questions.length, 0) ?? 100;
+	const numQuestions =
+		quiz?.sections?.reduce(
+			(total, section) => total + section.questions.length,
+			0
+		) ?? 100;
 	const positiveScore = quiz?.positiveScore ?? 2;
 	const negativeScore = quiz?.negativeScore ?? 0.5;
 	const totalMarks = numQuestions * positiveScore;
@@ -26,12 +29,14 @@ const LanguageSelection = ({
 		positiveScore,
 		negativeScore,
 		totalMarks,
-		sections: quiz?.sections?.length
+		sections: quiz?.sections?.length,
 	});
 
-	const languages = languageVersions.map(version => ({
+	const languages = languageVersions.map((version) => ({
 		value: version.language,
-		label: version.language.charAt(0).toUpperCase() + version.language.slice(1)
+		label:
+			version.language.charAt(0).toUpperCase() +
+			version.language.slice(1),
 	}));
 
 	if (languages.length === 0) {
@@ -55,7 +60,9 @@ const LanguageSelection = ({
 	return (
 		<div className="flex flex-col h-screen bg-white">
 			<div className="flex-grow p-8 overflow-auto">
-				<h1 className="text-3xl font-bold mb-6">{quiz?.title ?? testName}</h1>
+				<h1 className="text-3xl font-bold mb-6">
+					{quiz?.title ?? testName}
+				</h1>
 
 				<div className="mb-6 p-4 bg-gray-100 rounded-md">
 					<p className="font-bold mb-2">
@@ -75,19 +82,21 @@ const LanguageSelection = ({
 					</p>
 					<ol className="list-decimal list-inside space-y-2">
 						<li>
-							The test contains {quiz?.sections?.length ?? 4} sections having {numQuestions} questions.
+							The test contains {quiz?.sections?.length ?? 4}{" "}
+							sections having {numQuestions} questions.
 						</li>
 						<li>
 							Each question has 4 options out of which only one is
 							correct.
 						</li>
 						<li>
-							You have to finish the test in {durationMinutes} minutes.
+							You have to finish the test in {durationMinutes}{" "}
+							minutes.
 						</li>
 						<li>
-							You will be awarded {positiveScore} marks for
-							each correct answer and {negativeScore} will be deducted for
-							each wrong answer.
+							You will be awarded {positiveScore} marks for each
+							correct answer and {negativeScore} will be deducted
+							for each wrong answer.
 						</li>
 						<li>
 							There is no negative marking for the questions that

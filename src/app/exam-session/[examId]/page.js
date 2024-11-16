@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import useExamUIStore from '@/store/examUIStore';
+import React, { useState, useEffect } from "react";
+import useExamUIStore from "@/store/examUIStore";
 
 import { AlertCircle, X } from "lucide-react";
 import SideNav from "./SideNav";
@@ -15,14 +15,14 @@ import "@leenguyen/react-flip-clock-countdown/dist/index.css";
 
 const getShortenedSectionName = (name) => {
 	const shortNames = {
-		'Quantitative Aptitude': 'Quant',
-		'General Awareness': 'GA',
-		'Reasoning': 'Reas',
-		'English Language': 'Eng',
-		'Computer Knowledge': 'Comp',
-		'Professional Knowledge': 'Prof',
-		'General Knowledge': 'GK',
-		'Current Affairs': 'CA'
+		"Quantitative Aptitude": "Quant",
+		"General Awareness": "GA",
+		Reasoning: "Reas",
+		"English Language": "Eng",
+		"Computer Knowledge": "Comp",
+		"Professional Knowledge": "Prof",
+		"General Knowledge": "GK",
+		"Current Affairs": "CA",
 	};
 	return shortNames[name] || name;
 };
@@ -34,6 +34,7 @@ const calculateEndTime = (durationInMinutes) => {
 
 export default function ExamPage({ params }) {
 	const [showExitModal, setShowExitModal] = useState(false);
+	const [isTimerFrozen, setIsTimerFrozen] = useState(false);
 
 	const {
 		quiz,
@@ -73,10 +74,10 @@ export default function ExamPage({ params }) {
 
 	// Calculate end time based on exam start time
 	const endTimeRef = React.useRef(null);
-	
+
 	React.useEffect(() => {
 		if (quiz?.duration && examStartTime && !endTimeRef.current) {
-			endTimeRef.current = examStartTime + (quiz.duration * 60 * 1000);
+			endTimeRef.current = examStartTime + quiz.duration * 60 * 1000;
 		}
 	}, [quiz, examStartTime]);
 
@@ -93,13 +94,13 @@ export default function ExamPage({ params }) {
 		if (!isSubmitted && !isReviewMode) {
 			const handleBeforeUnload = (e) => {
 				e.preventDefault();
-				e.returnValue = ''; // Required for Chrome
+				e.returnValue = ""; // Required for Chrome
 			};
 
-			window.addEventListener('beforeunload', handleBeforeUnload);
+			window.addEventListener("beforeunload", handleBeforeUnload);
 
 			return () => {
-				window.removeEventListener('beforeunload', handleBeforeUnload);
+				window.removeEventListener("beforeunload", handleBeforeUnload);
 			};
 		}
 	}, [isSubmitted, isReviewMode]);
@@ -108,8 +109,14 @@ export default function ExamPage({ params }) {
 		if (!isSubmitted) {
 			setShowExitModal(true);
 		} else {
-			router.push('/exams');
+			router.push("/exams");
 		}
+	};
+
+	const handleSubmitConfirm = () => {
+		setIsTimerFrozen(true);
+		handleSubmitQuiz();
+		setShowConfirmModal(false);
 	};
 
 	if (loading) {
@@ -168,7 +175,7 @@ export default function ExamPage({ params }) {
 					</div>
 				</div>
 				<div className="flex items-center gap-4 flex-shrink-0">
-					{endTimeRef.current && examStartTime && (
+					{endTimeRef.current && examStartTime && !isTimerFrozen && (
 						<FlipClockCountdown
 							to={endTimeRef.current}
 							className="flip-clock"
@@ -205,7 +212,7 @@ export default function ExamPage({ params }) {
 					) : null}
 					<Button
 						variant="outline"
-						onClick={() => router.push('/exams')}
+						onClick={() => router.push("/exams")}
 						className="text-[#1ca7c0] border-[#1ca7c0] hover:bg-[#1ca7c0] hover:text-white transition-colors"
 					>
 						<X className="h-4 w-4 mr-2" />
@@ -234,22 +241,34 @@ export default function ExamPage({ params }) {
 											: ""
 									}`}
 								>
-									<span className="hidden md:inline">{section.name}</span>
-									<span className="md:hidden">{getShortenedSectionName(section.name)}</span>
+									<span className="hidden md:inline">
+										{section.name}
+									</span>
+									<span className="md:hidden">
+										{getShortenedSectionName(section.name)}
+									</span>
 								</button>
 							))}
 						</div>
 						<div className="flex justify-between items-center p-3 sm:p-5 border-b">
 							<div className="flex items-center">
 								<p className="text-sm text-gray-600">
-									<span className="hidden sm:inline">Question </span>
-									{currentQuestionIndex + 1}/{quiz.sections[currentSectionIndex].questions.length}
+									<span className="hidden sm:inline">
+										Question{" "}
+									</span>
+									{currentQuestionIndex + 1}/
+									{
+										quiz.sections[currentSectionIndex]
+											.questions.length
+									}
 								</p>
 							</div>
 							<div className="flex items-center gap-2 sm:gap-6">
 								<div className="flex items-center text-sm text-gray-600">
 									<span className="mr-1">⏱</span>
-									<span className="hidden sm:inline">Time spent: </span>
+									<span className="hidden sm:inline">
+										Time spent:{" "}
+									</span>
 									00:00
 								</div>
 								<div className="flex items-center gap-2">
@@ -295,7 +314,10 @@ export default function ExamPage({ params }) {
 									<button
 										className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 										onClick={handlePreviousQuestion}
-										disabled={currentQuestionIndex === 0 && currentSectionIndex === 0}
+										disabled={
+											currentQuestionIndex === 0 &&
+											currentSectionIndex === 0
+										}
 									>
 										Previous
 									</button>
@@ -304,8 +326,12 @@ export default function ExamPage({ params }) {
 									className="px-4 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap hover:bg-[#1a96ad] transition-colors"
 									onClick={handleNextQuestion}
 									disabled={
-										currentQuestionIndex === quiz.sections[currentSectionIndex].questions.length - 1 &&
-										currentSectionIndex === quiz.sections.length - 1
+										currentQuestionIndex ===
+											quiz.sections[currentSectionIndex]
+												.questions.length -
+												1 &&
+										currentSectionIndex ===
+											quiz.sections.length - 1
 									}
 								>
 									Save & Next
@@ -341,7 +367,7 @@ export default function ExamPage({ params }) {
 							>
 								Cancel
 							</Button>
-							<Button onClick={handleSubmitQuiz}>
+							<Button onClick={handleSubmitConfirm}>
 								Submit Quiz
 							</Button>
 						</div>
@@ -361,11 +387,10 @@ export default function ExamPage({ params }) {
 			{showExitModal && (
 				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
 					<div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-						<h2 className="text-xl font-bold mb-4">
-							Confirm Exit
-						</h2>
+						<h2 className="text-xl font-bold mb-4">Confirm Exit</h2>
 						<p className="mb-6 text-gray-600">
-							Are you sure you want to exit? Your progress will not be saved and this will count as an attempt.
+							Are you sure you want to exit? Your progress will
+							not be saved and this will count as an attempt.
 						</p>
 						<div className="flex justify-end gap-4">
 							<Button
@@ -376,7 +401,7 @@ export default function ExamPage({ params }) {
 								Cancel
 							</Button>
 							<Button
-								onClick={() => router.push('/exams')}
+								onClick={() => router.push("/exams")}
 								className="bg-red-500 hover:bg-red-600 text-white"
 							>
 								Exit Test

@@ -5,7 +5,12 @@ import { Check, X, Minus } from "lucide-react";
 import LatexRenderer from "./LatexRenderer";
 import useExamUIStore from "@/store/examUIStore";
 
-export default function QuestionCard({ section, questionIndex, tempSelectedOption, setTempSelectedOption }) {
+export default function QuestionCard({
+	section,
+	questionIndex,
+	tempSelectedOption,
+	setTempSelectedOption,
+}) {
 	const {
 		answers,
 		setAnswer,
@@ -110,7 +115,11 @@ export default function QuestionCard({ section, questionIndex, tempSelectedOptio
 							type="radio"
 							name={`question-${question.id}`}
 							value={index}
-							checked={tempSelectedOption === index || (!tempSelectedOption && selectedOption === index)}
+							checked={
+								tempSelectedOption === index ||
+								(!tempSelectedOption &&
+									selectedOption === index)
+							}
 							onChange={() => handleOptionSelect(index)}
 							className="w-4 h-4 text-blue-600 bg-white"
 							disabled={isSubmitted}

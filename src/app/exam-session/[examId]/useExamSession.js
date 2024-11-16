@@ -120,7 +120,7 @@ export function useExamSession(examId) {
 			setSelectedLanguage(null);
 			setSubmissionData(null);
 			setExamStartTime(null);
-			
+
 			// Reset global exam UI state
 			useExamUIStore.getState().resetExamUI();
 		};
