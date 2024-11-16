@@ -104,6 +104,28 @@ export function useExamSession(examId) {
 		fetchQuizAndLanguages();
 	}, [examId, isReviewMode]);
 
+	useEffect(() => {
+		return () => {
+			// Reset all local state
+			setQuiz(null);
+			setLanguageVersions([]);
+			setLoading(true);
+			setError(null);
+			setTempSelectedOption(null);
+			setShowConfirmModal(false);
+			setSubmissionScore(null);
+			setShowTermsAndConditions(!isReviewMode);
+			setShowLanguageSelection(false);
+			setShowAnalysis(isReviewMode);
+			setSelectedLanguage(null);
+			setSubmissionData(null);
+			setExamStartTime(null);
+			
+			// Reset global exam UI state
+			useExamUIStore.getState().resetExamUI();
+		};
+	}, [isReviewMode]);
+
 	const handleJumpToSection = (sectionIndex) => {
 		setCurrentIndices(Number(sectionIndex), 0);
 		const firstQuestionInSection = quiz.sections[sectionIndex].questions[0];

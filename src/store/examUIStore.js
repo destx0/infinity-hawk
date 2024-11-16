@@ -75,10 +75,13 @@ const useExamUIStore = create((set, get) => ({
   resetExamUI: () => set({
     currentQuestionIndex: 0,
     currentSectionIndex: 0,
+    isSidebarOpen: true,
     answers: {},
     markedQuestions: new Set(),
     visitedQuestions: new Set(),
-    isSubmitted: false
+    isSubmitted: false,
+    isSubmitting: false,
+    submissionError: null
   }),
   
   setSubmitting: (status) => set({ isSubmitting: status }),

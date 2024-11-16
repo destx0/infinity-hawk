@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import useExamUIStore from '@/store/examUIStore';
 
 import { AlertCircle, X } from "lucide-react";
 import SideNav from "./SideNav";
@@ -78,6 +79,30 @@ export default function ExamPage({ params }) {
 			endTimeRef.current = examStartTime + (quiz.duration * 60 * 1000);
 		}
 	}, [quiz, examStartTime]);
+
+	// Add cleanup effect
+	useEffect(() => {
+		// Cleanup function that runs when component unmounts
+		return () => {
+			useExamUIStore.getState().resetExamUI();
+		};
+	}, []);
+
+	useEffect(() => {
+		// Only add the beforeunload handler if exam is in progress
+		if (!isSubmitted && !isReviewMode) {
+			const handleBeforeUnload = (e) => {
+				e.preventDefault();
+				e.returnValue = ''; // Required for Chrome
+			};
+
+			window.addEventListener('beforeunload', handleBeforeUnload);
+
+			return () => {
+				window.removeEventListener('beforeunload', handleBeforeUnload);
+			};
+		}
+	}, [isSubmitted, isReviewMode]);
 
 	const handleExitTest = () => {
 		if (!isSubmitted) {
