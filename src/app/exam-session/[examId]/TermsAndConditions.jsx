@@ -133,9 +133,9 @@ const StatusItem = ({ icon, description }) => (
 
 const TermsAndConditions = ({
 	onStartQuiz,
+	onPrevious,
 	testName,
 	duration,
-	onPrevious,
 }) => {
 	return (
 		<div className="flex flex-col h-screen bg-white">
