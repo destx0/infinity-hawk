@@ -6,12 +6,18 @@ import useExamStore from "@/store/examStore";
 
 export default function ExamsPage() {
 	const router = useRouter();
-	const { allExams } = useExamStore();
+	const { allExams, lastVisitedPath } = useExamStore();
 
 	useEffect(() => {
-		const defaultExam = allExams[0].name.toLowerCase().replace(/ /g, '-');
-		router.replace(`/exams/${defaultExam}`);
-	}, [router, allExams]);
+		if (lastVisitedPath) {
+			router.replace(lastVisitedPath);
+		} else {
+			const defaultExam = allExams[0].name
+				.toLowerCase()
+				.replace(/ /g, "-");
+			router.replace(`/exams/${defaultExam}`);
+		}
+	}, [router, allExams, lastVisitedPath]);
 
 	return null;
 }

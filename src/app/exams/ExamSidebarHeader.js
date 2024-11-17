@@ -16,14 +16,18 @@ import useExamStore from "@/store/examStore";
 import { useRouter } from "next/navigation";
 
 export function ExamSidebarHeader() {
-	const { selectedExam, setSelectedExam, allExams } = useExamStore();
+	const { selectedExam, setSelectedExam, allExams, setLastVisitedPath } =
+		useExamStore();
 	const router = useRouter();
-	const selectedExamData = allExams.find((exam) => exam.name === selectedExam) || allExams[0];
+	const selectedExamData =
+		allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 
 	const handleExamSelect = (examName) => {
 		setSelectedExam(examName);
-		const examSlug = examName.toLowerCase().replace(/ /g, '-');
-		router.push(`/exams/${examSlug}`);
+		const examSlug = examName.toLowerCase().replace(/ /g, "-");
+		const path = `/exams/${examSlug}`;
+		setLastVisitedPath(path);
+		router.push(path);
 	};
 
 	return (

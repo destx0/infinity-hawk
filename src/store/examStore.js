@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 const allExams = [
 	{
@@ -64,12 +65,21 @@ const allExams = [
 	// },
 ];
 
-const useExamStore = create((set) => ({
-	activeSection: "pyqs",
-	selectedExam: "SSC CGL",
-	allExams,
-	setActiveSection: (section) => set({ activeSection: section }),
-	setSelectedExam: (exam) => set({ selectedExam: exam }),
-}));
+const useExamStore = create(
+	persist(
+		(set) => ({
+			activeSection: "pyqs",
+			selectedExam: "SSC CGL",
+			lastVisitedPath: null,
+			allExams,
+			setActiveSection: (section) => set({ activeSection: section }),
+			setSelectedExam: (exam) => set({ selectedExam: exam }),
+			setLastVisitedPath: (path) => set({ lastVisitedPath: path }),
+		}),
+		{
+			name: "exam-storage",
+		}
+	)
+);
 
 export default useExamStore;
