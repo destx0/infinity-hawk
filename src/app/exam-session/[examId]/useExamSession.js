@@ -20,7 +20,8 @@ export function useExamSession(examId) {
 
 	const handleJumpToSection = (sectionIndex) => {
 		examUI.setCurrentIndices(Number(sectionIndex), 0);
-		const firstQuestionInSection = examSession.quiz.sections[sectionIndex].questions[0];
+		const firstQuestionInSection =
+			examSession.quiz.sections[sectionIndex].questions[0];
 		examUI.markQuestionVisited(firstQuestionInSection.id);
 		examSession.setTempSelectedOption(null);
 	};
@@ -40,7 +41,10 @@ export function useExamSession(examId) {
 				examSession.quiz.sections[examUI.currentSectionIndex].questions[
 					examUI.currentQuestionIndex
 				];
-			examUI.setAnswer(currentQuestion.id, examSession.tempSelectedOption);
+			examUI.setAnswer(
+				currentQuestion.id,
+				examSession.tempSelectedOption
+			);
 		}
 		examUI.nextQuestion(examSession.quiz.sections);
 		examSession.setTempSelectedOption(null);
@@ -54,7 +58,9 @@ export function useExamSession(examId) {
 	const handleJumpToQuestion = (questionIndex) => {
 		examUI.setCurrentIndices(examUI.currentSectionIndex, questionIndex);
 		const targetQuestion =
-			examSession.quiz.sections[examUI.currentSectionIndex].questions[questionIndex];
+			examSession.quiz.sections[examUI.currentSectionIndex].questions[
+				questionIndex
+			];
 		examUI.markQuestionVisited(targetQuestion.id);
 		examSession.setTempSelectedOption(null);
 	};
@@ -77,7 +83,11 @@ export function useExamSession(examId) {
 			);
 
 			if (selectedVersion && selectedVersion.quizId) {
-				const langQuizRef = doc(db, "fullQuizzes", selectedVersion.quizId);
+				const langQuizRef = doc(
+					db,
+					"fullQuizzes",
+					selectedVersion.quizId
+				);
 				const langQuizSnap = await getDoc(langQuizRef);
 
 				if (langQuizSnap.exists()) {
