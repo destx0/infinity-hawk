@@ -261,6 +261,10 @@ export function useExamSession(examId) {
 			);
 			console.log("Submission saved with ID:", submissionRef.id);
 
+			// Update URL to include review mode and submission ID
+			const newUrl = `${window.location.pathname}?mode=review&submissionId=${submissionRef.id}`;
+			window.history.replaceState({}, '', newUrl);
+
 			// Prepare minimal submission data for user document
 			const minimalSubmissionData = {
 				primaryQuizId: examId,
