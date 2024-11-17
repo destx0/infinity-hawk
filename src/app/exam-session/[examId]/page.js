@@ -264,13 +264,13 @@ export default function ExamPage({ params }) {
 								</p>
 							</div>
 							<div className="flex items-center gap-2 sm:gap-6">
-								<div className="flex items-center text-sm text-gray-600">
+								{/* <div className="flex items-center text-sm text-gray-600">
 									<span className="mr-1">⏱</span>
 									<span className="hidden sm:inline">
 										Time spent:{" "}
 									</span>
 									00:00
-								</div>
+								</div> */}
 								<div className="flex items-center gap-2">
 									<span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-sm">
 										+{quiz.positiveScore || 0}
