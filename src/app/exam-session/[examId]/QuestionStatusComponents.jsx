@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import useExamUIStore from "@/store/examUIStore";
 
 export const QuestionStatusIcon = ({
 	isActive,
@@ -10,10 +11,15 @@ export const QuestionStatusIcon = ({
 	size = 40,
 	isSubmitted,
 	isCorrect,
+	questionId,
 }) => {
+	const visitCounts = useExamUIStore((state) => state.visitCounts);
+	const visitCount = visitCounts[questionId] || 0;
+
 	let viewBox = "0 0 224 186";
 	let shape = null;
 	let textColor = isActive ? "black" : "white";
+	let fillColor = "#fff";
 
 	if (isSubmitted) {
 		textColor = "white";
@@ -64,24 +70,10 @@ export const QuestionStatusIcon = ({
 			);
 		}
 	} else {
-		if (isActive) {
-			textColor = "black";
-			shape = (
-				<rect
-					x="4"
-					y="4"
-					width="216"
-					height="178"
-					rx="89"
-					ry="89"
-					fill="#fff"
-					stroke="#000"
-					strokeWidth="8"
-					strokeMiterlimit="10"
-				/>
-			);
-		} else if (isMarked && isAnswered) {
+		textColor = "white";
+		if (isMarked && isAnswered) {
 			viewBox = "0 0 251.3 215.23";
+			fillColor = "#9b59b6";
 			shape = (
 				<>
 					<rect
@@ -91,7 +83,7 @@ export const QuestionStatusIcon = ({
 						height="178"
 						rx="89"
 						ry="89"
-						fill="#9b59b6"
+						fill={fillColor}
 					/>
 					<polyline
 						points="95 51.23 138 102.23 244 8.23"
@@ -104,14 +96,16 @@ export const QuestionStatusIcon = ({
 			);
 		} else if (isAnswered) {
 			viewBox = "0 0 197.5 178";
+			fillColor = "#22C55E";
 			shape = (
 				<path
 					d="m82.54,0h29.66c47.08,0,85.3,38.22,85.3,85.3v92.7H0v-95.46C0,36.99,36.99,0,82.54,0Z"
-					fill="#22C55E"
+					fill={fillColor}
 				/>
 			);
 		} else if (isMarked) {
 			viewBox = "0 0 216 178";
+			fillColor = "#9b59b6";
 			shape = (
 				<rect
 					x="0"
@@ -120,30 +114,55 @@ export const QuestionStatusIcon = ({
 					height="178"
 					rx="89"
 					ry="89"
-					fill="#9b59b6"
+					fill={fillColor}
 				/>
 			);
 		} else if (isVisited) {
 			viewBox = "0 0 216 178";
+			fillColor = visitCount > 1 ? "#c0392b" : "#fff";
+			textColor = visitCount > 1 ? "white" : "black";
+
 			shape = (
 				<path
 					d="m0,0h216v89c0,49.12-39.88,89-89,89h-38C39.88,178,0,138.12,0,89V0h0Z"
-					fill="#c0392b"
+					fill={fillColor}
 				/>
 			);
 		} else {
 			textColor = "black";
+			fillColor = "#fff";
 			shape = (
 				<rect
 					x="4"
 					y="4"
 					width="216"
 					height="178"
-					fill="#fff"
+					fill={fillColor}
 					stroke="#000"
 					strokeWidth="8"
 					strokeMiterlimit="10"
 				/>
+			);
+		}
+
+		if (isActive) {
+			textColor = visitCount > 1 && !isAnswered ? "white" : "black";
+			shape = (
+				<>
+					{shape}
+					<rect
+						x="4"
+						y="4"
+						width="216"
+						height="178"
+						rx="89"
+						ry="89"
+						fill="none"
+						stroke="#000"
+						strokeWidth="8"
+						strokeMiterlimit="10"
+					/>
+				</>
 			);
 		}
 	}

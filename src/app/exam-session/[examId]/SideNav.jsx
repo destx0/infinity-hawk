@@ -110,6 +110,7 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 											isCorrect={false}
 											number={index + 1}
 											size={35}
+											questionId={question.id}
 										/>
 									</button>
 								);

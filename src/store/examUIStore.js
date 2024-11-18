@@ -10,6 +10,7 @@ const useExamUIStore = create((set, get) => ({
 	isSubmitted: false,
 	isSubmitting: false,
 	submissionError: null,
+	visitCounts: {},
 
 	setCurrentIndices: (sectionIndex, questionIndex) =>
 		set({
@@ -41,6 +42,10 @@ const useExamUIStore = create((set, get) => ({
 	markQuestionVisited: (questionId) =>
 		set((state) => ({
 			visitedQuestions: new Set([...state.visitedQuestions, questionId]),
+			visitCounts: {
+				...state.visitCounts,
+				[questionId]: (state.visitCounts[questionId] || 0) + 1,
+			},
 		})),
 
 	nextQuestion: (sections) =>
@@ -87,6 +92,7 @@ const useExamUIStore = create((set, get) => ({
 			isSubmitted: false,
 			isSubmitting: false,
 			submissionError: null,
+			visitCounts: {},
 		}),
 
 	setSubmitting: (status) => set({ isSubmitting: status }),
