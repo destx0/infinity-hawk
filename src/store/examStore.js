@@ -53,16 +53,16 @@ const allExams = [
 			pyqs: "WEY3husaRJoOlmOnv69e",
 		},
 	},
-	// {
-	// 	name: "West Bengal",
-	// 	icon: "/wbp.png",
-	// 	category: "West Bengal",
-	// 	width: 32,
-	// 	height: 32,
-	// 	batchIds: {
-	// 		pyqs: "bOerxhZfsuoPNKHHFSDq",
-	// 	},
-	// },
+	{
+		name: "West Bengal",
+		icon: "/wbp.png",
+		category: "West Bengal",
+		width: 32,
+		height: 32,
+		batchIds: {
+			pyqs: "ugmOXiYoE0lfnqlpvmsv",
+		},
+	},
 ];
 
 const useExamStore = create(
