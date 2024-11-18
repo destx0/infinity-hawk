@@ -27,6 +27,23 @@ export function useExamSession(examId) {
 	};
 
 	const handleMarkForReview = () => {
+		const currentQuestion =
+			examSession.quiz.sections[examUI.currentSectionIndex].questions[
+				examUI.currentQuestionIndex
+			];
+
+		// Save the current answer if there is one
+		if (examSession.tempSelectedOption !== null && !examUI.isSubmitted) {
+			examUI.setAnswer(
+				currentQuestion.id,
+				examSession.tempSelectedOption
+			);
+		}
+
+		// Toggle the marked status
+		examUI.toggleMarkedQuestion(currentQuestion.id);
+
+		// Move to next question
 		examUI.nextQuestion(examSession.quiz.sections);
 		examSession.setTempSelectedOption(null);
 	};

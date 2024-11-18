@@ -70,6 +70,7 @@ export default function ExamPage({ params }) {
 		handleComplete,
 		isReviewMode,
 		examStartTime,
+		markedQuestions,
 	} = useExamSession(params.examId);
 
 	// Calculate end time based on exam start time
@@ -159,6 +160,9 @@ export default function ExamPage({ params }) {
 			/>
 		);
 	}
+
+	const currentQuestion =
+		quiz.sections[currentSectionIndex].questions[currentQuestionIndex];
 
 	return (
 		<div className="flex flex-col h-screen">
@@ -299,7 +303,9 @@ export default function ExamPage({ params }) {
 									className="px-3 py-2 rounded bg-[#1ca7c0] text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#1a96ad] transition-colors"
 									onClick={handleMarkForReview}
 								>
-									Mark for review
+									{markedQuestions.has(currentQuestion.id)
+										? "Unmark for review"
+										: "Mark for review"}
 								</button>
 								<button
 									className="px-3 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#1a96ad] transition-colors"
