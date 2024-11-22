@@ -71,6 +71,7 @@ export default function ExamPage({ params }) {
 		isReviewMode,
 		examStartTime,
 		markedQuestions,
+		selectedLanguage,
 	} = useExamSession(params.examId);
 
 	// Calculate end time based on exam start time
@@ -205,15 +206,46 @@ export default function ExamPage({ params }) {
 							onComplete={handleComplete}
 						/>
 					)}
-					{isSubmitted ? (
-						<Button
-							onClick={handleToggleAnalysis}
-							variant="outline"
-							className="ml-4"
-						>
-							{showAnalysis ? "Hide Analysis" : "Show Analysis"}
-						</Button>
-					) : null}
+					{isSubmitted && (
+						<>
+							{languageVersions.length > 0 && (
+								<select
+									value={selectedLanguage || "default"}
+									onChange={(e) =>
+										handleLanguageSelect(e.target.value)
+									}
+									className="px-3 py-2 border rounded-md text-sm 
+										bg-white text-gray-700
+										border-[#1ca7c0] 
+										focus:outline-none focus:ring-2 focus:ring-[#1ca7c0] focus:border-transparent
+										hover:border-[#1ca7c0]
+										transition-colors"
+								>
+									<option value="default">
+										Default Language
+									</option>
+									{languageVersions.map((version) => (
+										<option
+											key={version.language}
+											value={version.language}
+											className="bg-white text-gray-700"
+										>
+											{version.language}
+										</option>
+									))}
+								</select>
+							)}
+							<Button
+								onClick={handleToggleAnalysis}
+								variant="outline"
+								className="ml-4"
+							>
+								{showAnalysis
+									? "Hide Analysis"
+									: "Show Analysis"}
+							</Button>
+						</>
+					)}
 					<Button
 						variant="outline"
 						onClick={() => router.push("/exams")}
