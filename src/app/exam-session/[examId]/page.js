@@ -210,7 +210,10 @@ export default function ExamPage({ params }) {
 						<>
 							{languageVersions.length > 0 && (
 								<select
-									value={selectedLanguage || "default"}
+									value={
+										selectedLanguage ||
+										languageVersions[0]?.language
+									}
 									onChange={(e) =>
 										handleLanguageSelect(e.target.value)
 									}
@@ -221,16 +224,16 @@ export default function ExamPage({ params }) {
 										hover:border-[#1ca7c0]
 										transition-colors"
 								>
-									<option value="default">
-										Default Language
-									</option>
 									{languageVersions.map((version) => (
 										<option
 											key={version.language}
 											value={version.language}
 											className="bg-white text-gray-700"
 										>
-											{version.language}
+											{version.language
+												.charAt(0)
+												.toUpperCase() +
+												version.language.slice(1)}
 										</option>
 									))}
 								</select>
@@ -238,7 +241,6 @@ export default function ExamPage({ params }) {
 							<Button
 								onClick={handleToggleAnalysis}
 								variant="outline"
-								className="ml-4"
 							>
 								{showAnalysis
 									? "Hide Analysis"

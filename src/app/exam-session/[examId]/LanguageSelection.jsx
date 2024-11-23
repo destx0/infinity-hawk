@@ -34,14 +34,11 @@ const LanguageSelection = ({
 
 	const languages = languageVersions.map((version) => ({
 		value: version.language,
-		label:
-			version.language.charAt(0).toUpperCase() +
-			version.language.slice(1),
+		label: version.language
+			.split(" ")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" "),
 	}));
-
-	if (languages.length === 0) {
-		languages.push({ value: "en", label: "English" });
-	}
 
 	const handleLanguageChange = (e) => {
 		setSelectedLanguage(e.target.value);
@@ -125,7 +122,6 @@ const LanguageSelection = ({
 						onChange={handleLanguageChange}
 						className="border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
 					>
-						<option value="">-- Select --</option>
 						{languages.map((lang) => (
 							<option key={lang.value} value={lang.value}>
 								{lang.label}
