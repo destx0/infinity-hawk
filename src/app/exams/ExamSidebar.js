@@ -14,73 +14,6 @@ import { useMobile } from "@/components/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/components/lib/utils";
 
-// Import the exam data from AllExamsSection
-const allExams = [
-	{
-		name: "SSC CGL",
-		icon: "/ssc.png",
-		category: "SSC",
-		width: 64,
-		height: 64,
-	},
-	{
-		name: "SSC GD",
-		icon: "/ssc.png",
-		category: "SSC",
-		width: 64,
-		height: 64,
-	},
-	{
-		name: "SSC Selection Post",
-		icon: "/ssc.png",
-		category: "SSC",
-		width: 64,
-		height: 64,
-	},
-	{
-		name: "RRB ALP",
-		icon: "/rail.png",
-		category: "RAILWAY",
-		width: 32,
-		height: 32,
-	},
-	{
-		name: "RRB Group D",
-		icon: "/rail.png",
-		category: "RAILWAY",
-		width: 32,
-		height: 32,
-	},
-	{
-		name: "Kolkata Police",
-		icon: "/wbp.png",
-		category: "WB",
-		width: 32,
-		height: 32,
-	},
-	{
-		name: "Kolkata SI",
-		icon: "/wbp.png",
-		category: "WB",
-		width: 32,
-		height: 32,
-	},
-	{
-		name: "SBI PO",
-		icon: "/sbi.png",
-		category: "BANKING",
-		width: 32,
-		height: 32,
-	},
-	{
-		name: "SBI Clerk",
-		icon: "/sbi.png",
-		category: "BANKING",
-		width: 32,
-		height: 32,
-	},
-];
-
 export function ExamSidebar({ user, className }) {
 	const router = useRouter();
 	const { toggleSidebar } = useSidebar();
@@ -101,7 +34,7 @@ export function ExamSidebar({ user, className }) {
 				<>
 					{/* Floating Header */}
 					<div className="fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-sm border-b z-40 flex items-center justify-between px-4 md:hidden">
-						<Button 
+						<Button
 							onClick={toggleSidebar}
 							className="h-10 px-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm rounded-full"
 							size="sm"
@@ -115,14 +48,17 @@ export function ExamSidebar({ user, className }) {
 					</div>
 				</>
 			)}
-			<div className={cn(
-				"flex flex-col min-h-screen",
-				className
-			)}>
-				<Sidebar className="w-64 flex flex-col" collapsible={isMobile ? "icon" : false}>
+			<div className={cn("flex flex-col min-h-screen", className)}>
+				<Sidebar
+					className="w-64 flex flex-col"
+					collapsible={isMobile ? "icon" : false}
+				>
 					<ExamSidebarHeader />
 					<ExamSidebarContent />
-					<ExamSidebarFooter user={user} handleSignOut={handleSignOut} />
+					<ExamSidebarFooter
+						user={user}
+						handleSignOut={handleSignOut}
+					/>
 				</Sidebar>
 			</div>
 		</>
