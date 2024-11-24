@@ -151,13 +151,16 @@ const LanguageSelection = ({
 				</div>
 				<div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-between items-center">
 					<button
-						onClick={onPrevious}
+						onClick={() => {
+							console.log("Previous button clicked");
+							onPrevious();
+						}}
 						className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
 					>
 						Previous
 					</button>
 					<button
-						onClick={handleStart}
+						onClick={() => onStart(selectedLanguage)}
 						disabled={!selectedLanguage || !isConfirmed}
 						className={`px-6 py-2 text-black rounded ${
 							selectedLanguage && isConfirmed

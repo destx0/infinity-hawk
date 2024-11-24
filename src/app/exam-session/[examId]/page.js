@@ -156,7 +156,7 @@ export default function ExamPage({ params }) {
 				testName={quiz?.title}
 				durationMinutes={quiz?.duration}
 				onStart={handleLanguageSelect}
-				onPrevious={handlePreviousFromTerms}
+				onPrevious={handlePreviousFromLanguageSelection}
 				languageVersions={languageVersions}
 			/>
 		);
