@@ -46,9 +46,11 @@ import Image from "next/image";
 
 // ExamSidebarHeader Component
 function ExamSidebarHeader() {
-	const { selectedExam, setSelectedExam, allExams, setLastVisitedPath } = useExamStore();
+	const { selectedExam, setSelectedExam, allExams, setLastVisitedPath } =
+		useExamStore();
 	const router = useRouter();
-	const selectedExamData = allExams.find((exam) => exam.name === selectedExam) || allExams[0];
+	const selectedExamData =
+		allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 
 	const handleExamSelect = (examName) => {
 		setSelectedExam(examName);
@@ -107,12 +109,16 @@ function ExamSidebarHeader() {
 											/>
 										</div>
 										<div className="flex flex-col items-start">
-											<span className="font-semibold">{exam.name}</span>
+											<span className="font-semibold">
+												{exam.name}
+											</span>
 											<span className="text-xs text-gray-500">
 												{exam.category}
 											</span>
 										</div>
-										{exam.name === selectedExam && <Check className="ml-auto" />}
+										{exam.name === selectedExam && (
+											<Check className="ml-auto" />
+										)}
 									</div>
 								</DropdownMenuItem>
 							))}
@@ -134,7 +140,11 @@ function ExamSidebarContent() {
 		{ name: "sectional-tests", icon: Target, label: "Sectional Tests" },
 		{ name: "topicwise-tests", icon: BookOpen, label: "Topicwise Tests" },
 		{ name: "bookmarked", icon: Bookmark, label: "Bookmarked Questions" },
-		{ name: "previous-tests", icon: History, label: "Previously Done Tests" },
+		{
+			name: "previous-tests",
+			icon: History,
+			label: "Previously Done Tests",
+		},
 		{ name: "statistics", icon: BarChart2, label: "Statistics" },
 	];
 
@@ -235,7 +245,10 @@ export function ExamSidebar({ user, className }) {
 				>
 					<ExamSidebarHeader />
 					<ExamSidebarContent />
-					<ExamSidebarFooter user={user} handleSignOut={handleSignOut} />
+					<ExamSidebarFooter
+						user={user}
+						handleSignOut={handleSignOut}
+					/>
 				</Sidebar>
 			</div>
 		</>
