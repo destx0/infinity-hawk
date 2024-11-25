@@ -268,33 +268,34 @@ export default function ExamPage({ params }) {
 				<div className="flex-grow overflow-auto flex flex-col">
 					{/* Sticky section tabs and question header */}
 					<div className="sticky top-0 bg-white z-10">
-						{/* Only show sections tab if there's more than one section */}
-						{quiz.sections.length > 1 && (
-							<div className="flex border-b text-sm overflow-x-auto scrollbar-hide">
-								{quiz.sections.map((section, index) => (
-									<button
-										key={index}
-										onClick={() =>
-											handleJumpToSection(index)
-										}
-										className={`px-3 py-2 whitespace-nowrap ${
-											currentSectionIndex === index
-												? "border-b-2 border-blue-500"
-												: ""
-										}`}
-									>
-										<span className="hidden md:inline">
-											{section.name}
-										</span>
-										<span className="md:hidden">
-											{getShortenedSectionName(
-												section.name
-											)}
-										</span>
-									</button>
-								))}
-							</div>
-						)}
+						{/* Only show sections tab if there's more than one section AND less than 21 sections */}
+						{quiz.sections.length > 1 &&
+							quiz.sections.length < 21 && (
+								<div className="flex border-b text-sm overflow-x-auto scrollbar-hide">
+									{quiz.sections.map((section, index) => (
+										<button
+											key={index}
+											onClick={() =>
+												handleJumpToSection(index)
+											}
+											className={`px-3 py-2 whitespace-nowrap ${
+												currentSectionIndex === index
+													? "border-b-2 border-blue-500"
+													: ""
+											}`}
+										>
+											<span className="hidden md:inline">
+												{section.name}
+											</span>
+											<span className="md:hidden">
+												{getShortenedSectionName(
+													section.name
+												)}
+											</span>
+										</button>
+									))}
+								</div>
+							)}
 						<div className="flex justify-between items-center p-3 sm:p-5 border-b">
 							<div className="flex items-center">
 								<p className="text-sm text-gray-600">
