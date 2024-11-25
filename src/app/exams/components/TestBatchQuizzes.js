@@ -139,7 +139,10 @@ export default function TestBatchQuizzes({
 	}
 
 	return (
-		<div className="p-6 w-full max-w-[1200px] mx-auto">
+		<div 
+			className="p-6 w-full max-w-[1200px] mx-auto"
+			key={`${batchId}-${title}`}
+		>
 			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>

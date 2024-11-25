@@ -53,11 +53,15 @@ function ExamSidebarHeader() {
 		allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 
 	const handleExamSelect = (examName) => {
-		setSelectedExam(examName);
+		if (examName === selectedExam) return;
+
 		const examSlug = examName.toLowerCase().replace(/ /g, "-");
 		const path = `/exams/${examSlug}`;
+
+		setSelectedExam(examName);
 		setLastVisitedPath(path);
-		router.push(path);
+
+		router.push(path, { shallow: true });
 	};
 
 	return (
@@ -96,7 +100,10 @@ function ExamSidebarHeader() {
 							{allExams.map((exam) => (
 								<DropdownMenuItem
 									key={exam.name}
-									onSelect={() => handleExamSelect(exam.name)}
+									onSelect={(e) => {
+										e.preventDefault();
+										handleExamSelect(exam.name);
+									}}
 								>
 									<div className="flex items-center w-full">
 										<div className="w-8 h-8 mr-3 flex items-center justify-center rounded-md bg-sidebar-primary overflow-hidden">

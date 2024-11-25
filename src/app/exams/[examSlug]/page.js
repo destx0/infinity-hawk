@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
-import { ExamSidebar } from "../ExamSidebar";
+import React, { useEffect, useState, Suspense, useMemo } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { useRouter } from "next/navigation";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import useExamStore from "@/store/examStore";
 import TestBatchQuizzes from "../components/TestBatchQuizzes";
 import { useMobile } from "@/components/hooks/use-mobile";
@@ -26,15 +24,10 @@ export default function ExamPage({ params }) {
 			(exam) => exam.name.toLowerCase().replace(/ /g, "-") === examSlug
 		)?.name;
 
-		if (examName) {
+		if (examName && examName !== selectedExam) {
 			setSelectedExam(examName);
-		} else {
-			const defaultExam = allExams[0].name
-				.toLowerCase()
-				.replace(/ /g, "-");
-			router.replace(`/exams/${defaultExam}`);
 		}
-	}, [examSlug, allExams, setSelectedExam, router]);
+	}, [examSlug, allExams, setSelectedExam, selectedExam]);
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -62,7 +55,7 @@ export default function ExamPage({ params }) {
 		</div>
 	);
 
-	const renderContent = () => {
+	const renderContent = useMemo(() => {
 		const currentExam =
 			allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 		const currentBatchIds = currentExam.batchIds || {};
@@ -73,6 +66,7 @@ export default function ExamPage({ params }) {
 					<Suspense fallback={<LoadingSpinner />}>
 						<div className="w-full">
 							<TestBatchQuizzes
+								key={`${selectedExam}-${activeSection}`}
 								batchId={currentBatchIds.mockTests}
 								title={`${selectedExam} Mock Tests`}
 								description="Full-length mock tests to assess your preparation"
@@ -179,27 +173,20 @@ export default function ExamPage({ params }) {
 			default:
 				return <ComingSoon title="Select a section" />;
 		}
-	};
+	}, [selectedExam, activeSection, allExams]);
 
 	if (isLoading || !user) {
 		return <LoadingSpinner />;
 	}
 
 	return (
-		<div className="flex min-h-screen w-full">
-			<SidebarProvider>
-				<div className="flex w-full">
-					<ExamSidebar user={user} />
-					<main
-						className={cn(
-							"flex-1 overflow-auto",
-							isMobile && "pt-16"
-						)}
-					>
-						{renderContent()}
-					</main>
+		<main className={cn("flex-1 overflow-auto", isMobile && "pt-16")}>
+			{!isLoading && user && (
+				<div className="transition-opacity duration-200">
+					{renderContent}
 				</div>
-			</SidebarProvider>
-		</div>
+			)}
+			{(isLoading || !user) && <LoadingSpinner />}
+		</main>
 	);
 }
