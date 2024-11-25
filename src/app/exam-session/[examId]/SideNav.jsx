@@ -90,6 +90,10 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 								const isVisited = visitedQuestions.has(
 									question.id
 								);
+								const isCorrect =
+									isSubmitted &&
+									answers[question.id] ===
+										question.correctAnswer;
 
 								return (
 									<button
@@ -106,8 +110,8 @@ export default function SideNav({ quiz, onSubmit, onQuestionClick }) {
 											isAnswered={isAnswered}
 											isVisited={isVisited}
 											isMarked={isMarked}
-											isSubmitted={false}
-											isCorrect={false}
+											isSubmitted={isSubmitted}
+											isCorrect={isCorrect}
 											number={index + 1}
 											size={35}
 											questionId={question.id}

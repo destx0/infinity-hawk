@@ -39,20 +39,13 @@ export const QuestionStatusIcon = ({
 					strokeMiterlimit="10"
 				/>
 			);
-		} else if (isCorrect) {
+		} else if (isAnswered) {
 			viewBox = "0 0 197.5 178";
+			fillColor = isCorrect ? "#22C55E" : "#c0392b";
 			shape = (
 				<path
 					d="m82.54,0h29.66c47.08,0,85.3,38.22,85.3,85.3v92.7H0v-95.46C0,36.99,36.99,0,82.54,0Z"
-					fill="#22C55E"
-				/>
-			);
-		} else if (isAnswered) {
-			viewBox = "0 0 216 178";
-			shape = (
-				<path
-					d="m0,0h216v89c0,49.12-39.88,89-89,89h-38C39.88,178,0,138.12,0,89V0h0Z"
-					fill="#c0392b"
+					fill={fillColor}
 				/>
 			);
 		} else {
@@ -208,6 +201,7 @@ export const Legend = ({ isSubmitted }) => (
 						icon={
 							<QuestionStatusIcon
 								isSubmitted={true}
+								isAnswered={true}
 								isCorrect={true}
 								size={20}
 							/>
