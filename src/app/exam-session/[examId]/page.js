@@ -340,8 +340,8 @@ export default function ExamPage({ params }) {
 					{/* Bottom Bar */}
 					<div className="bg-white border-t p-3 sticky bottom-0 mt-auto">
 						<div className="flex justify-between items-center gap-2">
-							{/* Only show Mark for Review and Clear buttons if not in review mode */}
-							{!isReviewMode && (
+							{/* Only show Mark for Review and Clear buttons if not in review mode AND not submitted */}
+							{!isReviewMode && !isSubmitted && (
 								<div className="flex gap-2 flex-1 min-w-0">
 									<button
 										className="px-3 py-2 rounded bg-[#1ca7c0] text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#1a96ad] transition-colors"

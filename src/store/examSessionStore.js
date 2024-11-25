@@ -258,6 +258,7 @@ const useExamSessionStore = create((set, get) => ({
 				showConfirmModal: false,
 				showAnalysis: true,
 				submissionData: submissionData,
+				isReviewMode: true,
 			});
 		} catch (error) {
 			console.error("=== Submission Error ===");
