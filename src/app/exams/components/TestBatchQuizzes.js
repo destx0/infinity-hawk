@@ -63,7 +63,10 @@ export default function TestBatchQuizzes({
 	useEffect(() => {
 		async function getExams() {
 			setLoading(true);
-			const { data, error: fetchError } = await fetchTestBatch(batchId);
+			const { data, error: fetchError } = await fetchTestBatch(
+				batchId,
+				false
+			);
 
 			if (fetchError) {
 				setError(fetchError);
@@ -110,8 +113,8 @@ export default function TestBatchQuizzes({
 			(selectedStatus === "attempted" && isAttempted) ||
 			(selectedStatus === "unattempted" && !isAttempted);
 
-		const matchesSearch = 
-			searchQuery === "" || 
+		const matchesSearch =
+			searchQuery === "" ||
 			exam.title.toLowerCase().includes(searchQuery.toLowerCase());
 
 		return matchesYear && matchesStatus && matchesSearch;
@@ -148,7 +151,11 @@ export default function TestBatchQuizzes({
 						{isPYQ && availableYears.length > 0 && (
 							<div className="flex flex-wrap gap-2">
 								<Button
-									variant={selectedYear === "all" ? "default" : "outline"}
+									variant={
+										selectedYear === "all"
+											? "default"
+											: "outline"
+									}
 									onClick={() => setSelectedYear("all")}
 									className={cn(
 										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -163,11 +170,17 @@ export default function TestBatchQuizzes({
 									{availableYears.map((year) => (
 										<Button
 											key={year}
-											variant={selectedYear === year ? "default" : "outline"}
-											onClick={() => setSelectedYear(year)}
+											variant={
+												selectedYear === year
+													? "default"
+													: "outline"
+											}
+											onClick={() =>
+												setSelectedYear(year)
+											}
 											className={cn(
 												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-												 selectedYear === year
+												selectedYear === year
 													? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
 													: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
 											)}
@@ -182,7 +195,11 @@ export default function TestBatchQuizzes({
 						{/* Status Filter - Moved to second position */}
 						<div className="flex gap-2">
 							<Button
-								variant={selectedStatus === "all" ? "default" : "outline"}
+								variant={
+									selectedStatus === "all"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("all")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -194,7 +211,11 @@ export default function TestBatchQuizzes({
 								All Tests
 							</Button>
 							<Button
-								variant={selectedStatus === "attempted" ? "default" : "outline"}
+								variant={
+									selectedStatus === "attempted"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("attempted")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -206,7 +227,11 @@ export default function TestBatchQuizzes({
 								Attempted
 							</Button>
 							<Button
-								variant={selectedStatus === "unattempted" ? "default" : "outline"}
+								variant={
+									selectedStatus === "unattempted"
+										? "default"
+										: "outline"
+								}
 								onClick={() => setSelectedStatus("unattempted")}
 								className={cn(
 									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
@@ -227,7 +252,7 @@ export default function TestBatchQuizzes({
 								value={searchQuery}
 								onChange={(e) => {
 									setSearchQuery(e.target.value);
-									setSearchKey(prev => prev + 1);
+									setSearchKey((prev) => prev + 1);
 								}}
 								className="w-full px-4 pr-16 h-8 rounded-full border border-[hsl(var(--sidebar-border))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--sidebar-accent))] focus:border-transparent bg-transparent text-sm"
 							/>
@@ -236,7 +261,7 @@ export default function TestBatchQuizzes({
 								<button
 									onClick={() => {
 										setSearchQuery("");
-										setSearchKey(prev => prev + 1);
+										setSearchKey((prev) => prev + 1);
 									}}
 									className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
 									aria-label="Clear search"
@@ -275,7 +300,10 @@ export default function TestBatchQuizzes({
 					</div>
 				</div>
 			</div>
-			<div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3" key={searchKey}>
+			<div
+				className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+				key={searchKey}
+			>
 				{filteredExams.map((exam, index) => (
 					<motion.div
 						key={exam.primaryQuizId}
