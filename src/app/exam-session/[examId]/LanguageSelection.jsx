@@ -122,6 +122,9 @@ const LanguageSelection = ({
 						onChange={handleLanguageChange}
 						className="border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
 					>
+						<option value="" disabled>
+							Choose Language
+						</option>
 						{languages.map((lang) => (
 							<option key={lang.value} value={lang.value}>
 								{lang.label}
