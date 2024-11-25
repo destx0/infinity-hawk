@@ -268,26 +268,33 @@ export default function ExamPage({ params }) {
 				<div className="flex-grow overflow-auto flex flex-col">
 					{/* Sticky section tabs and question header */}
 					<div className="sticky top-0 bg-white z-10">
-						<div className="flex border-b text-sm overflow-x-auto scrollbar-hide">
-							{quiz.sections.map((section, index) => (
-								<button
-									key={index}
-									onClick={() => handleJumpToSection(index)}
-									className={`px-3 py-2 whitespace-nowrap ${
-										currentSectionIndex === index
-											? "border-b-2 border-blue-500"
-											: ""
-									}`}
-								>
-									<span className="hidden md:inline">
-										{section.name}
-									</span>
-									<span className="md:hidden">
-										{getShortenedSectionName(section.name)}
-									</span>
-								</button>
-							))}
-						</div>
+						{/* Only show sections tab if there's more than one section */}
+						{quiz.sections.length > 1 && (
+							<div className="flex border-b text-sm overflow-x-auto scrollbar-hide">
+								{quiz.sections.map((section, index) => (
+									<button
+										key={index}
+										onClick={() =>
+											handleJumpToSection(index)
+										}
+										className={`px-3 py-2 whitespace-nowrap ${
+											currentSectionIndex === index
+												? "border-b-2 border-blue-500"
+												: ""
+										}`}
+									>
+										<span className="hidden md:inline">
+											{section.name}
+										</span>
+										<span className="md:hidden">
+											{getShortenedSectionName(
+												section.name
+											)}
+										</span>
+									</button>
+								))}
+							</div>
+						)}
 						<div className="flex justify-between items-center p-3 sm:p-5 border-b">
 							<div className="flex items-center">
 								<p className="text-sm text-gray-600">
@@ -332,22 +339,25 @@ export default function ExamPage({ params }) {
 					{/* Bottom Bar */}
 					<div className="bg-white border-t p-3 sticky bottom-0 mt-auto">
 						<div className="flex justify-between items-center gap-2">
-							<div className="flex gap-2 flex-1 min-w-0">
-								<button
-									className="px-3 py-2 rounded bg-[#1ca7c0] text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#1a96ad] transition-colors"
-									onClick={handleMarkForReview}
-								>
-									{markedQuestions.has(currentQuestion.id)
-										? "Unmark for review"
-										: "Mark for review"}
-								</button>
-								<button
-									className="px-3 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#1a96ad] transition-colors"
-									onClick={handleClearResponse}
-								>
-									Clear
-								</button>
-							</div>
+							{/* Only show Mark for Review and Clear buttons if not in review mode */}
+							{!isReviewMode && (
+								<div className="flex gap-2 flex-1 min-w-0">
+									<button
+										className="px-3 py-2 rounded bg-[#1ca7c0] text-white text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] hover:bg-[#1a96ad] transition-colors"
+										onClick={handleMarkForReview}
+									>
+										{markedQuestions.has(currentQuestion.id)
+											? "Unmark for review"
+											: "Mark for review"}
+									</button>
+									<button
+										className="px-3 py-2 bg-[#1ca7c0] text-white rounded text-sm whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#1a96ad] transition-colors"
+										onClick={handleClearResponse}
+									>
+										Clear
+									</button>
+								</div>
+							)}
 
 							<div className="flex items-center gap-2 flex-shrink-0">
 								{isSubmitted && (
@@ -374,7 +384,7 @@ export default function ExamPage({ params }) {
 											quiz.sections.length - 1
 									}
 								>
-									Save & Next
+									{isReviewMode ? "Next" : "Save & Next"}
 								</button>
 							</div>
 						</div>
