@@ -46,9 +46,20 @@ import Image from "next/image";
 
 // ExamSidebarHeader Component
 function ExamSidebarHeader() {
-	const { selectedExam, setSelectedExam, allExams, setLastVisitedPath } =
-		useExamStore();
+	const {
+		selectedExam,
+		setSelectedExam,
+		allExams,
+		setLastVisitedPath,
+		refreshExams,
+	} = useExamStore();
 	const router = useRouter();
+
+	// Force refresh exams when component mounts
+	React.useEffect(() => {
+		refreshExams();
+	}, [refreshExams]);
+
 	const selectedExamData =
 		allExams.find((exam) => exam.name === selectedExam) || allExams[0];
 

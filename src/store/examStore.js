@@ -32,7 +32,6 @@ const allExams = [
 			pyqs: "MDOtslHBMQ9VPdua7ppQ",
 		},
 	},
-
 	{
 		name: "RRB Group D",
 		icon: "/rail.png",
@@ -67,19 +66,37 @@ const allExams = [
 
 const useExamStore = create(
 	persist(
-		(set) => ({
+		(set, get) => ({
 			activeSection: "pyqs",
 			selectedExam: "SSC CGL",
 			lastVisitedPath: null,
-			allExams,
-			setActiveSection: (section) => set({ activeSection: section }),
-			setSelectedExam: (exam) => set({ selectedExam: exam }),
+			allExams: allExams,
+			setActiveSection: (section) => {
+				console.log("Setting active section:", section);
+				set({ activeSection: section });
+			},
+			setSelectedExam: (exam) => {
+				console.log("Setting selected exam:", exam);
+				set({ selectedExam: exam });
+			},
 			setLastVisitedPath: (path) => set({ lastVisitedPath: path }),
+			refreshExams: () => {
+				console.log("Refreshing exam list with:", allExams);
+				set({ allExams: allExams });
+			},
 		}),
 		{
 			name: "exam-storage",
+			partialize: (state) => ({
+				activeSection: state.activeSection,
+				selectedExam: state.selectedExam,
+				lastVisitedPath: state.lastVisitedPath,
+				allExams: state.allExams,
+			}),
 		}
 	)
 );
+
+useExamStore.getState().refreshExams();
 
 export default useExamStore;
