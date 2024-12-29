@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useExamSessionStore from "@/store/examSessionStore";
 
 const LanguageSelection = ({
 	onPrevious,
@@ -40,8 +41,14 @@ const LanguageSelection = ({
 			.join(" "),
 	}));
 
+	const setQuizFromLanguageVersion = useExamSessionStore(
+		(state) => state.setQuizFromLanguageVersion
+	);
+
 	const handleLanguageChange = (e) => {
-		setSelectedLanguage(e.target.value);
+		const newLanguage = e.target.value;
+		setSelectedLanguage(newLanguage);
+		setQuizFromLanguageVersion(newLanguage);
 	};
 
 	const handleConfirmationChange = (e) => {

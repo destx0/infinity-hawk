@@ -61,13 +61,44 @@ const useExamSessionStore = create((set, get) => ({
 				mainQuiz.languageVersions &&
 				Array.isArray(mainQuiz.languageVersions)
 			) {
-				const versions = mainQuiz.languageVersions.map((version) => ({
-					id: version.quizId,
-					language: version.language,
-					isDefault: version.isDefault,
-					quizId: version.quizId,
-				}));
-				set({ languageVersions: versions });
+				const fetchedLanguageVersions = await Promise.all(
+					mainQuiz.languageVersions.map(async (version) => {
+						try {
+							const versionRef = doc(
+								db,
+								"fullQuizzes",
+								version.quizId
+							);
+							const versionSnap = await getDoc(versionRef);
+
+							if (!versionSnap.exists()) {
+								console.error(
+									`Quiz with ID ${version.quizId} not found`
+								);
+								return null;
+							}
+
+							return {
+								id: version.quizId,
+								language: version.language,
+								isDefault: version.isDefault,
+								quizId: version.quizId,
+								quizData: versionSnap.data(),
+							};
+						} catch (error) {
+							console.error(
+								`Error fetching quiz for language version ${version.quizId}: `,
+								error
+							);
+							return null;
+						}
+					})
+				);
+
+				const validVersions = fetchedLanguageVersions.filter(
+					(v) => v !== null
+				);
+				set({ languageVersions: validVersions });
 			}
 
 			if (isReviewMode) {
@@ -365,6 +396,20 @@ const useExamSessionStore = create((set, get) => ({
 
 		console.log("Calculated analytics:", analytics);
 		return analytics;
+	},
+
+	setQuizFromLanguageVersion: (language) => {
+		const { languageVersions } = get();
+		const selectedVersion = languageVersions.find(
+			(v) => v.language === language
+		);
+
+		if (selectedVersion?.quizData) {
+			set({
+				quiz: selectedVersion.quizData,
+				selectedLanguage: language,
+			});
+		}
 	},
 
 	// ... other methods as needed
