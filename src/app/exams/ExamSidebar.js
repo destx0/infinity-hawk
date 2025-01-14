@@ -156,11 +156,21 @@ function ExamSidebarContent() {
 	const handleMenuClick = (itemName) => {
 		setActiveSection(itemName);
 
-		// If topicwise-tests is clicked, navigate to the topicwise page
-		if (itemName === "topicwise-tests") {
-			const examSlug = selectedExam.toLowerCase().replace(/ /g, "-");
-			router.push(`/exams/${examSlug}/topicwise`);
-			return;
+		const examSlug = selectedExam.toLowerCase().replace(/ /g, "-");
+
+		switch (itemName) {
+			case "topicwise-tests":
+				router.push(`/exams/${examSlug}/topicwise`);
+				break;
+			case "mock-tests":
+				router.push(`/exams/${examSlug}/mock-tests`);
+				break;
+			case "pyqs":
+				router.push(`/exams/${examSlug}/pyqs`);
+				break;
+			default:
+				// For other menu items, stay on the main exam page
+				router.push(`/exams/${examSlug}`);
 		}
 	};
 
