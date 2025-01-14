@@ -22,7 +22,7 @@ export function NavBar({ items, className }) {
 	return (
 		<div
 			className={cn(
-				"fixed bottom-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:mb-4",
+				"fixed bottom-0 left-1/2 left-[calc(50%+var(--sidebar-width)/2)] -translate-x-1/2 z-50 mb-6 sm:mb-4",
 				className
 			)}
 		>
