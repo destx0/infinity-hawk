@@ -1,13 +1,13 @@
 "use client";
 
 import { Calculator, Globe, Language, Lightbulb, Layout } from "lucide-react";
-import { NavBar } from "@/components/ui/tubelight-navbar";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useExamStore from "@/store/examStore";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 // Icon mapping
 const iconMap = {
@@ -93,21 +93,41 @@ export default function TopicwisePage() {
 		<div className="min-h-screen bg-background p-4 pt-24 sm:pt-4 relative">
 			{subjects.length > 0 && (
 				<>
-					<NavBar
-						items={subjects.map((subject) => ({
-							name: subject.name,
-							url: subject.url,
-							icon: subject.icon,
-							onClick: () => handleSubjectChange(subject),
-						}))}
-						className="mb-8"
-					/>
-
 					<div className="max-w-4xl mx-auto">
 						<h1 className="text-3xl font-bold mb-8">
 							{selectedExam} - {selectedSubject?.name}
 						</h1>
-
+						<div className="max-w-4xl mx-auto mb-8">
+							<div className="flex flex-wrap gap-2 mb-8">
+								{subjects.map((subject) => {
+									const Icon = subject.icon;
+									return (
+										<Button
+											key={subject.name}
+											variant={
+												selectedSubject?.name ===
+												subject.name
+													? "default"
+													: "outline"
+											}
+											onClick={() =>
+												handleSubjectChange(subject)
+											}
+											className={cn(
+												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+												selectedSubject?.name ===
+													subject.name
+													? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+													: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+											)}
+										>
+											<Icon className="w-4 h-4 mr-2" />
+											{subject.name}
+										</Button>
+									);
+								})}
+							</div>
+						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{selectedSubject?.name === "All"
 								? selectedSubject.topics.map((topic, index) => (
