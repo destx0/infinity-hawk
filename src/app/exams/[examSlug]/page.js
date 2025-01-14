@@ -107,17 +107,7 @@ export default function ExamPage({ params }) {
 				);
 
 			case "topicwise-tests":
-				return currentBatchIds.topicwise ? (
-					<Suspense fallback={<LoadingSpinner />}>
-						<TestBatchQuizzes
-							batchId={currentBatchIds.topicwise}
-							title={`${selectedExam} Topicwise Tests`}
-							description="Practice topic by topic to strengthen your basics"
-						/>
-					</Suspense>
-				) : (
-					<ComingSoon title={`${selectedExam} Topicwise Tests`} />
-				);
+				return null;
 
 			case "bookmarked":
 				return currentBatchIds.bookmarked ? (

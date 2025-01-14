@@ -150,7 +150,19 @@ function ExamSidebarHeader() {
 
 // ExamSidebarContent Component
 function ExamSidebarContent() {
-	const { activeSection, setActiveSection } = useExamStore();
+	const { activeSection, setActiveSection, selectedExam } = useExamStore();
+	const router = useRouter();
+
+	const handleMenuClick = (itemName) => {
+		setActiveSection(itemName);
+
+		// If topicwise-tests is clicked, navigate to the topicwise page
+		if (itemName === "topicwise-tests") {
+			const examSlug = selectedExam.toLowerCase().replace(/ /g, "-");
+			router.push(`/exams/${examSlug}/topicwise`);
+			return;
+		}
+	};
 
 	const menuItems = [
 		{ name: "mock-tests", icon: Clock, label: "Mock Tests" },
@@ -175,7 +187,7 @@ function ExamSidebarContent() {
 						{menuItems.map((item) => (
 							<SidebarMenuItem key={item.name}>
 								<SidebarMenuButton
-									onClick={() => setActiveSection(item.name)}
+									onClick={() => handleMenuClick(item.name)}
 									isActive={activeSection === item.name}
 								>
 									<item.icon className="mr-2 h-4 w-4" />
