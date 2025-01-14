@@ -5,6 +5,9 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useExamStore from "@/store/examStore";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 // Icon mapping
 const iconMap = {
@@ -108,41 +111,87 @@ export default function TopicwisePage() {
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 							{selectedSubject?.name === "All"
 								? selectedSubject.topics.map((topic, index) => (
-										<div
+										<motion.div
 											key={index}
-											className="p-6 rounded-lg border border-border hover:border-primary/50 transition-colors bg-card"
+											whileHover={{ scale: 1.02 }}
+											whileTap={{ scale: 0.98 }}
+											transition={{
+												type: "spring",
+												stiffness: 400,
+												damping: 25,
+											}}
+											className="h-full"
 										>
-											<h3 className="text-lg font-semibold mb-2">
-												{topic.name}
-											</h3>
-											<div className="flex justify-between items-center">
-												<span className="text-sm text-muted-foreground">
-													{topic.subject}
-												</span>
-												<button className="px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-													Practice
-												</button>
-											</div>
-										</div>
+											<Card className="hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col bg-white">
+												<CardHeader className="pb-2 flex-none">
+													<CardTitle className="flex items-start justify-between gap-2">
+														<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
+															{topic.name}
+														</span>
+													</CardTitle>
+												</CardHeader>
+												<CardContent className="flex flex-col flex-grow">
+													<div className="space-y-4 flex flex-col h-full">
+														<div className="flex items-center gap-4 text-sm text-muted-foreground">
+															<span>
+																{topic.subject}
+															</span>
+														</div>
+														<div className="mt-auto pt-6">
+															<Button
+																variant="expandIcon"
+																iconPlacement="right"
+																className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
+															>
+																Practice
+															</Button>
+														</div>
+													</div>
+												</CardContent>
+											</Card>
+										</motion.div>
 								  ))
 								: selectedSubject?.topics.map(
 										(topic, index) => (
-											<div
+											<motion.div
 												key={index}
-												className="p-6 rounded-lg border border-border hover:border-primary/50 transition-colors bg-card"
+												whileHover={{ scale: 1.02 }}
+												whileTap={{ scale: 0.98 }}
+												transition={{
+													type: "spring",
+													stiffness: 400,
+													damping: 25,
+												}}
+												className="h-full"
 											>
-												<h3 className="text-lg font-semibold mb-2">
-													{topic}
-												</h3>
-												<div className="flex justify-between items-center">
-													<span className="text-sm text-muted-foreground">
-														25 Questions
-													</span>
-													<button className="px-4 py-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-														Practice
-													</button>
-												</div>
-											</div>
+												<Card className="hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col bg-white">
+													<CardHeader className="pb-2 flex-none">
+														<CardTitle className="flex items-start justify-between gap-2">
+															<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
+																{topic}
+															</span>
+														</CardTitle>
+													</CardHeader>
+													<CardContent className="flex flex-col flex-grow">
+														<div className="space-y-4 flex flex-col h-full">
+															<div className="flex items-center gap-4 text-sm text-muted-foreground">
+																<span>
+																	25 Questions
+																</span>
+															</div>
+															<div className="mt-auto pt-6">
+																<Button
+																	variant="expandIcon"
+																	iconPlacement="right"
+																	className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
+																>
+																	Practice
+																</Button>
+															</div>
+														</div>
+													</CardContent>
+												</Card>
+											</motion.div>
 										)
 								  )}
 						</div>
