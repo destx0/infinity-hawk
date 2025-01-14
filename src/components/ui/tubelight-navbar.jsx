@@ -26,7 +26,7 @@ export function NavBar({ items, className }) {
 				className
 			)}
 		>
-			<div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
+			<div className="flex items-center gap-3 bg-white border border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] backdrop-blur-lg py-1 px-1 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl">
 				{items.map((item) => {
 					const Icon = item.icon || null;
 					const isActive = activeTab === item.name;
@@ -42,7 +42,8 @@ export function NavBar({ items, className }) {
 							className={cn(
 								"relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
 								"text-foreground/80 hover:text-primary",
-								isActive && "bg-muted text-primary"
+								isActive &&
+									"bg-[hsl(var(--sidebar-primary))] text-white"
 							)}
 						>
 							<span className="hidden md:inline">
@@ -56,7 +57,7 @@ export function NavBar({ items, className }) {
 							{isActive && (
 								<motion.div
 									layoutId="lamp"
-									className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
+									className="absolute inset-0 w-full bg-[hsl(var(--sidebar-primary))]/5 rounded-full -z-10"
 									initial={false}
 									transition={{
 										type: "spring",
