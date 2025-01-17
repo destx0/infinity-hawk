@@ -7,24 +7,44 @@ export async function POST(req) {
 		const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
 			body;
 
-		const sign = razorpay_order_id + "|" + razorpay_payment_id;
-		const expectedSign = crypto
+		// Generate the expected signature
+		const text = `${razorpay_order_id}|${razorpay_payment_id}`;
+		const expectedSignature = crypto
 			.createHmac("sha256", process.env.RAZORPAY_SECRET_KEY)
-			.update(sign.toString())
+			.update(text)
 			.digest("hex");
 
-		if (razorpay_signature === expectedSign) {
-			return NextResponse.json({ success: true });
+		// Compare signatures
+		const isAuthentic = expectedSignature === razorpay_signature;
+
+		if (isAuthentic) {
+			// Payment is verified
+			return NextResponse.json({
+				success: true,
+				message: "Payment verified successfully",
+			});
 		} else {
+			// Payment verification failed
+			console.error("Signature mismatch:", {
+				expected: expectedSignature,
+				received: razorpay_signature,
+			});
 			return NextResponse.json(
-				{ success: false, error: "Invalid signature" },
+				{
+					success: false,
+					message: "Invalid payment signature",
+				},
 				{ status: 400 }
 			);
 		}
 	} catch (error) {
-		console.error(error);
+		console.error("Payment verification error:", error);
 		return NextResponse.json(
-			{ success: false, error: "Internal server error" },
+			{
+				success: false,
+				message: "Payment verification failed",
+				error: error.message,
+			},
 			{ status: 500 }
 		);
 	}

@@ -31,6 +31,7 @@ import {
 	User,
 	ChevronsUpDown,
 	Check,
+	Crown,
 } from "lucide-react";
 import useExamStore from "@/store/examStore";
 import { useMobile } from "@/components/hooks/use-mobile";
@@ -43,6 +44,7 @@ import {
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import useAuthStore from "@/store/authStore";
 
 // ExamSidebarHeader Component
 function ExamSidebarHeader() {
@@ -151,6 +153,7 @@ function ExamSidebarHeader() {
 // ExamSidebarContent Component
 function ExamSidebarContent() {
 	const { activeSection, setActiveSection, selectedExam } = useExamStore();
+	const { isPremium } = useAuthStore();
 	const router = useRouter();
 
 	const handleMenuClick = (itemName) => {
@@ -190,6 +193,25 @@ function ExamSidebarContent() {
 
 	return (
 		<SidebarContent>
+			{!isPremium && (
+				<SidebarGroup className="mb-4">
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									onClick={() => router.push("/pro")}
+									className="bg-gradient-to-r from-yellow-500/10 to-yellow-500/20 hover:from-yellow-500/20 hover:to-yellow-500/30"
+								>
+									<Crown className="mr-2 h-4 w-4 text-yellow-500" />
+									<span className="group-data-[collapsible=icon]:hidden text-yellow-700">
+										Upgrade to Premium
+									</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+			)}
 			<SidebarGroup>
 				<SidebarGroupLabel>Exam Preparation</SidebarGroupLabel>
 				<SidebarGroupContent>
@@ -216,6 +238,8 @@ function ExamSidebarContent() {
 
 // ExamSidebarFooter Component
 function ExamSidebarFooter({ user, handleSignOut }) {
+	const { isPremium } = useAuthStore();
+
 	return (
 		<SidebarFooter>
 			<SidebarGroup>
@@ -224,9 +248,19 @@ function ExamSidebarFooter({ user, handleSignOut }) {
 						<SidebarMenuItem>
 							<SidebarMenuButton>
 								<User className="mr-2 h-4 w-4" />
-								<span className="group-data-[collapsible=icon]:hidden">
-									{user?.displayName || user?.email || "User"}
-								</span>
+								<div className="flex flex-col group-data-[collapsible=icon]:hidden">
+									<span>
+										{user?.displayName ||
+											user?.email ||
+											"User"}
+									</span>
+									{isPremium && (
+										<span className="text-xs text-yellow-600 flex items-center">
+											<Crown className="h-3 w-3 mr-1" />
+											Premium Member
+										</span>
+									)}
+								</div>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 						<SidebarMenuItem>
