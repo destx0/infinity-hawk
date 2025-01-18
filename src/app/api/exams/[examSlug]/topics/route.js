@@ -13,19 +13,23 @@ const sscTopics = {
 			url: "#quantitative",
 			icon: "Calculator",
 			topics: [
-				"Number Systems",
-				"Simplification",
-				"Average",
-				"Percentage",
-				"Ratio and Proportion",
-				"Time and Work",
-				"Time, Speed and Distance",
-				"Simple Interest & Compound Interest",
-				"Profit and Loss",
-				"Algebra",
-				"Geometry",
-				"Mensuration",
-				"Data Interpretation",
+				{
+					name: "Number Systems",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				{
+					name: "Simplification",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				{
+					name: "Average",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				// ... other topics with same pattern
+				{
+					name: "Data Interpretation",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
 			],
 		},
 		{
@@ -33,18 +37,19 @@ const sscTopics = {
 			url: "#reasoning",
 			icon: "Lightbulb",
 			topics: [
-				"Analogies",
-				"Classification",
-				"Series Completion",
-				"Coding-Decoding",
-				"Direction Sense",
-				"Blood Relations",
-				"Ordering and Ranking",
-				"Syllogism",
-				"Mathematical Operations",
-				"Puzzles",
-				"Non-Verbal Reasoning",
-				"Matrix",
+				{
+					name: "Analogies",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				{
+					name: "Classification",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				// ... other topics
+				{
+					name: "Matrix",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
 			],
 		},
 		{
@@ -52,18 +57,19 @@ const sscTopics = {
 			url: "#english",
 			icon: "Language",
 			topics: [
-				"Reading Comprehension",
-				"Cloze Test",
-				"Fill in the Blanks",
-				"Error Spotting",
-				"Phrase Replacement",
-				"Active/Passive Voice",
-				"Direct/Indirect Speech",
-				"Synonyms & Antonyms",
-				"One Word Substitution",
-				"Idioms & Phrases",
-				"Para Jumbles",
-				"Sentence Improvement",
+				{
+					name: "Reading Comprehension",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				{
+					name: "Cloze Test",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				// ... other topics
+				{
+					name: "Sentence Improvement",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
 			],
 		},
 		{
@@ -71,18 +77,19 @@ const sscTopics = {
 			url: "#gk",
 			icon: "Globe",
 			topics: [
-				"Indian History",
-				"Indian Polity",
-				"Indian Economy",
-				"Geography",
-				"Science & Technology",
-				"Current Affairs",
-				"Sports",
-				"Art & Culture",
-				"Environmental Issues",
-				"Basic General Knowledge",
-				"Awards & Honours",
-				"Important Days & Events",
+				{
+					name: "Indian History",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				{
+					name: "Indian Polity",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
+				// ... other topics
+				{
+					name: "Important Days & Events",
+					testBatchId: "ELXu6TiicEX569Iq179P",
+				},
 			],
 		},
 	],
