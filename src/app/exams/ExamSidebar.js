@@ -171,6 +171,9 @@ function ExamSidebarContent() {
 			case "pyqs":
 				router.push(`/exams/${examSlug}/pyqs`);
 				break;
+			case "sectional-tests":
+				router.push(`/exams/${examSlug}/sectional`);
+				break;
 			default:
 				// For other menu items, stay on the main exam page
 				router.push(`/exams/${examSlug}`);
