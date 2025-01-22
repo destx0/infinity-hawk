@@ -18,10 +18,11 @@ import {
 } from "firebase/firestore";
 
 export default function TestBatchQuizzes({
-	batchId = "NHI6vv2PzgQ899Sz4Rll",
+	batchId,
 	title = "Quizzes",
 	description = "Practice questions from our collection",
 	isPYQ = false,
+	sections = null,
 }) {
 	const [exams, setExams] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -33,6 +34,9 @@ export default function TestBatchQuizzes({
 	const [userSubmissions, setUserSubmissions] = useState(null);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [searchKey, setSearchKey] = useState(0);
+	const [selectedSection, setSelectedSection] = useState(
+		sections ? sections[0] : null
+	);
 
 	useEffect(() => {
 		async function fetchUserData() {
@@ -61,39 +65,63 @@ export default function TestBatchQuizzes({
 	};
 
 	useEffect(() => {
+		if (sections) {
+			// If sections are provided, use the selected section's batchId
+			setSelectedSection(sections[0]);
+		}
+	}, [sections]);
+
+	useEffect(() => {
 		async function getExams() {
-			setLoading(true);
-			const { data, error: fetchError } = await fetchTestBatch(
-				batchId,
-				false
-			);
+			try {
+				setLoading(true);
+				// Use the selected section's batchId if sections are provided, otherwise use the prop batchId
+				const currentBatchId = sections
+					? selectedSection?.testBatchId
+					: batchId;
 
-			if (fetchError) {
-				setError(fetchError);
-			} else {
-				const examDetails = data.examDetails || [];
-				console.log("Loaded exam details:", examDetails); // Debug log
-				setExams(examDetails);
-
-				// If it's PYQ section, extract and set available years
-				if (isPYQ) {
-					const years = new Set();
-					examDetails.forEach((exam) => {
-						const yearFromTitle = extractYear(exam.title);
-						const yearFromDesc = extractYear(
-							exam.description || ""
-						);
-						if (yearFromTitle) years.add(yearFromTitle);
-						if (yearFromDesc) years.add(yearFromDesc);
-					});
-					setAvailableYears(Array.from(years).sort().reverse());
+				if (!currentBatchId) {
+					setExams([]);
+					setLoading(false);
+					return;
 				}
+
+				const { data, error: fetchError } = await fetchTestBatch(
+					currentBatchId,
+					false
+				);
+
+				if (fetchError) {
+					setError(fetchError);
+				} else {
+					const examDetails = data.examDetails || [];
+					console.log("Loaded exam details:", examDetails);
+					setExams(examDetails);
+
+					// If it's PYQ section, extract and set available years
+					if (isPYQ) {
+						const years = new Set();
+						examDetails.forEach((exam) => {
+							const yearFromTitle = extractYear(exam.title);
+							const yearFromDesc = extractYear(
+								exam.description || ""
+							);
+							if (yearFromTitle) years.add(yearFromTitle);
+							if (yearFromDesc) years.add(yearFromDesc);
+						});
+						setAvailableYears(Array.from(years).sort().reverse());
+					}
+				}
+			} catch (error) {
+				console.error("Error fetching exams:", error);
+				setError("Failed to load exams. Please try again later.");
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
 		}
 
 		getExams();
-	}, [batchId, isPYQ]);
+	}, [batchId, isPYQ, sections, selectedSection]);
 
 	const filteredExams = exams.filter((exam) => {
 		const matchesYear =
@@ -139,16 +167,40 @@ export default function TestBatchQuizzes({
 	}
 
 	return (
-		<div 
-			className="p-6 w-full max-w-[1200px] mx-auto"
-			key={`${batchId}-${title}`}
-		>
+		<div className="p-6 w-full max-w-[1200px] mx-auto">
 			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>
 						<h2 className="text-3xl font-bold mb-2">{title}</h2>
 						<p className="text-muted-foreground">{description}</p>
 					</div>
+
+					{/* Section Tabs - Only show if sections are provided */}
+					{sections && (
+						<div className="flex flex-wrap gap-2 pt-2">
+							{sections.map((section) => (
+								<Button
+									key={section.name}
+									variant={
+										selectedSection?.name === section.name
+											? "default"
+											: "outline"
+									}
+									onClick={() => setSelectedSection(section)}
+									className={cn(
+										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+										selectedSection?.name === section.name
+											? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+											: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+									)}
+								>
+									{section.name}
+								</Button>
+							))}
+						</div>
+					)}
+
+					{/* Filters */}
 					<div className="flex flex-wrap gap-4 items-center pt-2">
 						{/* Year Filter - Moved to first position */}
 						{isPYQ && availableYears.length > 0 && (
