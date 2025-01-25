@@ -72,6 +72,16 @@ const allExams = [
 			pyqs: "4FKjanm1hNBOz5LtP2Jk",
 		},
 	},
+	{
+		name: "SSC Selection Post",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "NBkBXOelvo2hykyLAohH",
+		},
+	},
 ];
 
 const useExamStore = create(
