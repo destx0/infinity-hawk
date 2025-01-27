@@ -57,10 +57,8 @@ const useExamSessionStore = create((set, get) => ({
 
 			set({ quiz: mainQuiz });
 
-			if (
-				mainQuiz.languageVersions &&
-				Array.isArray(mainQuiz.languageVersions)
-			) {
+			// Handle language versions
+			if (Array.isArray(mainQuiz.languageVersions)) {
 				const fetchedLanguageVersions = await Promise.all(
 					mainQuiz.languageVersions.map(async (version) => {
 						try {
@@ -99,6 +97,18 @@ const useExamSessionStore = create((set, get) => ({
 					(v) => v !== null
 				);
 				set({ languageVersions: validVersions });
+			} else {
+				// If no language versions, create a single version from the quiz's own language
+				const singleLanguageVersion = [
+					{
+						id: examId,
+						language: mainQuiz.language || "English", // Default to English if not specified
+						isDefault: true,
+						quizId: examId,
+						quizData: mainQuiz,
+					},
+				];
+				set({ languageVersions: singleLanguageVersion });
 			}
 
 			if (isReviewMode) {
