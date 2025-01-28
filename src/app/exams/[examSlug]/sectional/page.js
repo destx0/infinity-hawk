@@ -25,7 +25,15 @@ export default function SectionalPage() {
 
 				const data = await response.json();
 				setSections([
-					{ name: "All", testBatchId: data.sections[0].testBatchId },
+					{
+						name: "All",
+						testBatchId: data.sections[0].testBatchId,
+						questionsCount: data.sections.reduce(
+							(total, section) =>
+								total + (section.questionsCount || 0),
+							0
+						),
+					},
 					...data.sections,
 				]);
 			} catch (error) {

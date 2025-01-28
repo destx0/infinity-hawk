@@ -50,3 +50,20 @@ export async function getExamTopics(examSlug) {
 		throw error;
 	}
 }
+
+export async function getExamSections(examSlug) {
+	try {
+		const examRef = doc(db, "organizer", examSlug);
+		const examDoc = await getDoc(examRef);
+
+		if (!examDoc.exists()) {
+			console.log("No exam found with slug:", examSlug);
+			return null;
+		}
+
+		return examDoc.data();
+	} catch (error) {
+		console.error("Error fetching exam sections:", error);
+		throw error;
+	}
+}
