@@ -82,6 +82,16 @@ const allExams = [
 			pyqs: "NBkBXOelvo2hykyLAohH",
 		},
 	},
+	{
+		name: "abc",
+		icon: "/ssc.png",
+		category: "SSC",
+		width: 64,
+		height: 64,
+		batchIds: {
+			pyqs: "NBkBXOelvo2hykyLAohH",
+		},
+	},
 ];
 
 const useExamStore = create(

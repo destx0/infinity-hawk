@@ -206,6 +206,14 @@ export default function TopicwisePage() {
 																			}
 																		</span>
 																	</div>
+																	<div className="flex items-center gap-4 text-sm text-muted-foreground">
+																		<span>
+																			{
+																				topic.questionsCount
+																			}{" "}
+																			Questions
+																		</span>
+																	</div>
 																	<div className="mt-auto pt-6">
 																		<Button
 																			variant="expandIcon"
@@ -277,7 +285,9 @@ export default function TopicwisePage() {
 																<div className="space-y-4 flex flex-col h-full">
 																	<div className="flex items-center gap-4 text-sm text-muted-foreground">
 																		<span>
-																			25
+																			{
+																				topic.questionsCount
+																			}{" "}
 																			Questions
 																		</span>
 																	</div>

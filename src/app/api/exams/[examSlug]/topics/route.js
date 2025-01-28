@@ -1,120 +1,67 @@
 import { NextResponse } from "next/server";
-
-const sscTopics = {
-	subjects: [
-		{
-			name: "All",
-			url: "#all",
-			icon: "Layout",
-			topics: [], // Will be populated on the client side
-		},
-		{
-			name: "Quantitative Aptitude",
-			url: "#quantitative",
-			icon: "Calculator",
-			topics: [
-				{
-					name: "Number Systems",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				{
-					name: "Simplification",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				{
-					name: "Average",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				// ... other topics with same pattern
-				{
-					name: "Data Interpretation",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-			],
-		},
-		{
-			name: "General Intelligence",
-			url: "#reasoning",
-			icon: "Lightbulb",
-			topics: [
-				{
-					name: "Analogies",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				{
-					name: "Classification",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				// ... other topics
-				{
-					name: "Matrix",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-			],
-		},
-		{
-			name: "English Language",
-			url: "#english",
-			icon: "Language",
-			topics: [
-				{
-					name: "Reading Comprehension",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				{
-					name: "Cloze Test",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				// ... other topics
-				{
-					name: "Sentence Improvement",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-			],
-		},
-		{
-			name: "General Awareness",
-			url: "#gk",
-			icon: "Globe",
-			topics: [
-				{
-					name: "Indian History",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				{
-					name: "Indian Polity",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-				// ... other topics
-				{
-					name: "Important Days & Events",
-					testBatchId: "ELXu6TiicEX569Iq179P",
-				},
-			],
-		},
-	],
-};
-
-const examData = {
-	"ssc-cgl": sscTopics,
-	"ssc-chsl": sscTopics,
-	"ssc-mts": sscTopics,
-	// Add other exams here with their specific topics
-};
+import { getExamTopics } from "@/lib/firebase/examFunctions";
 
 export async function GET(request, { params }) {
 	const { examSlug } = params;
-	console.log("examSlug", examSlug);
+	console.log("examSlug:", examSlug);
 
-	// Simulate network delay
-	await new Promise((resolve) => setTimeout(resolve, 500));
+	try {
+		// Fetch exam topics from Firebase
+		const examTopics = await getExamTopics(examSlug);
 
-	// if (!examData[examSlug]) {
-	// 	return NextResponse.json(
-	// 		{ error: `Topics for exam ${examSlug} not found` },
-	// 		{ status: 404 }
-	// 	);
-	// }
+		if (!examTopics) {
+			console.log("No topics found for exam:", examSlug);
+			return NextResponse.json(
+				{
+					error: `Topics for exam ${examSlug} not found`,
+					details: "Document does not exist in Firestore",
+				},
+				{ status: 404 }
+			);
+		}
 
-	return NextResponse.json(sscTopics);
+		if (!examTopics.sections) {
+			console.log(
+				"Invalid data structure - no sections found:",
+				examTopics
+			);
+			return NextResponse.json(
+				{
+					error: "Invalid exam data structure",
+					details: "No sections found in the document",
+				},
+				{ status: 400 }
+			);
+		}
+
+		// Transform the data into the required format
+		const formattedTopics = {
+			subjects: [
+				{
+					name: "All",
+					url: "#all",
+					icon: "Layout",
+					topics: [], // Will be populated on the client side
+				},
+				...examTopics.sections.map((section) => ({
+					name: section.name,
+					url: `#${section.name.toLowerCase().replace(/\s+/g, "-")}`,
+					icon: "Layout",
+					topics: section.topics.map((topic) => ({
+						name: topic.name,
+						testBatchId: topic.topic_batchid,
+						questionsCount: topic.no_of_questions || 0,
+					})),
+				})),
+			],
+		};
+		console.log("formattedTopics:", formattedTopics);
+		return NextResponse.json(formattedTopics);
+	} catch (error) {
+		console.error("Error fetching exam topics:", error);
+		return NextResponse.json(
+			{ error: "Failed to fetch exam topics" },
+			{ status: 500 }
+		);
+	}
 }
