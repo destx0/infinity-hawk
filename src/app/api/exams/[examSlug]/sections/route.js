@@ -13,24 +13,19 @@ export async function GET(request, { params }) {
 			console.log("No sections found for exam:", examSlug);
 			return NextResponse.json(
 				{
-					error: `Sections for exam ${examSlug} not found`,
-					details: "Document does not exist in Firestore",
+					sections: [],
 				},
-				{ status: 404 }
+				{ status: 200 }
 			);
 		}
 
 		if (!examData.sections) {
-			console.log(
-				"Invalid data structure - no sections found:",
-				examData
-			);
+			console.log("No sections array in data:", examData);
 			return NextResponse.json(
 				{
-					error: "Invalid exam data structure",
-					details: "No sections found in the document",
+					sections: [],
 				},
-				{ status: 400 }
+				{ status: 200 }
 			);
 		}
 
@@ -39,19 +34,17 @@ export async function GET(request, { params }) {
 			sections: examData.sections.map((section) => ({
 				name: section.name,
 				testBatchId: section.section_batchid,
-				questionsCount: section.topics.reduce(
-					(total, topic) => total + (topic.no_of_questions || 0),
-					0
-				),
+				questionsCount:
+					section.topics?.reduce(
+						(total, topic) => total + (topic.no_of_questions || 0),
+						0
+					) || 0,
 			})),
 		};
 
 		return NextResponse.json(formattedSections);
 	} catch (error) {
 		console.error("Error fetching exam sections:", error);
-		return NextResponse.json(
-			{ error: "Failed to fetch exam sections" },
-			{ status: 500 }
-		);
+		return NextResponse.json({ sections: [] }, { status: 200 });
 	}
 }

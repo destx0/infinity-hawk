@@ -73,7 +73,7 @@ const allExams = [
 		},
 	},
 	{
-		name: "SSC Selection Post",
+		name: "SSC Selection",
 		icon: "/ssc.png",
 		category: "SSC",
 		width: 64,

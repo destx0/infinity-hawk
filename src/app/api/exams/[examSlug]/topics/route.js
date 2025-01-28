@@ -13,24 +13,19 @@ export async function GET(request, { params }) {
 			console.log("No topics found for exam:", examSlug);
 			return NextResponse.json(
 				{
-					error: `Topics for exam ${examSlug} not found`,
-					details: "Document does not exist in Firestore",
+					subjects: [], // Return empty array instead of error
 				},
-				{ status: 404 }
+				{ status: 200 }
 			);
 		}
 
 		if (!examTopics.sections) {
-			console.log(
-				"Invalid data structure - no sections found:",
-				examTopics
-			);
+			console.log("No sections array in data:", examTopics);
 			return NextResponse.json(
 				{
-					error: "Invalid exam data structure",
-					details: "No sections found in the document",
+					subjects: [], // Return empty array instead of error
 				},
-				{ status: 400 }
+				{ status: 200 }
 			);
 		}
 
@@ -47,11 +42,12 @@ export async function GET(request, { params }) {
 					name: section.name,
 					url: `#${section.name.toLowerCase().replace(/\s+/g, "-")}`,
 					icon: "Layout",
-					topics: section.topics.map((topic) => ({
-						name: topic.name,
-						testBatchId: topic.topic_batchid,
-						questionsCount: topic.no_of_questions || 0,
-					})),
+					topics:
+						section.topics?.map((topic) => ({
+							name: topic.name,
+							testBatchId: topic.topic_batchid,
+							questionsCount: topic.no_of_questions || 0,
+						})) || [],
 				})),
 			],
 		};
@@ -60,8 +56,8 @@ export async function GET(request, { params }) {
 	} catch (error) {
 		console.error("Error fetching exam topics:", error);
 		return NextResponse.json(
-			{ error: "Failed to fetch exam topics" },
-			{ status: 500 }
+			{ subjects: [] }, // Return empty array instead of error
+			{ status: 200 }
 		);
 	}
 }

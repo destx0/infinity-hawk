@@ -104,7 +104,7 @@ export default function TopicwisePage() {
 
 	return (
 		<div className="min-h-screen bg-background p-4 pt-24 sm:pt-4 relative">
-			{subjects.length > 0 && (
+			{subjects.length > 0 ? (
 				<>
 					<div className="max-w-4xl mx-auto">
 						<h1 className="text-3xl font-bold mb-8">
@@ -336,6 +336,23 @@ export default function TopicwisePage() {
 						)}
 					</div>
 				</>
+			) : (
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3 }}
+					className="flex flex-col items-center justify-center gap-4 p-8 text-center"
+				>
+					<div className="w-full max-w-md p-6 rounded-lg border-2 border-dashed border-[hsl(var(--sidebar-border))]">
+						<h3 className="text-2xl font-bold mb-2">
+							Coming Soon!
+						</h3>
+						<p className="text-muted-foreground">
+							We're currently preparing topic-wise tests for this
+							exam. Check back soon!
+						</p>
+					</div>
+				</motion.div>
 			)}
 		</div>
 	);

@@ -18,16 +18,21 @@ export default function SectionalPage() {
 			try {
 				setLoading(true);
 				const response = await fetch(`/api/exams/${examSlug}/sections`);
+				const data = await response.json();
 
 				if (!response.ok) {
-					throw new Error("Failed to fetch sections");
+					throw new Error(data.error || "Failed to fetch sections");
 				}
 
-				const data = await response.json();
+				if (!data.sections || data.sections.length === 0) {
+					setSections([]);
+					return;
+				}
+
 				setSections([
 					{
 						name: "All",
-						testBatchId: data.sections[0].testBatchId,
+						testBatchId: data.sections[0]?.testBatchId,
 						questionsCount: data.sections.reduce(
 							(total, section) =>
 								total + (section.questionsCount || 0),
@@ -38,7 +43,8 @@ export default function SectionalPage() {
 				]);
 			} catch (error) {
 				console.error("Error fetching sections:", error);
-				setError("Failed to load sections. Please try again later.");
+				setError(null); // Don't show error to user, just show coming soon
+				setSections([]); // Set empty array to trigger coming soon message
 			} finally {
 				setLoading(false);
 			}
@@ -67,7 +73,7 @@ export default function SectionalPage() {
 
 	return (
 		<div className="min-h-screen bg-background p-4 pt-24 sm:pt-4 relative">
-			{sections.length > 0 && (
+			{sections.length > 0 ? (
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -78,6 +84,23 @@ export default function SectionalPage() {
 						title="Practice Tests"
 						description="Practice sectional tests to improve your score"
 					/>
+				</motion.div>
+			) : (
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3 }}
+					className="flex flex-col items-center justify-center gap-4 p-8 text-center"
+				>
+					<div className="w-full max-w-md p-6 rounded-lg border-2 border-dashed border-[hsl(var(--sidebar-border))]">
+						<h3 className="text-2xl font-bold mb-2">
+							Coming Soon!
+						</h3>
+						<p className="text-muted-foreground">
+							We're currently preparing sectional tests for this
+							exam. Check back soon!
+						</p>
+					</div>
 				</motion.div>
 			)}
 		</div>

@@ -16,6 +16,13 @@ import {
 	doc,
 	getDoc,
 } from "firebase/firestore";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import TestFilters from "./TestFilters";
 
 export default function TestBatchQuizzes({
 	batchId,
@@ -167,7 +174,7 @@ export default function TestBatchQuizzes({
 	}
 
 	return (
-		<div className="p-6 w-full max-w-[1200px] mx-auto">
+		<div className="p-4 sm:p-6 w-full">
 			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>
@@ -175,132 +182,22 @@ export default function TestBatchQuizzes({
 						<p className="text-muted-foreground">{description}</p>
 					</div>
 
-					{/* Section Tabs - Only show if sections are provided */}
-					{sections && (
-						<div className="flex flex-wrap gap-2 pt-2">
-							{sections.map((section) => (
-								<Button
-									key={section.name}
-									variant={
-										selectedSection?.name === section.name
-											? "default"
-											: "outline"
-									}
-									onClick={() => setSelectedSection(section)}
-									className={cn(
-										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-										selectedSection?.name === section.name
-											? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-											: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-									)}
-								>
-									{section.name}
-								</Button>
-							))}
-						</div>
-					)}
+					{/* Filters Row */}
+					<div className="flex items-center gap-3">
+						<TestFilters
+							sections={sections}
+							isPYQ={isPYQ}
+							availableYears={availableYears}
+							selectedStatus={selectedStatus}
+							setSelectedStatus={setSelectedStatus}
+							selectedYear={selectedYear}
+							setSelectedYear={setSelectedYear}
+							selectedSection={selectedSection}
+							setSelectedSection={setSelectedSection}
+						/>
 
-					{/* Filters */}
-					<div className="flex flex-wrap gap-4 items-center pt-2">
-						{/* Year Filter - Moved to first position */}
-						{isPYQ && availableYears.length > 0 && (
-							<div className="flex flex-wrap gap-2">
-								<Button
-									variant={
-										selectedYear === "all"
-											? "default"
-											: "outline"
-									}
-									onClick={() => setSelectedYear("all")}
-									className={cn(
-										"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-										selectedYear === "all"
-											? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-											: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-									)}
-								>
-									All Years
-								</Button>
-								<div className="flex flex-wrap gap-2">
-									{availableYears.map((year) => (
-										<Button
-											key={year}
-											variant={
-												selectedYear === year
-													? "default"
-													: "outline"
-											}
-											onClick={() =>
-												setSelectedYear(year)
-											}
-											className={cn(
-												"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-												selectedYear === year
-													? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-													: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-											)}
-										>
-											{year}
-										</Button>
-									))}
-								</div>
-							</div>
-						)}
-
-						{/* Status Filter - Moved to second position */}
-						<div className="flex gap-2">
-							<Button
-								variant={
-									selectedStatus === "all"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("all")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "all"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								All Tests
-							</Button>
-							<Button
-								variant={
-									selectedStatus === "attempted"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("attempted")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "attempted"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								Attempted
-							</Button>
-							<Button
-								variant={
-									selectedStatus === "unattempted"
-										? "default"
-										: "outline"
-								}
-								onClick={() => setSelectedStatus("unattempted")}
-								className={cn(
-									"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-									selectedStatus === "unattempted"
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-								)}
-							>
-								Unattempted
-							</Button>
-						</div>
-
-						{/* Search Bar - Remains at the end */}
-						<div className="ml-auto flex items-center relative min-w-[200px]">
+						{/* Search Bar */}
+						<div className="flex-1 flex items-center relative min-w-[180px] max-w-[300px] ml-auto">
 							<input
 								type="text"
 								placeholder="Search tests..."
@@ -311,7 +208,6 @@ export default function TestBatchQuizzes({
 								}}
 								className="w-full px-4 pr-16 h-8 rounded-full border border-[hsl(var(--sidebar-border))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--sidebar-accent))] focus:border-transparent bg-transparent text-sm"
 							/>
-							{/* Clear button */}
 							{searchQuery && (
 								<button
 									onClick={() => {
@@ -355,8 +251,10 @@ export default function TestBatchQuizzes({
 					</div>
 				</div>
 			</div>
+
+			{/* Grid Layout */}
 			<div
-				className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+				className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
 				key={searchKey}
 			>
 				{filteredExams.map((exam, index) => (
