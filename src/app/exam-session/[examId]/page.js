@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import useExamUIStore from "@/store/examUIStore";
+import useAuthStore from "@/store/authStore";
 
-import { AlertCircle, X } from "lucide-react";
+import { AlertCircle, X, Lock } from "lucide-react";
 import SideNav from "./SideNav";
 import QuestionCard from "./QuestionCard";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ const calculateEndTime = (durationInMinutes) => {
 export default function ExamPage({ params }) {
 	const [showExitModal, setShowExitModal] = useState(false);
 	const [isTimerFrozen, setIsTimerFrozen] = useState(false);
+	const isPremiumUser = useAuthStore((state) => state.isPremium);
 
 	const {
 		quiz,
@@ -125,6 +127,28 @@ export default function ExamPage({ params }) {
 		return (
 			<div className="min-h-screen w-full flex items-center justify-center">
 				<span className="loading loading-infinity loading-lg scale-[2]"></span>
+			</div>
+		);
+	}
+
+	if (quiz?.isPremium && !isPremiumUser) {
+		return (
+			<div className="flex flex-col items-center justify-center min-h-screen gap-6 p-4">
+				<div className="text-center max-w-md mx-auto">
+					<Lock className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
+					<h1 className="text-2xl font-bold mb-2">{quiz.title}</h1>
+					<p className="text-lg font-medium mb-2">Premium Content</p>
+					<p className="text-muted-foreground mb-6">
+						This test is part of our premium collection. Upgrade to
+						access this and other premium tests.
+					</p>
+					<Button
+						onClick={() => router.push("/pro")}
+						className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-8 py-2"
+					>
+						Upgrade to Access
+					</Button>
+				</div>
 			</div>
 		);
 	}

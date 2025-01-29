@@ -30,7 +30,7 @@ const useExamSessionStore = create((set, get) => ({
 	setShowTermsAndConditions: (show) => set({ showTermsAndConditions: show }),
 	setShowLanguageSelection: (show) => set({ showLanguageSelection: show }),
 
-	initializeExam: async (examId) => {
+	initializeExam: async (examId, isPremiumUser) => {
 		try {
 			set({ loading: true, error: null });
 
@@ -55,8 +55,16 @@ const useExamSessionStore = create((set, get) => ({
 			const mainQuiz = quizSnap.data();
 			console.log("Loaded quiz data:", mainQuiz);
 
+			// Set the quiz data first
 			set({ quiz: mainQuiz });
 
+			// Check premium access but don't set it as an error
+			if (mainQuiz.isPremium && !isPremiumUser) {
+				set({ loading: false });
+				return;
+			}
+
+			// Continue with initialization only if user has access
 			// Handle language versions
 			if (Array.isArray(mainQuiz.languageVersions)) {
 				const fetchedLanguageVersions = await Promise.all(
