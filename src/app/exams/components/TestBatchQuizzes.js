@@ -8,20 +8,7 @@ import ExamCard from "./ExamCard";
 import { motion } from "framer-motion";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/config/firebase";
-import {
-	collection,
-	query,
-	where,
-	getDocs,
-	doc,
-	getDoc,
-} from "firebase/firestore";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
 import TestFilters from "./TestFilters";
 
 export default function TestBatchQuizzes({

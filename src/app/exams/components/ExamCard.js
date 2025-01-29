@@ -1,16 +1,18 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, ArrowRight, BarChart2, RotateCcw } from "lucide-react";
+import { Clock, ArrowRight, BarChart2, RotateCcw, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db, auth } from "@/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useAuthStore from "@/store/authStore";
 
 export default function ExamCard({ exam, userSubmissions }) {
 	const router = useRouter();
 	const [user] = useAuthState(auth);
+	const isPremiumUser = useAuthStore((state) => state.isPremium);
 
 	// Find submission for this exam from the passed userSubmissions prop
 	const submission = userSubmissions
@@ -26,6 +28,9 @@ export default function ExamCard({ exam, userSubmissions }) {
 	// Format title by replacing underscores with spaces
 	const formattedTitle = exam.title?.replace(/_/g, " ") || "";
 
+	const isPremiumTest = exam.isPremium;
+	const isLocked = isPremiumTest && !isPremiumUser;
+
 	return (
 		<motion.div
 			whileHover={{ scale: 1.02 }}
@@ -36,8 +41,23 @@ export default function ExamCard({ exam, userSubmissions }) {
 			<Card
 				className={`hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col ${
 					hasAttempted ? "bg-[#f0f9f0]" : "bg-white"
-				}`}
+				} relative`}
 			>
+				{isLocked && (
+					<div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] z-10 rounded-lg flex flex-col items-center justify-center text-white p-4">
+						<Lock className="w-8 h-8 mb-2" />
+						<p className="text-center font-medium mb-2">
+							Premium Content
+						</p>
+						<Button
+							variant="default"
+							className="bg-yellow-500 hover:bg-yellow-600 text-black"
+							onClick={() => router.push("/pro")}
+						>
+							Upgrade to Access
+						</Button>
+					</div>
+				)}
 				<CardHeader className="pb-2 flex-none">
 					<CardTitle className="flex items-start justify-between gap-2">
 						<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
@@ -56,6 +76,14 @@ export default function ExamCard({ exam, userSubmissions }) {
 							{hasAttempted && score !== null && (
 								<div className="flex items-center text-green-900 ml-auto">
 									<span>Score: {score}</span>
+								</div>
+							)}
+
+							{isPremiumTest && (
+								<div className="ml-auto flex items-center">
+									<span className="text-yellow-600 font-medium">
+										Premium
+									</span>
 								</div>
 							)}
 						</div>
@@ -95,13 +123,19 @@ export default function ExamCard({ exam, userSubmissions }) {
 									Icon={ArrowRight}
 									iconPlacement="right"
 									className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
-									onClick={() =>
-										router.push(
-											`/exam-session/${exam.primaryQuizId}`
-										)
-									}
+									onClick={() => {
+										if (isLocked) {
+											router.push("/pro");
+										} else {
+											router.push(
+												`/exam-session/${exam.primaryQuizId}`
+											);
+										}
+									}}
 								>
-									Start Quiz
+									{isLocked
+										? "Upgrade to Access"
+										: "Start Quiz"}
 								</Button>
 							)}
 						</div>
