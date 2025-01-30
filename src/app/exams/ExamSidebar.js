@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	Sidebar,
 	SidebarTrigger,
@@ -58,7 +58,7 @@ function ExamSidebarHeader() {
 	const router = useRouter();
 
 	// Force refresh exams when component mounts
-	React.useEffect(() => {
+	useEffect(() => {
 		refreshExams();
 	}, [refreshExams]);
 
@@ -240,8 +240,30 @@ function ExamSidebarContent() {
 }
 
 // ExamSidebarFooter Component
-function ExamSidebarFooter({ user, handleSignOut }) {
-	const { isPremium } = useAuthStore();
+function ExamSidebarFooter({ handleSignOut }) {
+	const { user, isPremium } = useAuthStore();
+
+	// Add debug logging
+	useEffect(() => {
+		console.log("ExamSidebarFooter - User Details:", {
+			user,
+			displayName: user?.displayName,
+			email: user?.email,
+			uid: user?.uid,
+			isPremium,
+		});
+	}, [user, isPremium]);
+
+	// Format email to show only the part before @
+	const formatUserDisplay = (user) => {
+		console.log("Formatting user display for:", user);
+		if (user?.displayName) return user.displayName;
+		if (user?.email) {
+			const [username] = user.email.split("@");
+			return username;
+		}
+		return "User";
+	};
 
 	return (
 		<SidebarFooter>
@@ -252,13 +274,11 @@ function ExamSidebarFooter({ user, handleSignOut }) {
 							<SidebarMenuButton>
 								<User className="mr-2 h-4 w-4" />
 								<div className="flex flex-col group-data-[collapsible=icon]:hidden">
-									<span>
-										{user?.displayName ||
-											user?.email ||
-											"User"}
+									<span className="font-medium">
+										{formatUserDisplay(user)}
 									</span>
 									{isPremium && (
-										<span className="text-xs text-yellow-600 flex items-center">
+										<span className="text-xs text-yellow-600 flex items-center mt-0.5">
 											<Crown className="h-3 w-3 mr-1" />
 											Premium Member
 										</span>
@@ -282,10 +302,20 @@ function ExamSidebarFooter({ user, handleSignOut }) {
 }
 
 // Main ExamSidebar Component
-export function ExamSidebar({ user, className }) {
+export function ExamSidebar({ className }) {
 	const router = useRouter();
 	const { toggleSidebar } = useSidebar();
 	const isMobile = useMobile();
+	const { user } = useAuthStore();
+
+	// Add debug logging
+	useEffect(() => {
+		console.log("ExamSidebar - Auth Store User:", {
+			user,
+			email: user?.email,
+			uid: user?.uid,
+		});
+	}, [user]);
 
 	const handleSignOut = async () => {
 		try {
@@ -322,10 +352,7 @@ export function ExamSidebar({ user, className }) {
 				>
 					<ExamSidebarHeader />
 					<ExamSidebarContent />
-					<ExamSidebarFooter
-						user={user}
-						handleSignOut={handleSignOut}
-					/>
+					<ExamSidebarFooter handleSignOut={handleSignOut} />
 				</Sidebar>
 			</div>
 		</>

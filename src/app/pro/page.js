@@ -10,28 +10,61 @@ import { doc, arrayUnion, setDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
 export default function PaymentPage() {
-	const { user, isPremium, setPremiumStatus, initialized } = useAuthStore();
+	const { user, isPremium, setPremiumStatus, initialized, initializeAuth } =
+		useAuthStore();
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
+	const [couponCode, setCouponCode] = useState("");
+	const [discountedAmount, setDiscountedAmount] = useState(49900);
 
-	// Add auth protection
+	// Initialize auth on component mount
+	useEffect(() => {
+		console.log("Initializing auth in pro page...");
+		const unsubscribe = initializeAuth();
+
+		// Cleanup subscription on unmount
+		return () => {
+			console.log("Cleaning up auth subscription");
+			unsubscribe();
+		};
+	}, []); // Remove initializeAuth from dependencies to prevent re-initialization
+
+	// Debug logging
+	useEffect(() => {
+		console.log("Auth State:", { initialized, user, isPremium });
+	}, [initialized, user, isPremium]);
+
+	// Auth protection
 	useEffect(() => {
 		if (initialized && !user) {
+			console.log("No user found, redirecting to /join");
 			router.push("/join");
 		}
 	}, [initialized, user, router]);
 
-	// Show loading state while checking auth
-	if (!initialized || !user) {
+	// Redirect if already premium
+	useEffect(() => {
+		if (isPremium) {
+			router.push("/exams");
+		}
+	}, [isPremium, router]);
+
+	// Loading states
+	if (!initialized || loading) {
 		return (
 			<div className="min-h-screen flex items-center justify-center">
-				<p>Loading...</p>
+				<p className="text-lg">Initializing authentication...</p>
 			</div>
 		);
 	}
 
-	const [couponCode, setCouponCode] = useState("");
-	const [discountedAmount, setDiscountedAmount] = useState(49900);
+	if (!user) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<p className="text-lg">Please log in to continue...</p>
+			</div>
+		);
+	}
 
 	const features = [
 		{
@@ -99,13 +132,6 @@ export default function PaymentPage() {
 			setLoading(false);
 		}
 	};
-
-	// Redirect if already premium
-	useEffect(() => {
-		if (isPremium) {
-			router.push("/exams");
-		}
-	}, [isPremium, router]);
 
 	const makePayment = async () => {
 		try {
@@ -394,19 +420,6 @@ export default function PaymentPage() {
 					>
 						Apply
 					</Button>
-				</div>
-				<div className="pt-2 border-t">
-					<Button
-						onClick={testFirebaseWrite}
-						disabled={loading}
-						variant="secondary"
-						className="w-full"
-					>
-						{loading ? "Testing..." : "Test Firebase Write"}
-					</Button>
-					<p className="text-xs text-muted-foreground mt-1 text-center">
-						This button is for testing purposes only
-					</p>
 				</div>
 			</div>
 		</div>
