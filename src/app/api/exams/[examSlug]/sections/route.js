@@ -3,14 +3,15 @@ import { getExamSections } from "@/lib/firebase/examFunctions";
 
 export async function GET(request, { params }) {
 	const { examSlug } = params;
-	console.log("examSlug:", examSlug);
+	const formattedExamSlug = examSlug.replace(/-/g, "_");
+	console.log("examSlug:", formattedExamSlug);
 
 	try {
 		// Fetch exam sections from Firebase
-		const examData = await getExamSections(examSlug);
+		const examData = await getExamSections(formattedExamSlug);
 
 		if (!examData) {
-			console.log("No sections found for exam:", examSlug);
+			console.log("No sections found for exam:", formattedExamSlug);
 			return NextResponse.json(
 				{
 					sections: [],
