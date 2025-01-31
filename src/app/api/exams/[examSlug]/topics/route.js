@@ -3,14 +3,16 @@ import { getExamTopics } from "@/lib/firebase/examFunctions";
 
 export async function GET(request, { params }) {
 	const { examSlug } = params;
-	console.log("examSlug:", examSlug);
+	// Add slug formatting to match sections route
+	const formattedExamSlug = examSlug.replace(/-/g, "_");
+	console.log("examSlug:", formattedExamSlug);
 
 	try {
 		// Fetch exam topics from Firebase
-		const examTopics = await getExamTopics(examSlug);
+		const examTopics = await getExamTopics(formattedExamSlug);
 
 		if (!examTopics) {
-			console.log("No topics found for exam:", examSlug);
+			console.log("No topics found for exam:", formattedExamSlug);
 			return NextResponse.json(
 				{
 					subjects: [], // Return empty array instead of error
