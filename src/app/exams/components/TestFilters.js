@@ -62,25 +62,28 @@ export default function TestFilters({
 				</div>
 			) : sections ? (
 				<div className="flex gap-1 flex-wrap">
-					{sections.slice(0, 4).map((section) => (
-						<Button
-							key={section.name}
-							variant={
-								selectedSection?.name === section.name
-									? "default"
-									: "outline"
-							}
-							onClick={() => setSelectedSection(section)}
-							className={cn(
-								"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
-								selectedSection?.name === section.name
-									? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-									: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
-							)}
-						>
-							{section.name}
-						</Button>
-					))}
+					{sections
+						.filter((section) => section.name !== "All")
+						.slice(0, 4)
+						.map((section) => (
+							<Button
+								key={section.name}
+								variant={
+									selectedSection?.name === section.name
+										? "default"
+										: "outline"
+								}
+								onClick={() => setSelectedSection(section)}
+								className={cn(
+									"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+									selectedSection?.name === section.name
+										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								)}
+							>
+								{section.name}
+							</Button>
+						))}
 				</div>
 			) : null}
 
@@ -234,6 +237,10 @@ export default function TestFilters({
 										</p>
 										<div className="flex flex-wrap gap-1.5">
 											{sections
+												.filter(
+													(section) =>
+														section.name !== "All"
+												)
 												.slice(3)
 												.map((section) => (
 													<Button
