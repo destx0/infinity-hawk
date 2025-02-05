@@ -81,13 +81,6 @@ export default function ExamPage({ params }) {
 
 	// Debug logs added in the useEffect to track the timer calculations
 	React.useEffect(() => {
-		console.log("Timer Effect - quiz:", quiz);
-		console.log("Timer Effect - examStartTime:", examStartTime);
-		console.log(
-			"Timer Effect - endTimeRef.current before:",
-			endTimeRef.current
-		);
-
 		if (quiz?.duration && examStartTime && !endTimeRef.current) {
 			endTimeRef.current = examStartTime + quiz.duration * 60 * 1000;
 			console.log(
@@ -96,13 +89,6 @@ export default function ExamPage({ params }) {
 			);
 		}
 	}, [quiz, examStartTime]);
-
-	// Add a debug log before the return to check timer conditions
-	console.log("ExamPage Render - Timer Conditions:", {
-		endTimeRef: endTimeRef.current,
-		examStartTime,
-		isTimerFrozen,
-	});
 
 	// Add cleanup effect
 	useEffect(() => {

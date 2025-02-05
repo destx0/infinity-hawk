@@ -3,6 +3,30 @@ import { db, auth } from "@/config/firebase";
 import { doc, getDoc, addDoc, collection, setDoc } from "firebase/firestore";
 import useExamUIStore from "./examUIStore";
 
+// Add this helper function right after the import statements
+function normalizeQuiz(quiz) {
+	if (quiz && quiz.sections) {
+		quiz.sections.forEach((section) => {
+			if (Array.isArray(section.questions)) {
+				section.questions.forEach((question, index) => {
+					if (!question.id && question.questionId) {
+						question.id = question.questionId;
+						console.log(
+							`Normalized question id for section "${section.name}" at index ${index}: set id to "${question.id}" from questionId`
+						);
+					}
+					if (!question.id) {
+						console.warn(
+							`Question in section "${section.name}" at index ${index} has neither "id" nor "questionId".`
+						);
+					}
+				});
+			}
+		});
+	}
+	return quiz;
+}
+
 const useExamSessionStore = create((set, get) => ({
 	quiz: null,
 	loading: true,
@@ -53,22 +77,23 @@ const useExamSessionStore = create((set, get) => ({
 			}
 
 			const mainQuiz = quizSnap.data();
-			console.log("Loaded quiz data:", mainQuiz);
+			const normalizedQuiz = normalizeQuiz(mainQuiz);
+			console.log("Loaded quiz data (normalized):", normalizedQuiz);
 
-			// Set the quiz data first
-			set({ quiz: mainQuiz });
+			// Set the quiz data using the normalized quiz
+			set({ quiz: normalizedQuiz });
 
 			// Check premium access but don't set it as an error
-			if (mainQuiz.isPremium && !isPremiumUser) {
+			if (normalizedQuiz.isPremium && !isPremiumUser) {
 				set({ loading: false });
 				return;
 			}
 
 			// Continue with initialization only if user has access
 			// Handle language versions
-			if (Array.isArray(mainQuiz.languageVersions)) {
+			if (Array.isArray(normalizedQuiz.languageVersions)) {
 				const fetchedLanguageVersions = await Promise.all(
-					mainQuiz.languageVersions.map(async (version) => {
+					normalizedQuiz.languageVersions.map(async (version) => {
 						try {
 							const versionRef = doc(
 								db,
@@ -89,7 +114,7 @@ const useExamSessionStore = create((set, get) => ({
 								language: version.language,
 								isDefault: version.isDefault,
 								quizId: version.quizId,
-								quizData: versionSnap.data(),
+								quizData: normalizeQuiz(versionSnap.data()),
 							};
 						} catch (error) {
 							console.error(
@@ -110,10 +135,10 @@ const useExamSessionStore = create((set, get) => ({
 				const singleLanguageVersion = [
 					{
 						id: examId,
-						language: mainQuiz.language || "English", // Default to English if not specified
+						language: normalizedQuiz.language || "English", // Default to English if not specified
 						isDefault: true,
 						quizId: examId,
-						quizData: mainQuiz,
+						quizData: normalizedQuiz,
 					},
 				];
 				set({ languageVersions: singleLanguageVersion });
