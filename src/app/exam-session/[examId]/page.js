@@ -79,11 +79,30 @@ export default function ExamPage({ params }) {
 	// Calculate end time based on exam start time
 	const endTimeRef = React.useRef(null);
 
+	// Debug logs added in the useEffect to track the timer calculations
 	React.useEffect(() => {
+		console.log("Timer Effect - quiz:", quiz);
+		console.log("Timer Effect - examStartTime:", examStartTime);
+		console.log(
+			"Timer Effect - endTimeRef.current before:",
+			endTimeRef.current
+		);
+
 		if (quiz?.duration && examStartTime && !endTimeRef.current) {
 			endTimeRef.current = examStartTime + quiz.duration * 60 * 1000;
+			console.log(
+				"Timer Effect - Calculated endTimeRef.current:",
+				endTimeRef.current
+			);
 		}
 	}, [quiz, examStartTime]);
+
+	// Add a debug log before the return to check timer conditions
+	console.log("ExamPage Render - Timer Conditions:", {
+		endTimeRef: endTimeRef.current,
+		examStartTime,
+		isTimerFrozen,
+	});
 
 	// Add cleanup effect
 	useEffect(() => {
@@ -163,6 +182,14 @@ export default function ExamPage({ params }) {
 	}
 
 	if (showTermsAndConditions && !isReviewMode) {
+		// Ensure that quiz is loaded before rendering TermsAndConditions
+		if (!quiz) {
+			return (
+				<div className="min-h-screen flex items-center justify-center">
+					Loading...
+				</div>
+			);
+		}
 		return (
 			<TermsAndConditions
 				onStartQuiz={handleAcceptTerms}

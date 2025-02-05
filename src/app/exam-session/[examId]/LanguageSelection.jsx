@@ -45,6 +45,11 @@ const LanguageSelection = ({
 		(state) => state.setQuizFromLanguageVersion
 	);
 
+	const examStartTime = useExamSessionStore((state) => state.examStartTime);
+	const setExamStartTime = useExamSessionStore(
+		(state) => state.setExamStartTime
+	);
+
 	const handleLanguageChange = (e) => {
 		const newLanguage = e.target.value;
 		setSelectedLanguage(newLanguage);
@@ -57,6 +62,10 @@ const LanguageSelection = ({
 
 	const handleStart = () => {
 		if (selectedLanguage && isConfirmed) {
+			if (!examStartTime && setExamStartTime) {
+				console.log("Starting exam timer at:", Date.now());
+				setExamStartTime(Date.now());
+			}
 			onStart(selectedLanguage);
 		}
 	};
@@ -170,7 +179,7 @@ const LanguageSelection = ({
 						Previous
 					</button>
 					<button
-						onClick={() => onStart(selectedLanguage)}
+						onClick={handleStart}
 						disabled={!selectedLanguage || !isConfirmed}
 						className={`px-6 py-2 text-black rounded ${
 							selectedLanguage && isConfirmed

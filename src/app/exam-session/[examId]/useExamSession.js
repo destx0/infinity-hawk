@@ -22,6 +22,15 @@ export function useExamSession(examId) {
 			} catch (error) {
 				console.error("Error initializing exam:", error);
 			}
+			// Ensure examStartTime is set after initialization if not already set
+			if (!examSession.examStartTime) {
+				// If a setter method exists, use it; otherwise, assign directly (based on your store implementation)
+				if (examSession.setExamStartTime) {
+					examSession.setExamStartTime(Date.now());
+				} else {
+					examSession.examStartTime = Date.now();
+				}
+			}
 		};
 
 		initializeExamWithPremiumCheck();
@@ -31,10 +40,28 @@ export function useExamSession(examId) {
 		};
 	}, [examId, isPremiumUser]);
 
+	// Wrap handleAcceptTerms to ensure examStartTime is set when the user starts the quiz
+	const originalHandleAcceptTerms = examSessionHooks.handleAcceptTerms;
+	const handleAcceptTermsWrapped = (...args) => {
+		if (!examSession.examStartTime) {
+			if (examSession.setExamStartTime) {
+				examSession.setExamStartTime(Date.now());
+			} else {
+				examSession.examStartTime = Date.now();
+			}
+		}
+		return originalHandleAcceptTerms(...args);
+	};
+
+	const updatedExamSessionHooks = {
+		...examSessionHooks,
+		handleAcceptTerms: handleAcceptTermsWrapped,
+	};
+
 	return {
 		...examSession,
 		...examUI,
-		...examSessionHooks,
+		...updatedExamSessionHooks,
 		router,
 	};
 }
