@@ -161,12 +161,14 @@ export default function TestBatchQuizzes({
 	}
 
 	return (
-		<div className="p-4 sm:p-6 w-full">
+		<div className="p-6 sm:p-8 w-full">
 			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>
-						<h2 className="text-3xl font-bold mb-2">{title}</h2>
-						<p className="text-muted-foreground">{description}</p>
+						<h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]">
+							{title}
+						</h2>
+						<p className="text-gray-600">{description}</p>
 					</div>
 
 					{/* Filters Row */}
@@ -241,7 +243,7 @@ export default function TestBatchQuizzes({
 
 			{/* Grid Layout */}
 			<div
-				className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+				className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
 				key={searchKey}
 			>
 				{filteredExams.map((exam, index) => (

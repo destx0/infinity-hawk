@@ -59,20 +59,22 @@ export default function TopicTests({ batchId, title, description }) {
 	}
 
 	return (
-		<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-			{exams.map((exam, index) => (
-				<motion.div
-					key={exam.primaryQuizId}
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						duration: 0.3,
-						delay: index * 0.1,
-					}}
-				>
-					<ExamCard exam={exam} />
-				</motion.div>
-			))}
+		<div className="p-6">
+			<div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+				{exams.map((exam, index) => (
+					<motion.div
+						key={exam.primaryQuizId}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							duration: 0.3,
+							delay: index * 0.05,
+						}}
+					>
+						<ExamCard exam={exam} />
+					</motion.div>
+				))}
+			</div>
 		</div>
 	);
 }

@@ -39,7 +39,7 @@ export default function ExamCard({ exam, userSubmissions }) {
 			className="h-full"
 		>
 			<Card
-				className={`hover:shadow-2xl transition-shadow duration-300 rounded-xl border border-[hsl(var(--sidebar-border))] shadow-md h-full flex flex-col ${
+				className={`hover:shadow-2xl transition-shadow duration-300 rounded-xl focus:outline-none focus:ring-0 shadow-lg h-full flex flex-col ${
 					hasAttempted ? "bg-green-50" : "bg-white"
 				} relative`}
 			>
@@ -58,7 +58,7 @@ export default function ExamCard({ exam, userSubmissions }) {
 						</Button>
 					</div>
 				)}
-				<CardHeader className="pb-2 flex-none border-b border-[hsl(var(--sidebar-border))]">
+				<CardHeader className="pb-2 flex-none">
 					<CardTitle className="flex items-start justify-between gap-1">
 						<span className="text-lg font-sans line-clamp-2 min-h-[2rem] text-[hsl(var(--foreground))]">
 							{formattedTitle}
@@ -69,7 +69,7 @@ export default function ExamCard({ exam, userSubmissions }) {
 					<div className="space-y-3 flex flex-col h-full">
 						<div className="flex items-center gap-1">
 							<div className="flex items-center gap-1 border border-[hsl(var(--sidebar-border))] text-[hsl(var(--foreground))] px-2 py-0.5 rounded">
-								<Clock className="h-3 w-3" />
+								<Clock className="h-3 w-3 text-[hsl(var(--foreground))]" />
 								<span className="font-medium text-sm">
 									{exam.duration || 45} mins
 								</span>
@@ -128,7 +128,7 @@ export default function ExamCard({ exam, userSubmissions }) {
 									className={`w-full rounded-lg px-4 py-2 ${
 										isLocked
 											? "bg-yellow-500 hover:bg-yellow-600 text-black"
-											: "bg-[hsl(var(--sidebar-primary))] hover:brightness-110 text-[hsl(var(--sidebar-primary-foreground))]"
+											: "bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] hover:brightness-110 text-[hsl(var(--sidebar-primary-foreground))]"
 									} text-sm`}
 									onClick={() => {
 										if (isLocked) {
