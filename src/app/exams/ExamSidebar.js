@@ -53,6 +53,7 @@ function ExamSidebarHeader() {
 		setSelectedExam,
 		allExams,
 		setLastVisitedPath,
+		activeSection,
 		refreshExams,
 	} = useExamStore();
 	const router = useRouter();
@@ -69,7 +70,19 @@ function ExamSidebarHeader() {
 		if (examName === selectedExam) return;
 
 		const examSlug = examName.toLowerCase().replace(/ /g, "-");
-		const path = `/exams/${examSlug}`;
+
+		// Map activeSection values to a URL segment
+		const sectionMapping = {
+			"topicwise-tests": "topicwise",
+			"mock-tests": "mock-tests",
+			pyqs: "pyqs",
+			"sectional-tests": "sectional",
+		};
+		const sectionSuffix = sectionMapping[activeSection]
+			? `/${sectionMapping[activeSection]}`
+			: "";
+
+		const path = `/exams/${examSlug}${sectionSuffix}`;
 
 		setSelectedExam(examName);
 		setLastVisitedPath(path);
@@ -113,10 +126,7 @@ function ExamSidebarHeader() {
 							{allExams.map((exam) => (
 								<DropdownMenuItem
 									key={exam.name}
-									onSelect={(e) => {
-										e.preventDefault();
-										handleExamSelect(exam.name);
-									}}
+									onSelect={() => handleExamSelect(exam.name)}
 								>
 									<div className="flex items-center w-full">
 										<div className="w-8 h-8 mr-3 flex items-center justify-center rounded-md bg-sidebar-primary overflow-hidden">
