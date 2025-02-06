@@ -187,55 +187,51 @@ export default function TopicwisePage() {
 														}}
 														className="h-full"
 													>
-														<Card className="hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col bg-white">
+														<Card className="hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-400 h-full flex flex-col bg-white">
 															<CardHeader className="pb-2 flex-none">
-																<CardTitle className="flex items-start justify-between gap-2">
-																	<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
+																<CardTitle className="flex flex-col">
+																	<div className="flex items-center justify-between">
+																		<span className="text-lg font-semibold text-gray-800">
+																			{
+																				topic.name
+																			}
+																		</span>
+																		<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+																			{
+																				topic.totalQuizzes
+																			}{" "}
+																			Tests
+																		</span>
+																	</div>
+																	<span className="text-sm text-gray-500">
 																		{
-																			topic.name
+																			topic.subject
 																		}
 																	</span>
 																</CardTitle>
 															</CardHeader>
 															<CardContent className="flex flex-col flex-grow">
-																<div className="space-y-4 flex flex-col h-full">
-																	<div className="flex items-center gap-4 text-sm text-muted-foreground">
-																		<span>
-																			{
-																				topic.subject
-																			}
-																		</span>
-																	</div>
-																	<div className="flex items-center gap-4 text-sm text-muted-foreground">
-																		<span>
-																			{
-																				topic.questionsCount
-																			}{" "}
-																			Questions
-																		</span>
-																	</div>
-																	<div className="mt-auto pt-6">
-																		<Button
-																			variant="expandIcon"
-																			iconPlacement="right"
-																			className={cn(
-																				"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
-																				selectedTopic?.name ===
-																					topic.name &&
-																					"bg-[hsl(var(--sidebar-primary))]"
-																			)}
-																			onClick={() =>
-																				handleTopicClick(
-																					topic
-																				)
-																			}
-																		>
-																			{selectedTopic?.name ===
-																			topic.name
-																				? "Hide Tests"
-																				: "Show Tests"}
-																		</Button>
-																	</div>
+																<div className="mt-auto pt-6">
+																	<Button
+																		variant="expandIcon"
+																		iconPlacement="right"
+																		className={cn(
+																			"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
+																			selectedTopic?.name ===
+																				topic.name &&
+																				"bg-[hsl(var(--sidebar-primary))]"
+																		)}
+																		onClick={() =>
+																			handleTopicClick(
+																				topic
+																			)
+																		}
+																	>
+																		{selectedTopic?.name ===
+																		topic.name
+																			? "Hide Tests"
+																			: "Show Tests"}
+																	</Button>
 																</div>
 															</CardContent>
 														</Card>
@@ -271,48 +267,44 @@ export default function TopicwisePage() {
 														}}
 														className="h-full"
 													>
-														<Card className="hover:shadow-xl transition-all duration-300 border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-primary))] h-full flex flex-col bg-white">
+														<Card className="hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-400 h-full flex flex-col bg-white">
 															<CardHeader className="pb-2 flex-none">
-																<CardTitle className="flex items-start justify-between gap-2">
-																	<span className="text-lg line-clamp-2 min-h-[3rem] text-[hsl(var(--sidebar-background))]">
+																<CardTitle className="flex items-center justify-between gap-2">
+																	<span className="text-lg font-semibold text-gray-800">
 																		{
 																			topic.name
 																		}
 																	</span>
+																	<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+																		{
+																			topic.totalQuizzes
+																		}{" "}
+																		Tests
+																	</span>
 																</CardTitle>
 															</CardHeader>
 															<CardContent className="flex flex-col flex-grow">
-																<div className="space-y-4 flex flex-col h-full">
-																	<div className="flex items-center gap-4 text-sm text-muted-foreground">
-																		<span>
-																			{
-																				topic.questionsCount
-																			}{" "}
-																			Questions
-																		</span>
-																	</div>
-																	<div className="mt-auto pt-6">
-																		<Button
-																			variant="expandIcon"
-																			iconPlacement="right"
-																			className={cn(
-																				"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
-																				selectedTopic?.name ===
-																					topic.name &&
-																					"bg-[hsl(var(--sidebar-primary))]"
-																			)}
-																			onClick={() =>
-																				handleTopicClick(
-																					topic
-																				)
-																			}
-																		>
-																			{selectedTopic?.name ===
-																			topic.name
-																				? "Hide Tests"
-																				: "Show Tests"}
-																		</Button>
-																	</div>
+																<div className="mt-auto pt-6">
+																	<Button
+																		variant="expandIcon"
+																		iconPlacement="right"
+																		className={cn(
+																			"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
+																			selectedTopic?.name ===
+																				topic.name &&
+																				"bg-[hsl(var(--sidebar-primary))]"
+																		)}
+																		onClick={() =>
+																			handleTopicClick(
+																				topic
+																			)
+																		}
+																	>
+																		{selectedTopic?.name ===
+																		topic.name
+																			? "Hide Tests"
+																			: "Show Tests"}
+																	</Button>
 																</div>
 															</CardContent>
 														</Card>

@@ -48,7 +48,7 @@ export async function GET(request, { params }) {
 						section.topics?.map((topic) => ({
 							name: topic.name,
 							testBatchId: topic.topic_batchid,
-							questionsCount: topic.no_of_questions || 0,
+							totalQuizzes: topic.totalQuizzes || 0,
 						})) || [],
 				})),
 			],
