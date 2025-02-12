@@ -112,8 +112,8 @@ export const QuestionStatusIcon = ({
 			);
 		} else if (isVisited) {
 			viewBox = "0 0 216 178";
-			fillColor = visitCount > 1 ? "#c0392b" : "#fff";
-			textColor = visitCount > 1 ? "white" : "black";
+			fillColor = visitCount > 1 ? "#c0392b" : "#c0392b";
+			textColor = visitCount > 1 ? "white" : "white";
 
 			shape = (
 				<path
