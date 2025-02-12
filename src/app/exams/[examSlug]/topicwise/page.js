@@ -9,7 +9,7 @@ import {
 	ArrowLeft,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useExamStore from "@/store/examStore";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ const iconMap = {
 
 export default function TopicwisePage() {
 	const { examSlug } = useParams();
+	const router = useRouter();
 	const [subjects, setSubjects] = useState([]);
 	const [selectedSubject, setSelectedSubject] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -78,12 +79,39 @@ export default function TopicwisePage() {
 		}
 	}, [examSlug]);
 
+	useEffect(() => {
+		const handlePopState = () => {
+			setSelectedTopic(null);
+		};
+
+		window.addEventListener("popstate", handlePopState);
+
+		return () => {
+			window.removeEventListener("popstate", handlePopState);
+		};
+	}, []);
+
 	const handleSubjectChange = (subject) => {
 		setSelectedSubject(subject);
 	};
 
 	const handleTopicClick = (topic) => {
-		setSelectedTopic(selectedTopic?.name === topic.name ? null : topic);
+		if (selectedTopic?.name === topic.name) {
+			setSelectedTopic(null);
+			window.history.pushState(null, "", window.location.pathname);
+		} else {
+			setSelectedTopic(topic);
+			window.history.pushState(
+				{ topic: topic.name },
+				"",
+				window.location.pathname
+			);
+		}
+	};
+
+	const handleBackClick = () => {
+		setSelectedTopic(null);
+		window.history.pushState(null, "", window.location.pathname);
 	};
 
 	if (loading) {
@@ -106,18 +134,55 @@ export default function TopicwisePage() {
 		<div className="min-h-screen bg-background p-4 pt-24 sm:pt-4 relative">
 			{subjects.length > 0 ? (
 				<>
-					<div className="max-w-4xl mx-auto">
-						<h1 className="text-3xl font-bold mb-8">
-							{selectedExam} - {selectedSubject?.name}
-						</h1>
+					<div className="p-6 sm:p-8 w-full">
+						<div className="mb-8">
+							<div className="flex flex-col space-y-4">
+								<div>
+									<h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]">
+										{selectedExam} - {selectedSubject?.name}
+									</h2>
+								</div>
 
-						{/* Show either topics list or tests */}
+								{/* Subject filters */}
+								<div className="flex flex-wrap gap-2">
+									{subjects.map((subject) => {
+										const Icon = subject.icon;
+										return (
+											<Button
+												key={subject.name}
+												variant={
+													selectedSubject?.name ===
+													subject.name
+														? "default"
+														: "outline"
+												}
+												onClick={() =>
+													handleSubjectChange(subject)
+												}
+												className={cn(
+													"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
+													selectedSubject?.name ===
+														subject.name
+														? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
+														: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+												)}
+											>
+												<Icon className="w-4 h-4 mr-2" />
+												{subject.name}
+											</Button>
+										);
+									})}
+								</div>
+							</div>
+						</div>
+
+						{/* Show either topics grid or tests */}
 						{selectedTopic ? (
 							<>
 								<div className="mb-8 flex items-center gap-4">
 									<Button
 										variant="outline"
-										onClick={() => setSelectedTopic(null)}
+										onClick={handleBackClick}
 										className="gap-2"
 									>
 										<ArrowLeft className="h-4 w-4" />
@@ -134,197 +199,67 @@ export default function TopicwisePage() {
 								/>
 							</>
 						) : (
-							<>
-								<div className="max-w-4xl mx-auto mb-8">
-									<div className="flex flex-wrap gap-2 mb-8">
-										{subjects.map((subject) => {
-											const Icon = subject.icon;
-											return (
-												<Button
-													key={subject.name}
-													variant={
-														selectedSubject?.name ===
-														subject.name
-															? "default"
-															: "outline"
-													}
-													onClick={() =>
-														handleSubjectChange(
-															subject
-														)
-													}
-													className={cn(
-														"rounded-full text-sm px-4 h-8 transition-all border-[hsl(var(--sidebar-border))]",
-														selectedSubject?.name ===
-															subject.name
-															? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-															: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+								{(selectedSubject?.name === "All"
+									? selectedSubject.topics
+									: selectedSubject?.topics
+								).map((topic, index) => (
+									<motion.div
+										key={index}
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{
+											opacity: 1,
+											y: 0,
+											transition: {
+												duration: 0.05,
+												delay: index * 0.02,
+											},
+										}}
+										viewport={{
+											once: true,
+											margin: "-50px",
+										}}
+									>
+										<Card className="hover:shadow-xl transition-all duration-300 border border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-accent))] h-full flex flex-col">
+											<CardHeader className="pb-2 flex-none">
+												<CardTitle className="flex flex-col">
+													<div className="flex items-center justify-between">
+														<span className="text-lg font-semibold">
+															{topic.name}
+														</span>
+														<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+															{topic.totalQuizzes}{" "}
+															Tests
+														</span>
+													</div>
+													{selectedSubject?.name ===
+														"All" && (
+														<span className="text-sm text-muted-foreground">
+															{topic.subject}
+														</span>
 													)}
-												>
-													<Icon className="w-4 h-4 mr-2" />
-													{subject.name}
-												</Button>
-											);
-										})}
-									</div>
-								</div>
-								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-									{selectedSubject?.name === "All"
-										? selectedSubject.topics.map(
-												(topic, index) => (
-													<motion.div
-														key={index}
-														whileHover={{
-															scale: 1.02,
-														}}
-														whileTap={{
-															scale: 0.98,
-														}}
-														transition={{
-															type: "spring",
-															stiffness: 400,
-															damping: 25,
-														}}
-														className="h-full"
+												</CardTitle>
+											</CardHeader>
+											<CardContent className="flex flex-col flex-grow">
+												<div className="mt-auto pt-6">
+													<Button
+														variant="expandIcon"
+														iconPlacement="right"
+														className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
+														onClick={() =>
+															handleTopicClick(
+																topic
+															)
+														}
 													>
-														<Card className="hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-400 h-full flex flex-col bg-white">
-															<CardHeader className="pb-2 flex-none">
-																<CardTitle className="flex flex-col">
-																	<div className="flex items-center justify-between">
-																		<span className="text-lg font-semibold text-gray-800">
-																			{
-																				topic.name
-																			}
-																		</span>
-																		<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-																			{
-																				topic.totalQuizzes
-																			}{" "}
-																			Tests
-																		</span>
-																	</div>
-																	<span className="text-sm text-gray-500">
-																		{
-																			topic.subject
-																		}
-																	</span>
-																</CardTitle>
-															</CardHeader>
-															<CardContent className="flex flex-col flex-grow">
-																<div className="mt-auto pt-6">
-																	<Button
-																		variant="expandIcon"
-																		iconPlacement="right"
-																		className={cn(
-																			"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
-																			selectedTopic?.name ===
-																				topic.name &&
-																				"bg-[hsl(var(--sidebar-primary))]"
-																		)}
-																		onClick={() =>
-																			handleTopicClick(
-																				topic
-																			)
-																		}
-																	>
-																		{selectedTopic?.name ===
-																		topic.name
-																			? "Hide Tests"
-																			: "Show Tests"}
-																	</Button>
-																</div>
-															</CardContent>
-														</Card>
-														{selectedTopic?.name ===
-															topic.name && (
-															<div className="mt-4">
-																<TopicTests
-																	batchId={
-																		topic.testBatchId
-																	}
-																	title={`${topic.name} Tests`}
-																	description={`Practice tests for ${topic.name}`}
-																/>
-															</div>
-														)}
-													</motion.div>
-												)
-										  )
-										: selectedSubject?.topics.map(
-												(topic, index) => (
-													<motion.div
-														key={index}
-														whileHover={{
-															scale: 1.02,
-														}}
-														whileTap={{
-															scale: 0.98,
-														}}
-														transition={{
-															type: "spring",
-															stiffness: 400,
-															damping: 25,
-														}}
-														className="h-full"
-													>
-														<Card className="hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-400 h-full flex flex-col bg-white">
-															<CardHeader className="pb-2 flex-none">
-																<CardTitle className="flex items-center justify-between gap-2">
-																	<span className="text-lg font-semibold text-gray-800">
-																		{
-																			topic.name
-																		}
-																	</span>
-																	<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-																		{
-																			topic.totalQuizzes
-																		}{" "}
-																		Tests
-																	</span>
-																</CardTitle>
-															</CardHeader>
-															<CardContent className="flex flex-col flex-grow">
-																<div className="mt-auto pt-6">
-																	<Button
-																		variant="expandIcon"
-																		iconPlacement="right"
-																		className={cn(
-																			"w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]",
-																			selectedTopic?.name ===
-																				topic.name &&
-																				"bg-[hsl(var(--sidebar-primary))]"
-																		)}
-																		onClick={() =>
-																			handleTopicClick(
-																				topic
-																			)
-																		}
-																	>
-																		{selectedTopic?.name ===
-																		topic.name
-																			? "Hide Tests"
-																			: "Show Tests"}
-																	</Button>
-																</div>
-															</CardContent>
-														</Card>
-														{selectedTopic?.name ===
-															topic.name && (
-															<div className="mt-4">
-																<TopicTests
-																	batchId={
-																		topic.testBatchId
-																	}
-																	title={`${topic.name} Tests`}
-																	description={`Practice tests for ${topic.name}`}
-																/>
-															</div>
-														)}
-													</motion.div>
-												)
-										  )}
-								</div>
-							</>
+														Show Tests
+													</Button>
+												</div>
+											</CardContent>
+										</Card>
+									</motion.div>
+								))}
+							</div>
 						)}
 					</div>
 				</>
