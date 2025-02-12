@@ -10,6 +10,7 @@ const allExams = [
 		height: 64,
 		batchIds: {
 			pyqs: "ELXu6TiicEX569Iq179P",
+			mockTests: "ssc_cgl_full_mock",
 		},
 	},
 	{
@@ -20,6 +21,7 @@ const allExams = [
 		height: 64,
 		batchIds: {
 			pyqs: "7YIxWJRTqXyY8SHk7fUH",
+			mockTests: "ssc_mts_full_mock",
 		},
 	},
 	{
@@ -30,6 +32,7 @@ const allExams = [
 		height: 64,
 		batchIds: {
 			pyqs: "MDOtslHBMQ9VPdua7ppQ",
+			mockTests: "ssc_chsl_full_mock",
 		},
 	},
 	{
@@ -40,6 +43,7 @@ const allExams = [
 		height: 32,
 		batchIds: {
 			pyqs: "SCj53w0mE3lvxKcJAksp",
+			mockTests: "rrb_group_d_full_mock",
 		},
 	},
 	{
@@ -50,6 +54,7 @@ const allExams = [
 		height: 32,
 		batchIds: {
 			pyqs: "WEY3husaRJoOlmOnv69e",
+			mockTests: "rrb_ntpc_full_mock",
 		},
 	},
 	{
@@ -60,6 +65,7 @@ const allExams = [
 		height: 32,
 		batchIds: {
 			pyqs: "ugmOXiYoE0lfnqlpvmsv",
+			mockTests: "west_bengal_full_mock",
 		},
 	},
 	{
@@ -70,6 +76,7 @@ const allExams = [
 		height: 64,
 		batchIds: {
 			pyqs: "4FKjanm1hNBOz5LtP2Jk",
+			mockTests: "ssc_cpo_full_mock",
 		},
 	},
 	{
@@ -80,6 +87,7 @@ const allExams = [
 		height: 64,
 		batchIds: {
 			pyqs: "NBkBXOelvo2hykyLAohH",
+			mockTests: "ssc_selection_full_mock",
 		},
 	},
 	{
