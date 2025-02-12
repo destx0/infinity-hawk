@@ -29,7 +29,8 @@ const TAG_STYLES = {
 const BUTTON_STYLES = {
 	analysis: "from-[hsl(var(--tag-stone))] to-[hsl(var(--tag-slate))]", // professional blue gradient
 	retake: "from-[hsl(var(--tag-forest))] to-[hsl(var(--tag-moss))]", // forest green gradient
-	showTests: "from-[hsl(var(--tag-clay))] to-[hsl(var(--tag-bark))]", // earthy brown gradient
+	showTests:
+		"from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]", // earthy brown gradient
 	// start test keeps the original sidebar gradient
 	start: "from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]",
 };

@@ -165,10 +165,12 @@ export default function TestBatchQuizzes({
 			<div className="mb-8">
 				<div className="flex flex-col space-y-4">
 					<div>
-						<h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]">
+						<h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--tag-stone))] to-[hsl(var(--tag-slate))]">
 							{title}
 						</h2>
-						<p className="text-gray-600">{description}</p>
+						<p className="text-[hsl(var(--tag-slate))]">
+							{description}
+						</p>
 					</div>
 
 					{/* Filters Row */}
@@ -185,7 +187,7 @@ export default function TestBatchQuizzes({
 							setSelectedSection={setSelectedSection}
 						/>
 
-						{/* Search Bar */}
+						{/* Search Bar with updated styling */}
 						<div className="flex-1 flex items-center relative min-w-[180px] max-w-[300px] ml-auto">
 							<input
 								type="text"
@@ -195,7 +197,7 @@ export default function TestBatchQuizzes({
 									setSearchQuery(e.target.value);
 									setSearchKey((prev) => prev + 1);
 								}}
-								className="w-full px-4 pr-16 h-8 rounded-full border border-[hsl(var(--sidebar-border))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--sidebar-accent))] focus:border-transparent bg-transparent text-sm"
+								className="w-full px-4 pr-16 h-7 rounded-full border border-[hsl(var(--tag-slate))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--tag-stone))] focus:border-transparent bg-transparent text-xs"
 							/>
 							{searchQuery && (
 								<button
@@ -203,7 +205,7 @@ export default function TestBatchQuizzes({
 										setSearchQuery("");
 										setSearchKey((prev) => prev + 1);
 									}}
-									className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
+									className="absolute right-8 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--tag-slate))] hover:text-[hsl(var(--tag-stone))] transition-colors"
 									aria-label="Clear search"
 								>
 									<svg
@@ -211,7 +213,7 @@ export default function TestBatchQuizzes({
 										fill="none"
 										viewBox="0 0 24 24"
 										stroke="currentColor"
-										className="h-4 w-4"
+										className="h-3.5 w-3.5"
 									>
 										<path
 											strokeLinecap="round"
@@ -223,7 +225,7 @@ export default function TestBatchQuizzes({
 								</button>
 							)}
 							<svg
-								className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+								className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[hsl(var(--tag-slate))]"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"

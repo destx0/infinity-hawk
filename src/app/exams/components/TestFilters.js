@@ -14,6 +14,17 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+// Update the color utility constants
+const FILTER_STYLES = {
+	// Primary style for "All" and main actions
+	primary:
+		"bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] text-white/90 border-none",
+	// Secondary style for other filters
+	active: "bg-gradient-to-r from-[hsl(var(--tag-stone))] to-[hsl(var(--tag-slate))] text-white/90 border-none",
+	inactive:
+		"border-[hsl(var(--tag-slate))] text-[hsl(var(--tag-slate))] hover:bg-gradient-to-r hover:from-[hsl(var(--tag-stone))] hover:to-[hsl(var(--tag-slate))] hover:text-white/90",
+};
+
 export default function TestFilters({
 	sections,
 	isPYQ,
@@ -26,18 +37,18 @@ export default function TestFilters({
 	setSelectedSection,
 }) {
 	return (
-		<div className="flex items-center gap-1 flex-wrap">
+		<div className="flex items-center gap-1.5 flex-wrap">
 			{/* Primary Filters - PYQ or Sections */}
 			{isPYQ ? (
-				<div className="flex gap-1 flex-wrap">
+				<div className="flex gap-1.5 flex-wrap">
 					<Button
 						variant={selectedYear === "all" ? "default" : "outline"}
 						onClick={() => setSelectedYear("all")}
 						className={cn(
-							"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+							"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 							selectedYear === "all"
-								? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-								: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+								? FILTER_STYLES.primary
+								: FILTER_STYLES.inactive
 						)}
 					>
 						All
@@ -50,10 +61,10 @@ export default function TestFilters({
 							}
 							onClick={() => setSelectedYear(year)}
 							className={cn(
-								"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+								"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 								selectedYear === year
-									? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-									: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+									? FILTER_STYLES.active
+									: FILTER_STYLES.inactive
 							)}
 						>
 							{year}
@@ -61,11 +72,11 @@ export default function TestFilters({
 					))}
 				</div>
 			) : sections ? (
-				<div className="flex gap-1 flex-wrap">
+				<div className="flex gap-1.5 flex-wrap">
 					{sections
 						.filter((section) => section.name !== "All")
 						.slice(0, 4)
-						.map((section) => (
+						.map((section, index) => (
 							<Button
 								key={section.name}
 								variant={
@@ -75,10 +86,12 @@ export default function TestFilters({
 								}
 								onClick={() => setSelectedSection(section)}
 								className={cn(
-									"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+									"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 									selectedSection?.name === section.name
-										? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-										: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+										? index === 0
+											? FILTER_STYLES.primary
+											: FILTER_STYLES.active
+										: FILTER_STYLES.inactive
 								)}
 							>
 								{section.name}
@@ -87,16 +100,16 @@ export default function TestFilters({
 				</div>
 			) : null}
 
-			{/* Status Filter - Visible on larger screens */}
-			<div className="hidden lg:flex gap-1">
+			{/* Status Filter */}
+			<div className="hidden lg:flex gap-1.5">
 				<Button
 					variant={selectedStatus === "all" ? "default" : "outline"}
 					onClick={() => setSelectedStatus("all")}
 					className={cn(
-						"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+						"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 						selectedStatus === "all"
-							? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-							: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+							? FILTER_STYLES.primary
+							: FILTER_STYLES.inactive
 					)}
 				>
 					All
@@ -107,10 +120,10 @@ export default function TestFilters({
 					}
 					onClick={() => setSelectedStatus("attempted")}
 					className={cn(
-						"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+						"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 						selectedStatus === "attempted"
-							? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-							: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+							? FILTER_STYLES.active
+							: FILTER_STYLES.inactive
 					)}
 				>
 					Done
@@ -121,17 +134,17 @@ export default function TestFilters({
 					}
 					onClick={() => setSelectedStatus("unattempted")}
 					className={cn(
-						"rounded-full text-xs px-2.5 h-6 transition-all border-[hsl(var(--sidebar-border))]",
+						"rounded-full text-xs px-3 h-7 transition-all shadow-sm font-medium",
 						selectedStatus === "unattempted"
-							? "bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-accent-foreground))]"
-							: "hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-accent-foreground))]"
+							? FILTER_STYLES.active
+							: FILTER_STYLES.inactive
 					)}
 				>
 					New
 				</Button>
 			</div>
 
-			{/* More Filters Dropdown */}
+			{/* Filter Button */}
 			<Tooltip>
 				<TooltipTrigger asChild>
 					<div>
@@ -140,13 +153,16 @@ export default function TestFilters({
 								<Button
 									variant="outline"
 									size="icon"
-									className="h-6 w-6 rounded-full"
+									className={cn(
+										"h-7 w-7 rounded-full transition-all shadow-sm",
+										FILTER_STYLES.inactive
+									)}
 								>
-									<Filter className="h-3 w-3" />
+									<Filter className="h-3.5 w-3.5" />
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
-								className="w-[240px] p-2"
+								className="w-[240px] p-3 rounded-xl shadow-lg border-[hsl(var(--tag-slate))]"
 								align="start"
 								side="bottom"
 							>
