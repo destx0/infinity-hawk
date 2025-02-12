@@ -44,6 +44,13 @@
     --sidebar-accent-foreground: 237 57% 90%;
     --sidebar-border: 237 57% 10%;
     --sidebar-ring: 237 57% 30%;
+    --tag-olive: 79 65% 25%;      /* #4d5422 - saturated dark olive */
+    --tag-moss: 89 60% 22%;       /* #3a4520 - saturated dark moss */
+    --tag-forest: 103 55% 20%;    /* #2b391d - saturated dark forest */
+    --tag-bark: 40 55% 20%;       /* #382f1d - saturated dark bark */
+    --tag-clay: 27 50% 25%;       /* #473528 - saturated dark clay */
+    --tag-stone: 200 55% 25%;     /* #234454 - saturated dark stone */
+    --tag-slate: 220 55% 25%;     /* #233654 - saturated dark slate */
   }
 
   .dark {
@@ -79,6 +86,13 @@
     --sidebar-accent-foreground: 237 57% 90%;
     --sidebar-border: 237 57% 10%;
     --sidebar-ring: 237 57% 30%;
+    --tag-olive: 79 65% 25%;
+    --tag-moss: 89 60% 22%;
+    --tag-forest: 103 55% 20%;
+    --tag-bark: 40 55% 20%;
+    --tag-clay: 27 50% 25%;
+    --tag-stone: 200 55% 25%;
+    --tag-slate: 220 55% 25%;
   }
 }
 

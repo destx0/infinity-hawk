@@ -18,11 +18,20 @@ import useAuthStore from "@/store/authStore";
 
 // Add these color utility constants at the top
 const TAG_STYLES = {
-	duration: "from-[hsl(0,45%,45%)] to-[hsl(270,45%,45%)]", // muted red to purple
-	score: "from-[hsl(150,40%,40%)] to-[hsl(180,40%,40%)]", // muted teal to cyan
-	premium: "from-[hsl(270,40%,45%)] to-[hsl(220,40%,45%)]", // muted purple to blue
-	subject: "from-[hsl(220,40%,45%)] to-[hsl(200,40%,45%)]", // muted blue to cyan
-	tests: "from-[hsl(150,40%,40%)] to-[hsl(270,40%,45%)]", // muted green to purple
+	duration: "from-[hsl(var(--tag-clay))] to-[hsl(var(--tag-bark))]", // clay to bark
+	score: "from-[hsl(var(--tag-forest))] to-[hsl(var(--tag-moss))]", // forest to moss
+	premium: "from-[hsl(var(--tag-slate))] to-[hsl(var(--tag-stone))]", // slate to stone
+	subject: "from-[hsl(var(--tag-olive))] to-[hsl(var(--tag-moss))]", // olive to moss
+	tests: "from-[hsl(var(--tag-forest))] to-[hsl(var(--tag-olive))]", // forest to olive
+};
+
+// Add button style constants
+const BUTTON_STYLES = {
+	analysis: "from-[hsl(var(--tag-stone))] to-[hsl(var(--tag-slate))]", // professional blue gradient
+	retake: "from-[hsl(var(--tag-forest))] to-[hsl(var(--tag-moss))]", // forest green gradient
+	showTests: "from-[hsl(var(--tag-clay))] to-[hsl(var(--tag-bark))]", // earthy brown gradient
+	// start test keeps the original sidebar gradient
+	start: "from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))]",
 };
 
 export default function ExamCard({
@@ -82,7 +91,7 @@ export default function ExamCard({
 									variant="expandIcon"
 									Icon={ArrowRight}
 									iconPlacement="right"
-									className="w-full rounded-lg px-4 py-2 bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] hover:brightness-110 text-[hsl(var(--sidebar-primary-foreground))] text-sm font-medium"
+									className={`w-full rounded-lg px-4 py-2 bg-gradient-to-r ${BUTTON_STYLES.showTests} hover:brightness-110 text-white text-sm font-medium`}
 									onClick={() => onTopicClick(topic)}
 								>
 									Show Tests
@@ -178,7 +187,7 @@ export default function ExamCard({
 										variant="expandIcon"
 										Icon={BarChart2}
 										iconPlacement="right"
-										className="flex-1 rounded-lg px-4 py-2 bg-gradient-to-r from-[hsl(var(--sidebar-accent))] to-[hsl(var(--sidebar-primary))] hover:brightness-110 text-white text-sm font-medium"
+										className={`flex-1 rounded-lg px-4 py-2 bg-gradient-to-r ${BUTTON_STYLES.analysis} hover:brightness-110 text-white text-sm font-medium`}
 										onClick={() =>
 											router.push(
 												`/exam-session/${exam.primaryQuizId}?mode=review&submissionId=${submissionId}`
@@ -191,7 +200,7 @@ export default function ExamCard({
 										variant="expandIcon"
 										Icon={RotateCcw}
 										iconPlacement="right"
-										className="flex-1 rounded-lg px-4 py-2 bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] hover:brightness-110 text-white text-sm font-medium"
+										className={`flex-1 rounded-lg px-4 py-2 bg-gradient-to-r ${BUTTON_STYLES.retake} hover:brightness-110 text-white text-sm font-medium`}
 										onClick={() =>
 											router.push(
 												`/exam-session/${exam.primaryQuizId}`
@@ -209,7 +218,7 @@ export default function ExamCard({
 									className={`w-full rounded-lg px-4 py-2 ${
 										isLocked
 											? "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:brightness-110 text-black"
-											: "bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] hover:brightness-110 text-white"
+											: `bg-gradient-to-r ${BUTTON_STYLES.start} hover:brightness-110 text-white`
 									} text-sm font-medium`}
 									onClick={() => {
 										if (isLocked) {
