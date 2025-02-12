@@ -74,15 +74,15 @@ export default function QuestionCard({
 
 	return (
 		<div className="w-full h-full flex flex-col p-4 overflow-y-auto">
-			<h2 className="text-xl font-semibold mb-4">
+			<div className=" mb-4 p-1">
 				<LatexRenderer>{question.question}</LatexRenderer>
-			</h2>
+			</div>
 
 			{isReviewMode && isSubmitted && (
 				<div
-					className={`mb-4 p-2 rounded-md border ${getStatusStyle(
+					className={`mb-4 p-4 rounded-md border ${getStatusStyle(
 						questionStatus
-					)} flex items-center -mx-2`}
+					)} flex items-center `}
 				>
 					{getStatusIcon(questionStatus)}
 					<span className="ml-2 font-semibold">{questionStatus}</span>

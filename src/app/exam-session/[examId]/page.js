@@ -217,32 +217,35 @@ export default function ExamPage({ params }) {
 					</div>
 				</div>
 				<div className="flex items-center gap-4 flex-shrink-0">
-					{endTimeRef.current && examStartTime && !isTimerFrozen && (
-						<FlipClockCountdown
-							to={endTimeRef.current}
-							className="flip-clock"
-							labelStyle={{
-								fontSize: 0,
-							}}
-							digitBlockStyle={{
-								width: 25,
-								height: 35,
-								fontSize: 20,
-								backgroundColor: "#1ca7c0",
-							}}
-							dividerStyle={{
-								color: "white",
-								height: 1,
-							}}
-							separatorStyle={{
-								size: "4px",
-								color: "#1ca7c0",
-							}}
-							duration={0.5}
-							renderMap={[false, true, true, true]}
-							onComplete={handleComplete}
-						/>
-					)}
+					{endTimeRef.current &&
+						examStartTime &&
+						!isTimerFrozen &&
+						!isReviewMode && (
+							<FlipClockCountdown
+								to={endTimeRef.current}
+								className="flip-clock"
+								labelStyle={{
+									fontSize: 0,
+								}}
+								digitBlockStyle={{
+									width: 25,
+									height: 35,
+									fontSize: 20,
+									backgroundColor: "#1ca7c0",
+								}}
+								dividerStyle={{
+									color: "white",
+									height: 1,
+								}}
+								separatorStyle={{
+									size: "4px",
+									color: "#1ca7c0",
+								}}
+								duration={0.5}
+								renderMap={[false, true, true, true]}
+								onComplete={handleComplete}
+							/>
+						)}
 					{isSubmitted && (
 						<>
 							{languageVersions.length > 0 && (
