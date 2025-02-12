@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import TopicTests from "../../components/TopicTests";
+import ExamCard from "../../components/ExamCard";
 
 // Icon mapping
 const iconMap = {
@@ -220,43 +221,10 @@ export default function TopicwisePage() {
 											margin: "-50px",
 										}}
 									>
-										<Card className="hover:shadow-xl transition-all duration-300 border border-[hsl(var(--sidebar-border))] hover:border-[hsl(var(--sidebar-accent))] h-full flex flex-col">
-											<CardHeader className="pb-2 flex-none">
-												<CardTitle className="flex flex-col">
-													<div className="flex items-center justify-between">
-														<span className="text-lg font-semibold">
-															{topic.name}
-														</span>
-														<span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-															{topic.totalQuizzes}{" "}
-															Tests
-														</span>
-													</div>
-													{selectedSubject?.name ===
-														"All" && (
-														<span className="text-sm text-muted-foreground">
-															{topic.subject}
-														</span>
-													)}
-												</CardTitle>
-											</CardHeader>
-											<CardContent className="flex flex-col flex-grow">
-												<div className="mt-auto pt-6">
-													<Button
-														variant="expandIcon"
-														iconPlacement="right"
-														className="w-full bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-primary))]"
-														onClick={() =>
-															handleTopicClick(
-																topic
-															)
-														}
-													>
-														Show Tests
-													</Button>
-												</div>
-											</CardContent>
-										</Card>
+										<ExamCard
+											topic={topic}
+											onTopicClick={handleTopicClick}
+										/>
 									</motion.div>
 								))}
 							</div>

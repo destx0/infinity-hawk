@@ -9,10 +9,68 @@ import { db, auth } from "@/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import useAuthStore from "@/store/authStore";
 
-export default function ExamCard({ exam, userSubmissions }) {
+export default function ExamCard({
+	exam,
+	userSubmissions,
+	topic,
+	onTopicClick,
+}) {
 	const router = useRouter();
 	const [user] = useAuthState(auth);
 	const isPremiumUser = useAuthStore((state) => state.isPremium);
+
+	// If it's a topic card, use exam card styling with topic content
+	if (topic) {
+		return (
+			<motion.div
+				whileHover={{ scale: 1.02 }}
+				whileTap={{ scale: 0.98 }}
+				transition={{ type: "spring", stiffness: 400, damping: 25 }}
+				className="h-full"
+			>
+				<Card className="hover:shadow-2xl transition-shadow duration-300 rounded-xl focus:outline-none focus:ring-0 shadow-lg h-full flex flex-col bg-white relative">
+					<CardHeader className="pb-2 flex-none">
+						<CardTitle className="flex items-start justify-between gap-1">
+							<span className="text-lg font-sans line-clamp-2 min-h-[2rem] text-[hsl(var(--foreground))]">
+								{topic.name}
+							</span>
+						</CardTitle>
+					</CardHeader>
+					<CardContent className="flex flex-col flex-grow p-3">
+						<div className="space-y-3 flex flex-col h-full">
+							<div className="flex items-center gap-1">
+								{topic.subject && (
+									<div className="">
+										<span className="px-2 py-0.5 rounded border border-[hsl(var(--sidebar-border))] text-[hsl(var(--foreground))] font-medium text-sm">
+											{topic.subject}
+										</span>
+									</div>
+								)}
+								{topic.totalQuizzes > 0 && (
+									<div className="flex items-center gap-1 border border-[hsl(var(--sidebar-border))] text-[hsl(var(--foreground))] px-2 py-0.5 rounded">
+										<span className="font-medium text-sm">
+											{topic.totalQuizzes} Tests
+										</span>
+									</div>
+								)}
+							</div>
+							<div className="mt-auto pt-1">
+								<Button
+									variant="expandIcon"
+									Icon={ArrowRight}
+									iconPlacement="right"
+									className="w-full rounded-lg px-4 py-2 bg-gradient-to-r from-[hsl(var(--sidebar-primary))] to-[hsl(var(--sidebar-accent))] hover:brightness-110 text-[hsl(var(--sidebar-primary-foreground))] text-sm"
+									onClick={() => onTopicClick(topic)}
+								>
+									Show Tests
+								</Button>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+			</motion.div>
+		);
+	}
 
 	// Find submission for this exam from the passed userSubmissions prop
 	const submission = userSubmissions
