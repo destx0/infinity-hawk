@@ -97,6 +97,7 @@ const allExams = [
 		width: 64,
 		height: 64,
 		batchIds: {
+			mockTests: "abc_full_mock",
 			pyqs: "NBkBXOelvo2hykyLAohH",
 		},
 	},
