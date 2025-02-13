@@ -231,7 +231,7 @@ export default function ExamPage({ params }) {
 									width: 25,
 									height: 35,
 									fontSize: 20,
-									backgroundColor: "#1ca7c0",
+									backgroundColor: "#10133c",
 								}}
 								dividerStyle={{
 									color: "white",
@@ -239,7 +239,7 @@ export default function ExamPage({ params }) {
 								}}
 								separatorStyle={{
 									size: "4px",
-									color: "#1ca7c0",
+									color: "#10133c",
 								}}
 								duration={0.5}
 								renderMap={[false, true, true, true]}

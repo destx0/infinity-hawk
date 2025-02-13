@@ -163,23 +163,7 @@
   font-style: normal;
 }
 
-/* Add these styles for the flip clock countdown */
-.flip-clock {
-  --fcc-flip-duration: 0.5s;
-  --fcc-digit-block-width: 25px;
-  --fcc-digit-block-height: 35px;
-  --fcc-digit-block-radius: 3px;
-  --fcc-digit-font-size: 20px;
-  --fcc-digit-color: white;
-  --fcc-background: #1ca7c0;
-  --fcc-divider-color: white;
-  --fcc-divider-height: 1px;
-  --fcc-separator-size: 4px;
-  --fcc-separator-color: #1ca7c0;
-  --fcc-spacing: 4px;
-  --fcc-label-font-size: 8px;
-  --fcc-label-color: #4B5563;
-}
+
 
 /* Add these styles at the end of the file */
 
